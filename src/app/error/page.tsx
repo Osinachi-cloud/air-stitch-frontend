@@ -6,7 +6,7 @@ import Head from 'next/head'
 import Button from '@/components/Button'
 import CardBox from '@/components/CardBox'
 import SectionFullScreen from '@/components/Section/FullScreen'
-import LayoutGuest from '@/layouts/Guest'
+// import LayoutGuest from '@/layouts/Guest'
 import { getPageTitle } from '@/config'
 
 const ErrorPage = () => {
@@ -33,7 +33,7 @@ const ErrorPage = () => {
 }
 
 ErrorPage.getLayout = function getLayout(page: ReactElement) {
-  return <LayoutGuest>{page}</LayoutGuest>
+  // return <LayoutGuest>{page}</LayoutGuest>
 }
 
 export default ErrorPage
