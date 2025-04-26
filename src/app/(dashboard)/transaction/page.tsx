@@ -140,7 +140,7 @@ const orders = [
 
 
 
-export const TransactionTable = () => {
+export const Transaction = () => {
 
   const [transactions, setTransactions] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
