@@ -22,7 +22,7 @@ const TransactionPage = () => {
           <TransactionStatusCard status="UK" transactionAmount={3000} />
         </div>
         <div>
-          <Transaction />
+          <TransactionTable />
         </div>
       </div>
 
@@ -140,7 +140,7 @@ const orders = [
 
 
 
-export const Transaction = () => {
+const TransactionTable = () => {
 
   const [transactions, setTransactions] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
