@@ -1,4 +1,5 @@
 "use client"
+import Image from "next/image";
 import { useState } from "react";
 
 interface Review {
@@ -26,12 +27,12 @@ const ProductDetails = () => {
       <div className="col-span-1 w-full">
         <div className="grid grid-cols-4 gap-4">
           <div className="col-span-1 grid gap-2">
-            <img src="/images/Agbada (2).png" alt="Kaftan 1" className="w-full rounded-md" />
-            <img src="/images/Agbada (2).png" alt="Kaftan 2" className="w-full rounded-md" />
-            <img src="/images/Agbada (2).png" alt="Kaftan 3" className="w-full rounded-md" />
+            <Image src="/images/Agbada (2).png" alt="Kaftan 1" width={100} height={100} className="w-full rounded-md" />
+            <Image src="/images/Agbada (2).png" alt="Kaftan 2" width={100} height={100} className="w-full rounded-md" />
+            <Image src="/images/Agbada (2).png" alt="Kaftan 3" width={100} height={100} className="w-full rounded-md" />
           </div>
           <div className="col-span-3">
-            <img src="/images/Agbada (2).png" alt="Kaftan main" className="w-full rounded-lg"/>
+            <Image src="/images/Agbada (2).png" alt="Kaftan main" width={100} height={100} className="w-full rounded-lg"/>
           </div>
         </div>
       </div>

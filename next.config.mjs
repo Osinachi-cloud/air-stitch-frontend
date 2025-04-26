@@ -9,10 +9,11 @@
 const nextConfig = {
     reactStrictMode: true,
     compiler: {
-      warnings: {
-        extraAttributes: 'off',
-      },
+      // warnings: {
+      //   extraAttributes: 'off',
+      // },
     },
   };
   
   export default nextConfig;
+  
