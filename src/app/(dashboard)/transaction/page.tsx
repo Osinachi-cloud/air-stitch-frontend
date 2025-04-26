@@ -22,7 +22,7 @@ const TransactionPage = () => {
           <TransactionStatusCard status="UK" transactionAmount={3000} />
         </div>
         <div>
-          <TransactionTable />
+          <Transaction />
         </div>
       </div>
 
