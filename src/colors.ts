@@ -123,15 +123,15 @@ export const getButtonColor = (
 
   const base = [colors.borders[color], colors.ring[color]]
 
-  if (isActive) {
-    base.push(colors.active[color])
-  } else {
-    base.push(isOutlinedProcessed ? colors.text[color] : colors.bg[color])
-  }
+  // if (isActive) {
+  //   base.push(colors.active[color])
+  // } else {
+  //   base.push(isOutlinedProcessed ? colors.text[color] : colors.bg[color])
+  // }
 
-  if (hasHover) {
-    base.push(isOutlinedProcessed ? colors.outlineHover[color] : colors.bgHover[color])
-  }
+  // if (hasHover) {
+  //   base.push(isOutlinedProcessed ? colors.outlineHover[color] : colors.bgHover[color])
+  // }
 
   return base.join(' ')
 }
