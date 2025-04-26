@@ -26,7 +26,7 @@ export const Products: React.FC = () => {
   return (
     <section className="px-2 md:px-6 py-10 w-[90%] m-auto">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="md:text-3xl font-bold">See what's trending</h2>
+        <h2 className="md:text-3xl font-bold">See what is trending</h2>
         <a href="#" className="flex justify-center gap-[1rem] items-center text-[12px] md:text-[20px] text-blue-600 font-medium">
           <span>Browse all categories</span>
           <Image src="/icons/Arrow-dark-right.png" alt="Product Image" className=" h-auto " width={100} height={40}/>

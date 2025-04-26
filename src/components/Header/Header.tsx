@@ -20,7 +20,7 @@ export const Header = () => {
                     <p className="text-[16px] md:text-[25px] leading-normal">
                         Browse from our different styles that suits your
                         <br />
-                        everyday needs, doesn't leave your pocket empty and
+                        everyday needs, does not leave your pocket empty and
                         <br />
                         saves time spent visiting tailor shops.
                     </p>

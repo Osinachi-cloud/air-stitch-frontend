@@ -6,9 +6,10 @@ import { useEffect } from "react";
 const Navbar = () => {
 
   const userDetails = useAppSelector((state) => state.authReducer.value);
+
   useEffect(()=>{
     console.log(userDetails);
-  },[])
+  },[userDetails])
 
   return (
     <div className='grid grid-cols-4 p-4'>

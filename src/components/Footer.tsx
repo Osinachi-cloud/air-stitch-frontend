@@ -50,7 +50,7 @@ export const Footer: React.FC = () => {
             <div>
               <h4 className="font-semibold mb-8">Business</h4>
               <ul className="space-y-4 font-extralight ">
-                <li><a href="#">Create a Tailor's Account</a></li>
+                <li><a href="#">Create an Acount for Tailors</a></li>
                 <li><a href="#">Our policies</a></li>
                 <li><a href="#">Complaints</a></li>
                 <li><a href="#">Refund</a></li>

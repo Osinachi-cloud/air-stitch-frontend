@@ -143,7 +143,7 @@ const ProductDetails = () => {
         <p className="text-gray-700 mb-8">
           Elevate your style with our Plain Kaftan for Men, a timeless classic that embodies simplicity, sophistication, and versatility. Crafted from a combination of Senator and Guinea fabrics, this kaftan is a symbol of high-quality craftsmanship and exquisite materials.
           <br /><br />
-          With our Plain Kaftan for Men in black, you're not just wearing an outfit; you're making a statement...
+          With our Plain Kaftan for Men in black, you are not just wearing an outfit; you are making a statement...
         </p>
 
         <h2 className="text-2xl font-semibold mb-4">Review (3)</h2>

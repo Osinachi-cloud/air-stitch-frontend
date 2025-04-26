@@ -181,7 +181,7 @@ const LoginPage = () => {
             {/* <button type="submit" className="text-white bg-[#005DA6] focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full px-5 py-3.5 text-center">Login</button> */}
           </div>
           <div className='text-center mt-[1rem] text-[14px]'>
-            <a href="/signup">Didn't have an account? Create Account</a>
+            <a href="/signup">You do not have an account? Create Account</a>
           </div>
         </form>
       </div>

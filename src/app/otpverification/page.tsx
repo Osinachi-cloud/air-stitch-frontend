@@ -68,7 +68,7 @@ const VerifyOTP = () => {
                     Verify OTP
                 </button>
                 <p className='py-[1rem]'>
-                    <span>Didn't received code? </span>
+                    <span>Did not received code? </span>
                     <a href="" className='font-light'>Resend</a>
                 </p>
             </form>
