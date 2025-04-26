@@ -17,7 +17,7 @@ import CardBoxComponentBody from '@/components/CardBox/Component/Body'
 import CardBoxComponentFooter from '@/components/CardBox/Component/Footer'
 import FormField from '@/components/Form/Field' 
 import FormFilePicker from '@/components/Form/FilePicker'
-import LayoutAuthenticated from '@/layouts/Authenticated' 
+// import LayoutAuthenticated from '@/layouts/Authenticated' 
 import SectionMain from '@/components/Section/Main' 
 import SectionTitleLineWithButton from '@/components/Section/TitleLineWithButton' 
 import CardBoxUser from '@/components/CardBox/User' 
@@ -170,7 +170,7 @@ const ProfilePage = () => {
 }
 
 ProfilePage.getLayout = function getLayout(page: ReactElement) {
-  return <LayoutAuthenticated>{page}</LayoutAuthenticated>
+  // return <LayoutAuthenticated>{page}</LayoutAuthenticated>
 }
 
 export default ProfilePage

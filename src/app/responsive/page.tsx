@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import React, { ReactElement } from 'react'
-import LayoutAuthenticated from '@/layouts/Authenticated' 
+// import LayoutAuthenticated from '@/layouts/Authenticated' 
 import SectionMain from '@/components/Section/Main'
 import SectionTitle from '@/components/Section/Title' 
 import { appTitle, getPageTitle } from '@/config'
@@ -71,7 +71,7 @@ const ResponsivePage = () => {
 }
 
 ResponsivePage.getLayout = function getLayout(page: ReactElement) {
-  return <LayoutAuthenticated>{page}</LayoutAuthenticated>
+  // return <LayoutAuthenticated>{page}</LayoutAuthenticated>
 }
 
 export default ResponsivePage
