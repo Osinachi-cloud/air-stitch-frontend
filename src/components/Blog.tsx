@@ -23,7 +23,7 @@ export const Blog = ({ id, image, header, body, price, buttonText}: any) => {
                             className="text-[#f5f8ff] md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] my-[0.5rem] rounded-[4px] bg-[#373636] text-center text-[14px] md:w-[200px] w-[150px] flex justify-center items-center gap-[1rem]">
                         <span>Read more</span>
                         <div>
-                            <Image src="/icons/Arrow-right.png" alt="" width={100} height={100} />
+                            <Image src="/icons/Arrow-right.png" alt="" width={30} height={20} />
                         </div>
                     </div>
 

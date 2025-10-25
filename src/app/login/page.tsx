@@ -40,7 +40,7 @@ const LoginPage = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   // const [isLoading, setIsLoading] = useState(false);
-  const loginUrl = `${baseUrL}/admin/auth/login`;
+  const loginUrl = `${baseUrL}/customer-login`;
   const router = useRouter();
 
   const { data: loginResponseData, isLoading, setIsLoading, callApi } = useFetch('POST', authDetails, loginUrl);
@@ -52,9 +52,6 @@ const LoginPage = () => {
     e.preventDefault();
     handlePost();
     console.log({ loginResponseData });
-
-
-
     // window.location.replace("/dashboard")
     console.log('Form values', authDetails);
   }
@@ -83,13 +80,13 @@ const LoginPage = () => {
       })
 
       let apiResponseData: any = await apiResponse.json();
-      console.log(apiResponseData);
+      console.log({apiResponseData});
       setIsLoading(false);
 
       if (apiResponse.ok) {
         router.push('/admin');
       } else {
-        errorToast(apiResponseData.message);
+        errorToast(apiResponseData.error);
       }
 
       dispatch(getAuthResponse(apiResponseData.data))
@@ -98,7 +95,7 @@ const LoginPage = () => {
       console.log(e);
       setIsLoading(false);
 
-      errorToast("Error login in");
+      // errorToast(e);
     }
   }
 
