@@ -1,7 +1,7 @@
 "use client"
 
 import { baseUrL } from '@/env/URLs';
-import { useEmailFromStorage } from '@/hooks/UseLocalStorage';
+import { useEmailFromStorage } from '@/hooks/useLocalStorage';
 import { useRouter } from 'next/navigation'
 import { useState, useRef, FormEvent, ChangeEvent, KeyboardEvent } from 'react';
 

@@ -9,7 +9,7 @@ import { errorToast } from '@/hooks/UseToast';
 import 'react-toastify/dist/ReactToastify.css';
 import './page.css';
 import { useFetch } from '@/hooks/useFetch'
-import { useLocalStorage } from '@/hooks/UseLocalStorage';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 type EmailVerificationForm = {
   email: string
