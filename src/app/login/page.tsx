@@ -16,7 +16,6 @@ type LoginForm = {
 }
 
 const LoginPage = () => {
-
   const initialState: LoginForm = {
     email: "",
     password: "",
