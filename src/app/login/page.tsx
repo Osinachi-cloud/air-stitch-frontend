@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react'
 import type { FormEventHandler, ReactElement } from 'react'
 import { useRouter } from 'next/navigation'
 import { baseUrL } from '@/env/URLs';
-import { getAuthResponse } from '@/redux/features/authSlice';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/stores/store';
+import { loginSuccess } from '@/redux/features/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
 import { errorToast } from '@/hooks/UseToast';
 import 'react-toastify/dist/ReactToastify.css';
 import './page.css';
+import { useAppSelector } from '@/redux/store';
 
 type LoginForm = {
   email: string
@@ -23,10 +24,22 @@ const LoginPage = () => {
 
   const [authDetails, setAuthDetails] = useState(initialState);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Local loading state
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const loginUrl = `${baseUrL}/customer-login`;
   const router = useRouter();
+  
+  // Move selector to component level
+  const userDetails = useAppSelector((state) => state.auth.userDetails);
+
+  // Add useEffect to monitor userDetails changes
+  useEffect(() => {
+    console.log("Updated User Details:", userDetails);
+    if (userDetails && userDetails.access_token) {
+      // Redirect on successful login
+      router.push('/admin');
+    }
+  }, [userDetails, router]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,18 +78,25 @@ const LoginPage = () => {
 
       let apiResponseData: any = await apiResponse.json();
       console.log({apiResponseData});
+
+    if (apiResponse.ok) {
+      const transformedUserDetails = {
+        access_token: apiResponseData.accessToken, 
+        refresh_token: apiResponseData.refreshToken, 
+        permissions: [], 
+        roles: [apiResponseData.role] 
+      };
       
-      if (apiResponse.ok) {
-        router.push('/admin');
+      console.log("Transformed user details:", transformedUserDetails);
+      dispatch(loginSuccess(transformedUserDetails));
+ 
       } else {
         errorToast(apiResponseData.error || 'Login failed');
       }
 
-      dispatch(getAuthResponse(apiResponseData.data))
-
     } catch (e) {
       console.log(e);
-      // errorToast('An error occurred during login');
+      errorToast('Unable to login');
     } finally {
       setIsLoading(false);
     }

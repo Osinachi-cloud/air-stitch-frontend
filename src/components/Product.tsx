@@ -21,8 +21,7 @@ export const Product = ({id, image, title, description, price, productId}: any) 
                     <span className="text-[12px] md:text-lg font-bold">{price}</span>
                     <Link 
                         href={`/product-details/${productId}`} 
-                        className="text-[12px] md:text-sm text-gray-600"
-                    >
+                        className="text-[12px] md:text-sm text-gray-600">
                         View Details
                     </Link>
                 </div>

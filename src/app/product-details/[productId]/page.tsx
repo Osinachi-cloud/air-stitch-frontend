@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useFetch } from "@/hooks/useFetch"; // Adjust import path as needed
 import { baseUrL } from "@/env/URLs";
+// import { RootState } from "@/stores/store";
+import { useSelector } from "react-redux";
+import { RootState, useAppSelector } from "@/redux/store";
 
 interface Review {
   name: string;
@@ -72,7 +75,20 @@ const ProductDetails = () => {
 
   const product: ProductDto | null = data || null;
 
+
+  //   const { access_token, refresh_token, permissions, roles } = useSelector(
+  //   (state: RootState) => state.auth.userDetails
+  // );
+
+  //   const userDetails = useSelector((state: RootState) => state.auth.userDetails);
+  // const { access_token, refresh_token, permissions, roles } = userDetails;
+
+     const userDetails = useAppSelector((state) => state.auth.userDetails);
+  
+
+
   useEffect(() => {
+    console.log("Access Token:", userDetails);
     // Set default color if product data is available
     if (product?.productVariation && product.productVariation.length > 0) {
       setSelectedColor(product.productVariation[0].color || "black");
