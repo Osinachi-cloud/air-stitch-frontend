@@ -59,23 +59,20 @@ import Image from "next/image";
 import { Product } from "./Product";
 import { baseUrL } from "@/env/URLs";
 import { useFetch } from "@/hooks/useFetch";
-// import { useFetch } from "./useFetch";
+import { useAppSelector } from "@/redux/store";
 
-// ... (keep all your interfaces and enums)
 
 export const Products: React.FC = () => {
-  // Replace with your actual base URL
-  // const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api";
   
   // Build query parameters
   const queryParams = new URLSearchParams({
     page: '0',
     size: '8',
     publishStatus: 'PUBLISHED',
-    // Add other parameters as needed
+ 
   }).toString();
   
-  const url = `${baseUrL}/get-all-products?${queryParams}`;
+  const url = `${baseUrL}/get-all-products-by-auth?${queryParams}`;
 
   const { data, isLoading, error } = useFetch("GET", null, url);
 

@@ -7,7 +7,7 @@ import Head from 'next/head'
 import { store } from '../stores/store'
 import { Provider } from 'react-redux'
 import '../css/main.css'
-import { ToastContainer } from 'react-toastify'
+// import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
 export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<P, IP> & {
@@ -80,7 +80,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
             `}
       </Script> */}
 
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <Component {...pageProps} />
 
     </>

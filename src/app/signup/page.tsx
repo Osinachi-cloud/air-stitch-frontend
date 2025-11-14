@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { baseUrL } from '@/env/URLs';
 import { errorToast, successToast } from '@/hooks/UseToast';
-import { ToastContainer } from 'react-toastify';
+// import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './page.css';
 
@@ -104,7 +104,7 @@ const SignUp = () => {
     return (
         <div>
             {/* Toast Container - This is essential for toasts to work */}
-            <ToastContainer
+            {/* <ToastContainer
                 position="top-right"
                 autoClose={5000}
                 hideProgressBar={false}
@@ -115,7 +115,7 @@ const SignUp = () => {
                 draggable
                 pauseOnHover
                 theme="light"
-            />
+            /> */}
             
             <div className="flex items-center justify-center min-h-screen ">
                 <div className="p-8 rounded-lg max-w-4xl">

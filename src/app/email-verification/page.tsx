@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './page.css';
 import { useFetch } from '@/hooks/useFetch'
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useAppSelector } from '@/redux/store';
 
 type EmailVerificationForm = {
   email: string
@@ -28,6 +29,10 @@ const EmailVerificationPage = () => {
   const router = useRouter();
   
   const { setValue: saveEmailToStorage } = useLocalStorage<string>('email');
+
+  const token = useAppSelector((state) => state.auth.userDetails).access_token;
+
+  console.log("token ------> ",{token});
 
   const { data: loginResponseData, isLoading, setIsLoading, callApi } = useFetch('POST', authDetails, loginUrl);
   console.log(loginResponseData);

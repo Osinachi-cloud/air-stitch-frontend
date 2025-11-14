@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import type { FormEventHandler, ReactElement } from 'react'
 import { useRouter } from 'next/navigation'
 import { baseUrL } from '@/env/URLs';
@@ -10,6 +10,8 @@ import { errorToast } from '@/hooks/UseToast';
 import 'react-toastify/dist/ReactToastify.css';
 import './page.css';
 import { useAppSelector } from '@/redux/store';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { json } from 'stream/consumers';
 
 type LoginForm = {
   email: string
@@ -29,15 +31,14 @@ const LoginPage = () => {
   const loginUrl = `${baseUrL}/customer-login`;
   const router = useRouter();
   
-  // Move selector to component level
   const userDetails = useAppSelector((state) => state.auth.userDetails);
+  const  { value , getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
 
-  // Add useEffect to monitor userDetails changes
   useEffect(() => {
-    console.log("Updated User Details:", userDetails);
+    console.log("Updated User Details:" , userDetails);
+    console.log("value =======>>>", getUserDetails()?.accessToken);
     if (userDetails && userDetails.access_token) {
-      // Redirect on successful login
-      router.push('/admin');
+      router.push('/');
     }
   }, [userDetails, router]);
 
@@ -78,6 +79,8 @@ const LoginPage = () => {
 
       let apiResponseData: any = await apiResponse.json();
       console.log({apiResponseData});
+
+      setStoredValue(apiResponseData);
 
     if (apiResponse.ok) {
       const transformedUserDetails = {

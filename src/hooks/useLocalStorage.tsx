@@ -1,3 +1,4 @@
+import { User } from '@/types/user';
 import { useState, useEffect } from 'react';
 
 export const useLocalStorage = <T,>(key: string, initialValue?: T) => {
@@ -14,6 +15,15 @@ export const useLocalStorage = <T,>(key: string, initialValue?: T) => {
       return initialValue;
     }
   });
+
+  const getUserDetails = (): User | null=> {
+    const str = window.localStorage.getItem(key);
+    console.log("str --->>> ", str);
+    if(str != null){
+      return typeof str === 'string' ? JSON.parse(str) : str;
+    }
+    return null;
+  } 
 
   const setStoredValue = (value: T) => {
     try {
@@ -37,7 +47,7 @@ export const useLocalStorage = <T,>(key: string, initialValue?: T) => {
     }
   };
 
-  return { value, setValue: setStoredValue, removeValue: removeStoredValue };
+  return { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue };
 };
 
 

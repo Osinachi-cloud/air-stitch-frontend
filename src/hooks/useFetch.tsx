@@ -1,14 +1,23 @@
 import { useEffect, useState } from "react"
+import { RootState, useAppSelector } from "@/redux/store";
+import { useLocalStorage } from "./useLocalStorage";
+
+
+
 
 export const useFetch = (methodType: string, body: any, url: string) => {
+    const  { value , getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+    
     console.log(methodType, body, url);
 
     const [data, setData] = useState<any>();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const token = null;
+    const token = getUserDetails()?.accessToken
 
+    console.log("token ====>", token);
+    
     const apiFetchOnRender = async() => {
         setIsLoading(true);
         try {
@@ -16,7 +25,6 @@ export const useFetch = (methodType: string, body: any, url: string) => {
                 'Content-Type': 'application/json',
             };
 
-            // Add Authorization header only if token is provided
             if (token) {
                 headers.Authorization = `Bearer ${token}`;
             }
@@ -26,7 +34,6 @@ export const useFetch = (methodType: string, body: any, url: string) => {
                 headers: headers,
             };
 
-            // Add body for non-GET requests
             if (body && methodType !== 'GET') {
                 fetchOptions.body = JSON.stringify(body);
             }
@@ -46,14 +53,13 @@ export const useFetch = (methodType: string, body: any, url: string) => {
         } catch (e: any){
             console.log(e);
             setIsLoading(false);
-            // Ensure error is a string, not an Error object
             setError(e.message || "An error occurred while fetching data")
         }
     }
 
     useEffect(() => {
         apiFetchOnRender();
-    }, [url, methodType, JSON.stringify(body)]) // Added dependencies
+    }, [url, methodType, JSON.stringify(body)]) 
 
     const callApi = async() => {
         console.log("call Api for me");

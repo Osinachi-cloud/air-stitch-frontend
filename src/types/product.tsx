@@ -56,3 +56,8 @@ export interface RelatedProduct {
   price: number;
   image: string;
 }
+
+export interface ProductVariation {
+  color: string;
+  sleeveType: string;
+}

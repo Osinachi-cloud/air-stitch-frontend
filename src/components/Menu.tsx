@@ -15,7 +15,13 @@ const menuItems = [
       {
         icon: "/Bag.png",
         label: "Orders",
-        href: "/Orders",
+        href: "/orders",
+        visible: ["admin", "teacher"],
+      },
+      {
+        icon: "/Bag.png",
+        label: "Cart",
+        href: "/cart",
         visible: ["admin", "teacher"],
       },
       {
