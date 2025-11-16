@@ -316,7 +316,8 @@ export default function CartPage() {
                                             <div className="flex gap-3">
                                                 <button
                                                     onClick={() => handleAddProductLikes(product.productId)}
-                                                    className={`p-2 bg-${product.color} bg-[${product.color}] text-[white] rounded-[4px] h-50px w-50px`}
+                                                    className={`p-2 text-[white] rounded-[4px] h-50px w-50px`}
+                                                    style={{ backgroundColor: product.color }}
                                                 >
                                                     {/* ❤️ */}
                                                     {product.sleeveType}
