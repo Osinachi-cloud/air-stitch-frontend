@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useFetch } from "@/hooks/useFetch"; // Adjust import path as needed
 import { baseUrL } from "@/env/URLs";
+import { useRouter } from 'next/navigation';
 // import { RootState } from "@/stores/store";
 import { useSelector } from "react-redux";
 import { RootState, useAppSelector } from "@/redux/store";
@@ -88,8 +89,8 @@ const ProductDetails = () => {
 
   const { data, isLoading, error } = useFetch("GET", null, url);
   const { data: bodyMeasurementData, isLoading: bodyMeasurementLoading, error: bodyMeasurementError } = useFetch("GET", null, bodyMeasurementUrl);
-  const { data: addToCartResponse, isLoading: addToCartLoading, error: addToCartError, callApi } = usePost("POST", addToCartRequestBody, addToCartUrl);
-
+  const { data: addToCartResponse, isLoading: addToCartLoading, error: addToCartError, callApi } = usePost("POST", addToCartRequestBody, addToCartUrl, "cart");
+  const router = useRouter();
   const product: ProductDto | null = data || null;
 
   // errorToast(error || 'Login failed');
@@ -138,10 +139,6 @@ const ProductDetails = () => {
         </div>
       </div>
     );
-  }
-
-  const view = () => {
-    console.log("Product data fetched:");
   }
 
   const uniqueSleeveTypes = [...new Set(data.productVariation.map((product: ProductVariation) => product.sleeveType))];
@@ -265,7 +262,6 @@ const ProductDetails = () => {
                   <button
                     key={sleeveTypeValue}
                     onClick={() => {
-                      view();
                       setSleeveType(sleeveTypeValue);
                     }}
                     className={`px-4 py-2 rounded-md border ${sleeveType === sleeveTypeValue

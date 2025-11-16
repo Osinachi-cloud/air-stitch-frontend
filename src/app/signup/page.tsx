@@ -103,20 +103,6 @@ const SignUp = () => {
 
     return (
         <div>
-            {/* Toast Container - This is essential for toasts to work */}
-            {/* <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            /> */}
-            
             <div className="flex items-center justify-center min-h-screen ">
                 <div className="p-8 rounded-lg max-w-4xl">
                     <h1 className="text-[30px] font-bold text-center mb-1">Create a new account</h1>

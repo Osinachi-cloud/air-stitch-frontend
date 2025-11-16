@@ -2,9 +2,11 @@ import { useEffect, useState } from "react"
 import { RootState, useAppSelector } from "@/redux/store";
 import { useLocalStorage } from "./useLocalStorage";
 import { errorToast, successToast } from "./UseToast";
+import { useRouter } from 'next/navigation';
 
 
-export const usePost = (methodType: string, body: any, url: string) => {
+
+export const usePost = (methodType: string, body: any, url: string, route:string) => {
     const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
 
     console.log(methodType, body, url);
@@ -13,7 +15,8 @@ export const usePost = (methodType: string, body: any, url: string) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const token = getUserDetails()?.accessToken
+    const token = getUserDetails()?.accessToken;
+    const router = useRouter();
 
     console.log("token ====>", token);
 
@@ -49,9 +52,10 @@ export const usePost = (methodType: string, body: any, url: string) => {
 
             const dataResponse = await apiResponse.json();
             successToast(dataResponse?.message); 
-            setData(dataResponse);
+            setData(dataResponse?.message);
             setIsLoading(false);
             console.log(dataResponse);
+            router.push(`/${route}`)
 
         } catch (e: any) {
             console.log(e.message);

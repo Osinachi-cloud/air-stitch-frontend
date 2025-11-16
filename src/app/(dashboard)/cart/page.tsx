@@ -85,7 +85,7 @@ export default function CartPage() {
     const {
         callApi: clearCart,
         isLoading: clearCartLoading
-    } = usePost("PUT", null, `${baseUrL}/clear-cart`);
+    } = usePost("PUT", null, `${baseUrL}/clear-cart`, 'cart');
 
     // const {
     //     callApi: initializePayment,
