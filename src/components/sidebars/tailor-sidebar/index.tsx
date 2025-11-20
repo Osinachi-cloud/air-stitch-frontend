@@ -11,7 +11,7 @@ type MenuItem = {
   icon: string;
   label: string;
   href: string;
-  visible: Role[];
+  //   visible: Role[];
 };
 
 type MenuSection = {
@@ -26,56 +26,27 @@ const menuItems: MenuSection[] = [
       {
         icon: "/Vector.png",
         label: "Account Overview",
-        href: "/Account-Overview",
-        visible: ["customer", "tailor"],
+        href: "/tailor",
       },
-      {
+       {
         icon: "/Bag.png",
         label: "Orders",
         href: "/Orders",
-        visible: ["customer", "tailor"],
-      },
-      {
-        icon: "/message.png",
-        label: "Pending Reviews",
-        href: "/pending-Review",
-        visible: ["customer"],
-      }, // tailor-only?
-      {
-        icon: "/Heart.png",
-        label: "Liked Items",
-        href: "/Liked-items",
-        visible: ["customer"],
-      },
-      {
-        icon: "/productCart.png",
-        label: "Cart",
-        href: "/cart",
-        visible: ["customer"],
       },
       {
         icon: "/folder.png",
         label: "Inventory",
         href: "/list/Inventory",
-        visible: ["tailor"],
       },
       {
         icon: "/Activity 2.png",
         label: "Analytics",
         href: "/Analytics",
-        visible: ["tailor"],
-      },
-      {
-        icon: "/Activity 2.png",
-        label: "Measurements",
-        href: "/Measurements",
-        visible: ["customer"],
       },
       {
         icon: "/Setting 2.png",
         label: "Account Settings",
-        href: "/list/settings",
-        visible: ["customer", "tailor"],
+        href: "/tailor/account-settings",
       },
     ],
   },
@@ -86,13 +57,12 @@ const menuItems: MenuSection[] = [
         icon: "/logout.png",
         label: "Logout",
         href: "/logout",
-        visible: ["customer", "tailor"],
       },
     ],
   },
 ];
 
-export default function Menu({
+export default function TailorMenu({
   // Pass this from parent if you have it; otherwise we’ll fall back.
   role: roleProp,
 }: {
@@ -112,9 +82,7 @@ export default function Menu({
   return (
     <div className="text-sm">
       {menuItems.map((section) => {
-        const visibleItems = section.items.filter((item) =>
-          item.visible.includes(role)
-        );
+        const visibleItems = section.items;
         if (visibleItems.length === 0) return null;
 
         return (

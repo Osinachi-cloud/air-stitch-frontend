@@ -1,7 +1,7 @@
+import AccountOverviewPage from "../Account-Overview/page";
+
 const CustomerPage = () => {
-    return (
-        <>Hello world</>
-    )
-}
+  return <AccountOverviewPage />;
+};
 
 export default CustomerPage;

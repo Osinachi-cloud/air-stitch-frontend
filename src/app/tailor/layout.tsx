@@ -1,9 +1,10 @@
 import Menu from "@/components/Menu";
 import Navbar from "@/components/Navbar";
+import TailorMenu from "@/components/sidebars/tailor-sidebar";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function DashboardLayout({
+export default function TailorDashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -18,10 +19,10 @@ export default function DashboardLayout({
         >
           <Image src="/images/T-Logo.png" alt="logo" width={150} height={90} />
         </Link>
-        <Menu />
+        <TailorMenu />
       </div>
       {/* RIGHT */}
-      <div className="w-[86%] absolute right-0 md:w-[92%] lg:w-[84%] xl:w-[80%] bg-[#eff2f9] overflow-scroll flex flex-col">
+      <div className="w-[86%] absolute right-0 md:w-[92%] lg:w-[84%] xl:w-[80%] bg-[#F7F8FA] overflow-scroll flex flex-col">
         <Navbar />
         {children}
       </div>
