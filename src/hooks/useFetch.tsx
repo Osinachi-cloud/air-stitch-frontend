@@ -1,14 +1,23 @@
 import { useEffect, useState } from "react"
+import { RootState, useAppSelector } from "@/redux/store";
+import { useLocalStorage } from "./useLocalStorage";
+
+
+
 
 export const useFetch = (methodType: string, body: any, url: string) => {
+    const  { value , getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+    
     console.log(methodType, body, url);
 
     const [data, setData] = useState<any>();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const token = null;
+    const token = getUserDetails()?.accessToken
 
+    console.log("token ====>", token);
+    
     const apiFetchOnRender = async() => {
         setIsLoading(true);
         try {
@@ -16,20 +25,24 @@ export const useFetch = (methodType: string, body: any, url: string) => {
                 'Content-Type': 'application/json',
             };
 
-            // Add Authorization header only if token is provided
             if (token) {
                 headers.Authorization = `Bearer ${token}`;
             }
 
-            const apiResponse = await fetch(url, {
+            const fetchOptions: RequestInit = {
                 method: methodType,
                 headers: headers,
-                // body:JSON.stringify(body)
-            });
+            };
+
+            if (body && methodType !== 'GET') {
+                fetchOptions.body = JSON.stringify(body);
+            }
+
+            const apiResponse = await fetch(url, fetchOptions);
 
             if (!apiResponse.ok) {
-                setError("Error loading Api")
-                throw new Error(`HTTP error! status: ${apiResponse.status}`);
+                const errorText = await apiResponse.text();
+                throw new Error(`HTTP error! status: ${apiResponse.status}, message: ${errorText}`);
             }
 
             const dataResponse = await apiResponse.json();
@@ -40,13 +53,13 @@ export const useFetch = (methodType: string, body: any, url: string) => {
         } catch (e: any){
             console.log(e);
             setIsLoading(false);
-            setError(e)
+            setError(e.message || "An error occurred while fetching data")
         }
     }
 
     useEffect(() => {
         apiFetchOnRender();
-    }, [])
+    }, [url, methodType, JSON.stringify(body)]) 
 
     const callApi = async() => {
         console.log("call Api for me");
@@ -60,15 +73,21 @@ export const useFetch = (methodType: string, body: any, url: string) => {
                 headers.Authorization = `Bearer ${token}`;
             }
 
-            const apiResponse = await fetch(url, {
+            const fetchOptions: RequestInit = {
                 method: methodType,
                 headers: headers,
-                // body:JSON.stringify(body)
-            });
+            };
+
+            // Add body for non-GET requests
+            if (body && methodType !== 'GET') {
+                fetchOptions.body = JSON.stringify(body);
+            }
+
+            const apiResponse = await fetch(url, fetchOptions);
 
             if (!apiResponse.ok) {
-                setError("Error loading Api")
-                throw new Error(`HTTP error! status: ${apiResponse.status}`);
+                const errorText = await apiResponse.text();
+                throw new Error(`HTTP error! status: ${apiResponse.status}, message: ${errorText}`);
             }
 
             const dataResponse = await apiResponse.json();
@@ -79,7 +98,8 @@ export const useFetch = (methodType: string, body: any, url: string) => {
         } catch (e: any){
             console.log(e);
             setIsLoading(false);
-            setError(e)
+            // Ensure error is a string, not an Error object
+            setError(e.message || "An error occurred while fetching data")
         }
     }
 

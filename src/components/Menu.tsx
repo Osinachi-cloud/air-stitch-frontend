@@ -40,7 +40,7 @@ const menuItems: MenuSection[] = [
         label: "Pending Reviews",
         href: "/pending-Review",
         visible: ["customer"],
-      }, // tailor-only?
+      },
       {
         icon: "/Heart.png",
         label: "Liked Items",
@@ -52,6 +52,12 @@ const menuItems: MenuSection[] = [
         label: "Cart",
         href: "/cart",
         visible: ["customer"],
+      },
+      {
+        icon: "/Bag.png",
+        label: "Cart",
+        href: "/cart",
+        visible: [ "tailor"],
       },
       {
         icon: "/folder.png",

@@ -1,8 +1,9 @@
 "use client";
 
 import { useAppSelector } from "@/redux/store";
+import { RootState } from "@/redux/store";
 import Image from "next/image";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useCallback } from "react";
 import { usePathname } from "next/navigation";
 
 /** Route -> Title map */
@@ -19,30 +20,37 @@ const ROUTE_TITLES: Record<string, string> = {
   "/list/settings": "Account Settings",
 };
 
-/** Fallback: prettify last URL segment */
-function titleFromPath(pathname: string) {
-  const seg =
-    pathname.split("?")[0].split("#")[0].split("/").filter(Boolean).pop() ?? "";
-  if (!seg) return "Overview";
-  return seg.replace(/-/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
-}
-
 const Navbar = () => {
-  const userDetails = useAppSelector((state) => state.authReducer.value);
+  const userDetails = useAppSelector((state) => state.auth.userDetails);
   const pathname = usePathname();
+  const titleFromPath = useCallback((pathname: string) => {
+    const seg =
+      pathname.split("?")[0].split("#")[0].split("/").filter(Boolean).pop() ??
+      "";
+
+    if (!seg) return "Overview";
+
+    return seg
+      .replace(/-/g, " ")
+      .replace(/\b\w/g, (m) => m.toUpperCase());
+  }, []);
+
+  /** Determine page title */
+  const pageTitle = useMemo(() => {
+    if (!pathname) return "Overview";
+
+    if (ROUTE_TITLES[pathname]) return ROUTE_TITLES[pathname];
+
+    const match = Object.keys(ROUTE_TITLES).find((k) =>
+      pathname.startsWith(k + "/")
+    );
+
+    return match ? ROUTE_TITLES[match] : titleFromPath(pathname);
+  }, [pathname, titleFromPath]);
 
   useEffect(() => {
     console.log(userDetails);
   }, [userDetails]);
-
-  const pageTitle = useMemo(() => {
-    if (!pathname) return "Overview";
-    if (ROUTE_TITLES[pathname]) return ROUTE_TITLES[pathname];
-    const match = Object.keys(ROUTE_TITLES).find((k) =>
-      pathname.startsWith(k + "/")
-    );
-    return match ? ROUTE_TITLES[match] : titleFromPath(pathname);
-  }, [pathname]);
 
   return (
     <div className="w-full">
@@ -75,12 +83,12 @@ const Navbar = () => {
       {/* Path display section */}
       <div className="flex items-center gap-2 px-6 py-2 bg-white text-gray-600 text-sm">
         <Image
-            src="/images/Home-Icon.png"
-            alt="Home"
-            width={20}
-            height={20}
-            className="rounded-md"
-          />
+          src="/images/Home-Icon.png"
+          alt="Home"
+          width={20}
+          height={20}
+          className="rounded-md"
+        />
         <span className="text-gray-500">/</span>
         <span className="text-blue-600 font-medium">{pageTitle}</span>
       </div>
