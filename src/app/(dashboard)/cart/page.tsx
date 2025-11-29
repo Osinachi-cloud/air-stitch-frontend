@@ -36,22 +36,6 @@ type PaymentRequest = {
     productCategoryName?: string;
 };
 
-// Custom hook for cart operations
-// const useCartOperations = () => {
-//   const { callApi: addToCart } = usePost("POST", null, `${baseUrL}/add-to-cart`);
-//   const { callApi: removeOneFromCart } = usePost("PUT", null, `${baseUrL}/delete-product-cart`);
-//   const { callApi: removeAllFromCart } = usePost("DELETE", null, `${baseUrL}/remove-all-product-from-cart`);
-//   const { callApi: addProductLike } = usePost("POST", null, `${baseUrL}/add-product-likes`);
-
-//   return {
-//     addToCart: (productId: string) => addToCart(), // Note: This won't work with current hook design
-//     removeOneFromCart: (productId: string) => removeOneFromCart(),
-//     removeAllFromCart: (productId: string) => removeAllFromCart(),
-//     addProductLike: (productId: string) => addProductLike(),
-//   };
-// };
-
-// === React / Next.js page component ===
 export default function CartPage() {
     const router = useRouter();
     const [isLoadingOrder, setIsLoadingOrder] = useState(false);
@@ -59,14 +43,9 @@ export default function CartPage() {
     const [selectedChannel, setSelectedChannel] = useState<string>("");
     const [pageRequest] = useState<PageRequest>({ page: 0, size: 30 });
 
-
     const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+    const token = getUserDetails()?.accessToken;
 
-    const token = getUserDetails()?.accessToken
-
-
-
-    // Use useFetch for cart data
     const {
         data: cartData,
         isLoading: cartLoading,
@@ -74,25 +53,17 @@ export default function CartPage() {
         callApi: fetchCart
     } = useFetch("GET", null, `${baseUrL}/get-cart?page=${pageRequest.page}&size=${pageRequest.size}`);
 
-    // Use useFetch for cart summary
     const {
         data: summaryData,
         isLoading: summaryLoading,
         callApi: fetchSummary
     } = useFetch("GET", null, `${baseUrL}/sum-amount-by-quantity-by-customerId`);
 
-    // For clear cart and payment - these don't need dynamic parameters
     const {
         callApi: clearCart,
         isLoading: clearCartLoading
     } = usePost("PUT", null, `${baseUrL}/clear-cart`, 'cart');
 
-    // const {
-    //     callApi: initializePayment,
-    //     isLoading: paymentLoading
-    // } = usePost("POST", null, `${baseUrL}/payments/initialize`);
-
-    // Refetch cart and summary when component mounts
     useEffect(() => {
         fetchCart();
         fetchSummary();
@@ -106,7 +77,6 @@ export default function CartPage() {
         }
     }, [cartData, summaryData]);
 
-    // Extract cart items with proper typing
     const cartItems: CartProduct[] = React.useMemo(() => {
         if (!cartData) return [];
         return cartData.data?.items || cartData.items || cartData.data || [];
@@ -114,10 +84,7 @@ export default function CartPage() {
 
     const isLoading = cartLoading || summaryLoading;
 
-    // Since we can't use hooks in handlers, let's use direct fetch for dynamic operations
-
     const handleAddCount = async (productId: string, color: string, sleeveType: string, measurementTag: string) => {
-
         try {
             await fetch(`${baseUrL}/add-product-cart-with-variation?productId=${productId}`, {
                 method: "POST",
@@ -128,7 +95,6 @@ export default function CartPage() {
                 credentials: "include",
                 body: JSON.stringify({ color, sleeveType, measurementTag })
             })
-
             await fetchCart();
             await fetchSummary();
         } catch (err) {
@@ -146,7 +112,6 @@ export default function CartPage() {
                 },
                 credentials: "include",
                 body: JSON.stringify({ color, sleeveType, measurementTag })
-
             });
             await fetchCart();
             await fetchSummary();
@@ -199,34 +164,32 @@ export default function CartPage() {
         }
     };
 
-      const goToOrderPage = async () => {
+    const goToOrderPage = async () => {
         if (!selectedChannel) {
-          errorToast("You have not selected any payment channel");
-          return;
+            errorToast("You have not selected any payment channel");
+            return;
         }
 
         if (cartItems.length === 0) {
-          errorToast("Your cart is empty");
-          return;
+            errorToast("Your cart is empty");
+            return;
         }
 
         const firstProduct = cartItems[0];
         const paymentRequest: PaymentRequest = {
-          amount: summaryData?.sum ,
-          channel: [selectedChannel],
-          quantity: firstProduct?.quantity,
-          productId: firstProduct?.productId,
-          vendorId: firstProduct?.vendorId,
-          email: firstProduct?.vendorId,
-          narration: "Great Product",
-          productCategoryName: firstProduct?.category,
+            amount: summaryData?.sum,
+            channel: [selectedChannel],
+            quantity: firstProduct?.quantity,
+            productId: firstProduct?.productId,
+            vendorId: firstProduct?.vendorId,
+            email: firstProduct?.vendorId,
+            narration: "Great Product",
+            productCategoryName: firstProduct?.category,
         };
 
         try {
-          setIsLoadingOrder(true);
-        //   const res = await initializePayment(paymentRequest);
-
-          const apiResponse = await fetch(`${baseUrL}/initialize-payment`, {
+            setIsLoadingOrder(true);
+            const apiResponse = await fetch(`${baseUrL}/initialize-payment`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -239,102 +202,104 @@ export default function CartPage() {
             let res: any = await apiResponse.json();
             const redirect = res?.data?.authorization_url;
             successToast(res.status && "Order initialized successfully");
-          if (redirect) {
-            window.location.href = redirect;
-            router.push(redirect);
-          } else {
-            console.warn("No authorizationUrl returned", res);
-            // successToast(res?.status || "Order initialized successfully");
-          }
+            if (redirect) {
+                window.location.href = redirect;
+                router.push(redirect);
+            } else {
+                console.warn("No authorizationUrl returned", res);
+            }
         } catch (err) {
-          console.error(err);
-          alert("Failed to initialize payment");
+            console.error(err);
+            alert("Failed to initialize payment");
         } finally {
-          setIsLoadingOrder(false);
+            setIsLoadingOrder(false);
         }
-      };
+    };
 
     return (
-        <div className="p-6 md:p-6">
-            <h1 className="text-4xl font-bold text-center mb-8">Shopping Cart</h1>
+        <div className="p-3 md:p-6 lg:p-8">
+            <h1 className="text-2xl md:text-4xl font-bold text-center mb-6 md:mb-8">Shopping Cart</h1>
 
             {isLoading ? (
                 <div className="flex items-center justify-center h-64">
                     <div className="w-6 h-6 border-4 border-dashed rounded-full animate-spin" />
                 </div>
             ) : (
-                <div className="grid md:grid-cols-3 gap-8">
-                    <div className="md:col-span-2 bg-white shadow-sm rounded">
-                        <table className="w-full text-sm text-gray-600">
+                <div className="flex flex-col lg:grid lg:grid-cols-3 gap-6 md:gap-8">
+                    {/* Cart Items - Mobile optimized */}
+                    <div className="lg:col-span-2 bg-white shadow-sm rounded-lg overflow-hidden">
+                        {/* Desktop Table */}
+                        <table className="hidden md:table w-full text-sm text-gray-600">
                             <thead className="uppercase text-xs text-gray-500 border-b">
                                 <tr>
                                     <th className="p-4 text-left">Product</th>
-                                    <th className="p-4">Price</th>
-                                    <th className="p-4">Quantity</th>
-                                    <th className="p-4">Total</th>
-                                    <th className="p-4">Action</th>
-                                    <th className="p-4">Tag</th>
+                                    <th className="p-4 text-center">Price</th>
+                                    <th className="p-4 text-center">Quantity</th>
+                                    <th className="p-4 text-center">Total</th>
+                                    <th className="p-4 text-center">Action</th>
+                                    <th className="p-4 text-center">Tag</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {cartItems.length > 0 ? cartItems.map((product: CartProduct) => (
-                                    <tr key={product.productId + product.measurementTag + product.sleeveType + product.color} className="hover:bg-gray-50">
+                                    <tr key={product.productId + product.measurementTag + product.sleeveType + product.color} className="hover:bg-gray-50 border-b">
                                         <td className="p-4 flex items-center gap-4">
-                                            <div className="w-24 h-24 bg-gray-100 flex items-center justify-center overflow-hidden">
+                                            <div className="w-16 h-16 md:w-20 md:h-20 bg-gray-100 flex items-center justify-center overflow-hidden rounded">
                                                 {product.productImage ? (
                                                     <img
                                                         src={product.productImage === null ? "/images/placeholder-product.png" : product.productImage}
                                                         alt={product.name}
-                                                        className="object-contain h-full rounded-4"
+                                                        className="object-contain h-full"
                                                     />
                                                 ) : (
                                                     <div className="text-xs text-gray-400">No image</div>
                                                 )}
                                             </div>
-                                            <div>{product.name}</div>
+                                            <div className="text-sm md:text-base">{product.name}</div>
                                         </td>
-                                        <td className="p-2">{formatNumberToNaira(product.price)}</td>
-                                        <td className="p-2">
+                                        <td className="p-2 text-center">{formatNumberToNaira(product.price)}</td>
+                                        <td className="p-2 text-center">
                                             <div className="inline-flex border rounded items-center">
                                                 <button
                                                     onClick={() => handleRemoveCount(product.productId, product.color, product.sleeveType, product.measurementTag)}
-                                                    className="p-2"
+                                                    className="p-1 md:p-2 w-8 h-8 flex items-center justify-center"
                                                 >
                                                     -
                                                 </button>
-                                                <div className="px-4">{product.quantity}</div>
+                                                <div className="px-2 md:px-4 text-sm md:text-base">{product.quantity}</div>
                                                 <button
                                                     onClick={() => handleAddCount(product.productId, product.color, product.sleeveType, product.measurementTag)}
-                                                    className="p-2"
+                                                    className="p-1 md:p-2 w-8 h-8 flex items-center justify-center"
                                                 >
                                                     +
                                                 </button>
                                             </div>
                                         </td>
-                                        <td className="p-2">{formatNumberToNaira(product.amountByQuantity ?? product.amount * product.quantity)}</td>
-                                        <td className="p-2">
-                                            <div className="flex gap-3">
+                                        <td className="p-2 text-center">{formatNumberToNaira(product.amountByQuantity ?? product.amount * product.quantity)}</td>
+                                        <td className="p-2 text-center">
+                                            <div className="flex gap-2 justify-center">
                                                 <button
                                                     onClick={() => handleAddProductLikes(product.productId)}
-                                                    className={`p-2 text-[white] rounded-[4px] h-50px w-50px`}
+                                                    className={`p-2 text-white rounded text-xs h-8 w-8 flex items-center justify-center`}
                                                     style={{ backgroundColor: product.color }}
+                                                    title="Add to favorites"
                                                 >
-                                                    {/* ❤️ */}
-                                                    {product.sleeveType}
+                                                    ❤️
                                                 </button>
                                                 <button
                                                     onClick={() => handleRemoveProduct(product.productId, product.color, product.sleeveType, product.measurementTag)}
-                                                    className="p-2"
+                                                    className="p-2 text-red-500 hover:bg-red-50 rounded"
+                                                    title="Remove item"
                                                 >
                                                     ✖
                                                 </button>
                                             </div>
                                         </td>
-                                        <td className="p-2">{product.measurementTag}</td>
+                                        <td className="p-2 text-center text-xs md:text-sm">{product.measurementTag}</td>
                                     </tr>
                                 )) : (
                                     <tr>
-                                        <td colSpan={5} className="p-4 text-center">
+                                        <td colSpan={6} className="p-8 text-center text-gray-500">
                                             Your cart is empty
                                         </td>
                                     </tr>
@@ -342,17 +307,99 @@ export default function CartPage() {
                             </tbody>
                         </table>
 
+                        {/* Mobile Card View */}
+                        <div className="md:hidden space-y-4 p-4">
+                            {cartItems.length > 0 ? cartItems.map((product: CartProduct) => (
+                                <div key={product.productId + product.measurementTag + product.sleeveType + product.color} className="bg-white border rounded-lg p-4 shadow-sm">
+                                    <div className="flex justify-between items-start mb-3">
+                                        <div className="flex items-center gap-3 flex-1">
+                                            <div className="w-16 h-16 bg-gray-100 flex items-center justify-center overflow-hidden rounded">
+                                                {product.productImage ? (
+                                                    <img
+                                                        src={product.productImage === null ? "/images/placeholder-product.png" : product.productImage}
+                                                        alt={product.name}
+                                                        className="object-contain h-full"
+                                                    />
+                                                ) : (
+                                                    <div className="text-xs text-gray-400">No image</div>
+                                                )}
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="font-medium text-sm line-clamp-2">{product.name}</h3>
+                                                <p className="text-green-600 font-semibold text-sm mt-1">
+                                                    {formatNumberToNaira(product.price)}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => handleRemoveProduct(product.productId, product.color, product.sleeveType, product.measurementTag)}
+                                            className="text-red-500 p-1"
+                                        >
+                                            ✖
+                                        </button>
+                                    </div>
+
+                                    <div className="flex justify-between items-center mb-3">
+                                        <span className="text-xs text-gray-500">Quantity:</span>
+                                        <div className="inline-flex border rounded items-center">
+                                            <button
+                                                onClick={() => handleRemoveCount(product.productId, product.color, product.sleeveType, product.measurementTag)}
+                                                className="p-2 w-8 h-8 flex items-center justify-center"
+                                            >
+                                                -
+                                            </button>
+                                            <div className="px-3 text-sm font-medium">{product.quantity}</div>
+                                            <button
+                                                onClick={() => handleAddCount(product.productId, product.color, product.sleeveType, product.measurementTag)}
+                                                className="p-2 w-8 h-8 flex items-center justify-center"
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex justify-between items-center mb-3">
+                                        <span className="text-xs text-gray-500">Total:</span>
+                                        <span className="font-semibold text-sm">
+                                            {formatNumberToNaira(product.amountByQuantity ?? product.amount * product.quantity)}
+                                        </span>
+                                    </div>
+
+                                    <div className="flex justify-between items-center">
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-xs text-gray-500">Tag:</span>
+                                            <span className="text-xs font-medium bg-gray-100 px-2 py-1 rounded">
+                                                {product.measurementTag}
+                                            </span>
+                                        </div>
+                                        <button
+                                            onClick={() => handleAddProductLikes(product.productId)}
+                                            className={`p-2 text-white rounded text-xs h-8 w-8 flex items-center justify-center`}
+                                            style={{ backgroundColor: product.color }}
+                                            title="Add to favorites"
+                                        >
+                                            ❤️
+                                        </button>
+                                    </div>
+                                </div>
+                            )) : (
+                                <div className="text-center text-gray-500 py-8">
+                                    Your cart is empty
+                                </div>
+                            )}
+                        </div>
+
                         {cartItems.length > 0 && (
-                            <div className="flex justify-between p-4 border-t">
+                            <div className="flex flex-col sm:flex-row justify-between p-4 border-t gap-3">
                                 <button
                                     onClick={() => router.push("/")}
-                                    className="px-4 py-2 bg-gray-100 rounded uppercase text-xs font-medium"
+                                    className="px-4 py-3 bg-gray-100 rounded uppercase text-xs font-medium hover:bg-gray-200 transition-colors"
                                 >
                                     Continue shopping
                                 </button>
                                 <button
                                     onClick={handleClearCart}
-                                    className="px-4 py-2 bg-gray-100 rounded uppercase text-xs font-medium"
+                                    className="px-4 py-3 bg-gray-100 rounded uppercase text-xs font-medium hover:bg-gray-200 transition-colors"
                                     disabled={clearCartLoading}
                                 >
                                     {clearCartLoading ? "Clearing..." : "Clear shopping cart"}
@@ -361,73 +408,93 @@ export default function CartPage() {
                         )}
                     </div>
 
+                    {/* Order Summary - Mobile optimized */}
                     <aside className="space-y-6">
-                        <div className="p-4 bg-gray-50 border rounded">
-                            <h2 className="text-lg font-semibold mb-2">Apply Discount Code</h2>
-                            <input className="w-full p-2 border rounded" placeholder="Enter discount code" />
+                        <div className="p-4 bg-gray-50 border rounded-lg">
+                            <h2 className="text-lg font-semibold mb-3">Apply Discount Code</h2>
+                            <div className="flex gap-2">
+                                <input 
+                                    className="flex-1 p-3 border rounded text-sm" 
+                                    placeholder="Enter discount code" 
+                                />
+                                <button className="px-2 py-3 bg-black text-white rounded text-[12px] font-medium hover:bg-gray-800 transition-colors">
+                                    Apply
+                                </button>
+                            </div>
                         </div>
 
-                        <div className="p-4 bg-gray-50 border rounded">
-                            <div className="flex justify-between text-lg font-semibold">
-                                <div>Subtotal</div>
-                                {/* <div>{summaryData?.sum}</div> */}
-                                {formatNumberToNaira(summaryData?.sum)}
-                            </div>
-                            <div className="flex justify-between text-sm text-gray-500 mt-2">
-                                <div>Tax</div>
-                                <div>0.00</div>
-                            </div>
-                            <div className="flex justify-between text-lg font-semibold mt-2">
-                                <div>Order Total</div>
-                                <div>{sumCartAmount}</div>
-                            </div>
-
-                            <form className="mt-4 space-y-2">
-                                <label className="flex items-center gap-2">
-                                    <input
-                                        type="radio"
-                                        name="channel"
-                                        value="card"
-                                        checked={selectedChannel === "card"}
-                                        onChange={(e) => setSelectedChannel(e.target.value)}
-                                    />
-                                    <span className="ml-1">CARD</span>
-                                </label>
-                                <label className="flex items-center gap-2">
-                                    <input
-                                        type="radio"
-                                        name="channel"
-                                        value="ussd"
-                                        checked={selectedChannel === "ussd"}
-                                        onChange={(e) => setSelectedChannel(e.target.value)}
-                                    />
-                                    <span className="ml-1">USSD</span>
-                                </label>
-                                <label className="flex items-center gap-2">
-                                    <input
-                                        type="radio"
-                                        name="channel"
-                                        value="transfer"
-                                        checked={selectedChannel === "transfer"}
-                                        onChange={(e) => setSelectedChannel(e.target.value)}
-                                    />
-                                    <span className="ml-1">Transfer</span>
-                                </label>
-
-                                <div className="text-center text-xs uppercase text-gray-400 border-t pt-4">
-                                    Check out with a different address
+                        <div className="p-4 bg-gray-50 border rounded-lg">
+                            <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
+                            
+                            <div className="space-y-3">
+                                <div className="flex justify-between items-center">
+                                    <div className="text-gray-600">Subtotal</div>
+                                    <div className="font-semibold">{formatNumberToNaira(summaryData?.sum)}</div>
                                 </div>
+                                <div className="flex justify-between items-center text-sm">
+                                    <div className="text-gray-500">Tax</div>
+                                    <div className="text-gray-500">0.00</div>
+                                </div>
+                                <div className="flex justify-between items-center pt-3 border-t">
+                                    <div className="text-lg font-semibold">Order Total</div>
+                                    <div className="text-lg font-semibold text-green-600">
+                                        {formatNumberToNaira(sumCartAmount)}
+                                    </div>
+                                </div>
+                            </div>
 
-                                <button
-                                    type="button"
-                                    disabled={isLoadingOrder || cartItems.length === 0}
-                                      onClick={goToOrderPage} 
-                                    className="w-full mt-4 py-3 bg-black text-white rounded flex items-center justify-center gap-3 disabled:bg-gray-400 disabled:cursor-not-allowed"
-                                >
-                                    <span>Proceed to checkout</span>
-                                    {isLoadingOrder && <span className="w-4 h-4 border-2 border-white rounded-full animate-spin" />}
-                                </button>
-                            </form>
+                            <div className="mt-6">
+                                <h3 className="font-semibold mb-3">Payment Method</h3>
+                                <div className="space-y-2">
+                                    <label className="flex items-center gap-3 p-3 border rounded hover:bg-gray-50 cursor-pointer">
+                                        <input
+                                            type="radio"
+                                            name="channel"
+                                            value="card"
+                                            checked={selectedChannel === "card"}
+                                            onChange={(e) => setSelectedChannel(e.target.value)}
+                                            className="w-4 h-4"
+                                        />
+                                        <span>Credit/Debit Card</span>
+                                    </label>
+                                    <label className="flex items-center gap-3 p-3 border rounded hover:bg-gray-50 cursor-pointer">
+                                        <input
+                                            type="radio"
+                                            name="channel"
+                                            value="ussd"
+                                            checked={selectedChannel === "ussd"}
+                                            onChange={(e) => setSelectedChannel(e.target.value)}
+                                            className="w-4 h-4"
+                                        />
+                                        <span>USSD</span>
+                                    </label>
+                                    <label className="flex items-center gap-3 p-3 border rounded hover:bg-gray-50 cursor-pointer">
+                                        <input
+                                            type="radio"
+                                            name="channel"
+                                            value="transfer"
+                                            checked={selectedChannel === "transfer"}
+                                            onChange={(e) => setSelectedChannel(e.target.value)}
+                                            className="w-4 h-4"
+                                        />
+                                        <span>Bank Transfer</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div className="text-center text-xs uppercase text-gray-400 border-t pt-4 mt-4">
+                                Check out with a different address
+                            </div>
+
+                            <button
+                                type="button"
+                                disabled={isLoadingOrder || cartItems.length === 0}
+                                onClick={goToOrderPage}
+                                className="w-full mt-4 py-4 bg-black text-white rounded-lg flex items-center justify-center gap-3 disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-gray-800 transition-colors font-medium"
+                            >
+                                <span>Proceed to checkout</span>
+                                {isLoadingOrder && <span className="w-4 h-4 border-2 border-white rounded-full animate-spin" />}
+                            </button>
                         </div>
                     </aside>
                 </div>
