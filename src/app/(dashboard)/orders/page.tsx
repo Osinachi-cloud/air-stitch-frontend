@@ -76,10 +76,10 @@ const Orders = () => {
     if (!customersOrder?.total || !productOrderRequest?.size) {
       return 1; // Default to 1 page if data is not available
     }
-    
+
     const total = customersOrder.total;
     const size = productOrderRequest.size;
-    
+
     if (total % size === 0) {
       return total / size;
     } else {
@@ -201,13 +201,16 @@ const Orders = () => {
             </div>
           </div>
           <div>
-            <div className="bg-gray-500 w-8 h-8 md:w-10 md:h-10 flex justify-center items-center rounded-full">
+            {/* <div className="bg-gray-500 w-8 h-8 md:w-10 md:h-10 flex justify-center items-center rounded-full">
               <span className="text-white text-sm md:text-base">⏰</span>
+            </div> */}
+            <div className="bg-[#519C66] w-8 h-8 md:w-10 md:h-10 flex justify-center items-center rounded-full">
+              <span className="text-white text-sm md:text-base">✓</span>
             </div>
           </div>
         </div>
 
-        <div
+        {/* <div
           onClick={() => filterByStatus(Status.rejected)}
           className="cursor-pointer flex justify-between bg-white rounded-xl p-4 md:p-6 gap-4 hover:bg-[#dddfdf] transition-colors"
         >
@@ -222,7 +225,7 @@ const Orders = () => {
               <span className="text-white text-sm md:text-base">✕</span>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div
           onClick={() => filterByStatus(Status.failed)}
@@ -235,13 +238,18 @@ const Orders = () => {
             </div>
           </div>
           <div>
-            <div className="bg-[#2148C0] w-8 h-8 md:w-10 md:h-10 flex justify-center items-center rounded-full">
+            {/* <div className="bg-[#2148C0] w-8 h-8 md:w-10 md:h-10 flex justify-center items-center rounded-full">
               <span className="text-white text-sm md:text-base">🔄</span>
+            </div> */}
+            <div>
+              <div className="bg-[#CC5F5F] w-8 h-8 md:w-10 md:h-10 flex justify-center items-center rounded-full">
+                <span className="text-white text-sm md:text-base">✕</span>
+              </div>
             </div>
           </div>
         </div>
 
-        <div
+        {/* <div
           onClick={() => filterByStatus(Status.completed)}
           className="cursor-pointer flex justify-between bg-white rounded-xl p-4 md:p-6 gap-4 hover:bg-[#dddfdf] transition-colors"
         >
@@ -256,7 +264,7 @@ const Orders = () => {
               <span className="text-white text-sm md:text-base">✓</span>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Orders Table */}
@@ -328,7 +336,7 @@ const Orders = () => {
 
                     <td className="px-4 py-3 md:py-4 md:px-6 flex items-center gap-2 md:table-cell whitespace-normal text-gray-900">
                       <span className="md:hidden text-xs font-bold text-gray-500 whitespace-nowrap">PRODUCT:</span>
-                      <span>{order.productName}</span>
+                      <span>{order.productName || "Product Name"}</span>
                     </td>
 
                     <td className="px-4 py-3 md:py-4 md:px-6 flex items-center gap-2 md:table-cell whitespace-normal text-gray-900">

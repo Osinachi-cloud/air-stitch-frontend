@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 
 
-export const usePost = (methodType: string, body: any, url: string, route:string) => {
+export const usePost = (methodType: string, body: any, url: string, route:string | null) => {
     const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
 
     console.log(methodType, body, url);
@@ -55,7 +55,9 @@ export const usePost = (methodType: string, body: any, url: string, route:string
             setData(dataResponse?.message);
             setIsLoading(false);
             console.log(dataResponse);
-            router.push(`/${route}`)
+            if(route !== null && route !== undefined){
+                router.push(`/${route}`)
+            }
 
         } catch (e: any) {
             console.log(e.message);

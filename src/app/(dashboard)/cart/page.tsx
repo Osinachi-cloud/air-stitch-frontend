@@ -25,25 +25,13 @@ type CartProduct = {
     price: number;
 };
 
-type PaymentRequest = {
-    amount: number;
-    channel: string[];
-    quantity?: number;
-    productId?: string;
-    vendorId?: string;
-    email?: string;
-    narration?: string;
-    productCategoryName?: string;
-};
-
 export default function CartPage() {
     const router = useRouter();
-    const [isLoadingOrder, setIsLoadingOrder] = useState(false);
     const [sumCartAmount, setSumCartAmount] = useState<number>(0);
     const [selectedChannel, setSelectedChannel] = useState<string>("");
     const [pageRequest] = useState<PageRequest>({ page: 0, size: 30 });
 
-    const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+    const { value, getUserDetails } = useLocalStorage("userDetails", null);
     const token = getUserDetails()?.accessToken;
 
     const {
@@ -62,7 +50,7 @@ export default function CartPage() {
     const {
         callApi: clearCart,
         isLoading: clearCartLoading
-    } = usePost("PUT", null, `${baseUrL}/clear-cart`, 'cart');
+    } = usePost("PUT", null, `${baseUrL}/clear-cart`, null);
 
     useEffect(() => {
         fetchCart();
@@ -164,56 +152,14 @@ export default function CartPage() {
         }
     };
 
-    const goToOrderPage = async () => {
-        if (!selectedChannel) {
-            errorToast("You have not selected any payment channel");
-            return;
-        }
-
+    const handleProceedToCheckout = () => {
         if (cartItems.length === 0) {
             errorToast("Your cart is empty");
             return;
         }
 
-        const firstProduct = cartItems[0];
-        const paymentRequest: PaymentRequest = {
-            amount: summaryData?.sum,
-            channel: [selectedChannel],
-            quantity: firstProduct?.quantity,
-            productId: firstProduct?.productId,
-            vendorId: firstProduct?.vendorId,
-            email: firstProduct?.vendorId,
-            narration: "Great Product",
-            productCategoryName: firstProduct?.category,
-        };
-
-        try {
-            setIsLoadingOrder(true);
-            const apiResponse = await fetch(`${baseUrL}/initialize-payment`, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                credentials: "include",
-                body: JSON.stringify(paymentRequest)
-            })
-
-            let res: any = await apiResponse.json();
-            const redirect = res?.data?.authorization_url;
-            successToast(res.status && "Order initialized successfully");
-            if (redirect) {
-                window.location.href = redirect;
-                router.push(redirect);
-            } else {
-                console.warn("No authorizationUrl returned", res);
-            }
-        } catch (err) {
-            console.error(err);
-            alert("Failed to initialize payment");
-        } finally {
-            setIsLoadingOrder(false);
-        }
+        // Navigate to order request page
+        router.push("/order-request");
     };
 
     return (
@@ -443,57 +389,13 @@ export default function CartPage() {
                                 </div>
                             </div>
 
-                            <div className="mt-6">
-                                <h3 className="font-semibold mb-3">Payment Method</h3>
-                                <div className="space-y-2">
-                                    <label className="flex items-center gap-3 p-3 border rounded hover:bg-gray-50 cursor-pointer">
-                                        <input
-                                            type="radio"
-                                            name="channel"
-                                            value="card"
-                                            checked={selectedChannel === "card"}
-                                            onChange={(e) => setSelectedChannel(e.target.value)}
-                                            className="w-4 h-4"
-                                        />
-                                        <span>Credit/Debit Card</span>
-                                    </label>
-                                    <label className="flex items-center gap-3 p-3 border rounded hover:bg-gray-50 cursor-pointer">
-                                        <input
-                                            type="radio"
-                                            name="channel"
-                                            value="ussd"
-                                            checked={selectedChannel === "ussd"}
-                                            onChange={(e) => setSelectedChannel(e.target.value)}
-                                            className="w-4 h-4"
-                                        />
-                                        <span>USSD</span>
-                                    </label>
-                                    <label className="flex items-center gap-3 p-3 border rounded hover:bg-gray-50 cursor-pointer">
-                                        <input
-                                            type="radio"
-                                            name="channel"
-                                            value="transfer"
-                                            checked={selectedChannel === "transfer"}
-                                            onChange={(e) => setSelectedChannel(e.target.value)}
-                                            className="w-4 h-4"
-                                        />
-                                        <span>Bank Transfer</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div className="text-center text-xs uppercase text-gray-400 border-t pt-4 mt-4">
-                                Check out with a different address
-                            </div>
-
                             <button
                                 type="button"
-                                disabled={isLoadingOrder || cartItems.length === 0}
-                                onClick={goToOrderPage}
+                                disabled={cartItems.length === 0}
+                                onClick={handleProceedToCheckout}
                                 className="w-full mt-4 py-4 bg-black text-white rounded-lg flex items-center justify-center gap-3 disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-gray-800 transition-colors font-medium"
                             >
                                 <span>Proceed to checkout</span>
-                                {isLoadingOrder && <span className="w-4 h-4 border-2 border-white rounded-full animate-spin" />}
                             </button>
                         </div>
                     </aside>

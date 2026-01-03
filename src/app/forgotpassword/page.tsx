@@ -8,7 +8,6 @@ import { AppDispatch } from '@/stores/store';
 import { errorToast, successToast } from '@/hooks/UseToast';
 import 'react-toastify/dist/ReactToastify.css';
 import './page.css';
-import { useFetch } from '@/hooks/useFetch'
 
 type ForgotPasswordPageForm = {
   email: string;
@@ -18,7 +17,6 @@ type ForgotPasswordPageForm = {
 }
 
 const ForgotPasswordPage = () => {
-
   const initialState: ForgotPasswordPageForm = {
     email: "",
     resetCode: "",
@@ -30,21 +28,22 @@ const ForgotPasswordPage = () => {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   
   const loginUrl = `${baseUrL}/request-password-reset`;
   const confirmRequestUrl = `${baseUrL}/validate-reset-code`;
   const router = useRouter();
 
-  const { data: loginResponseData, isLoading, setIsLoading, callApi } = useFetch('POST', authDetails, loginUrl);
-  console.log(loginResponseData);
-  errorToast(loginResponseData?.message);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    handlePost();
-    console.log({ loginResponseData });
-    console.log('Form values', authDetails);
+    
+    if (!isFormValid()) {
+      errorToast("Please fill in all required fields correctly");
+      return;
+    }
+
+    await handlePost();
   }
 
   const handleTogglePasswordVisibility = () => {
@@ -94,7 +93,7 @@ const ForgotPasswordPage = () => {
         body: JSON.stringify(requestBody)
       })
 
-      let apiResponseData: any = await apiResponse.json();
+      const apiResponseData = await apiResponse.json();
       console.log(apiResponseData);
       setIsLoading(false);
 
@@ -109,11 +108,11 @@ const ForgotPasswordPage = () => {
           router.push('/login'); // Redirect to login page
         }
       } else {
-        errorToast(apiResponseData.error || 'Something went wrong');
+        errorToast(apiResponseData.error || apiResponseData.message || 'Something went wrong');
       }
 
     } catch (e) {
-      console.log(e);
+      console.error(e);
       setIsLoading(false);
       errorToast("Error processing request");
     }
@@ -179,6 +178,7 @@ const ForgotPasswordPage = () => {
                 onChange={handleChange}
                 placeholder="Email Address"
                 required
+                disabled={isLoading}
               />
             </div>
           </div>
@@ -199,6 +199,7 @@ const ForgotPasswordPage = () => {
                   onChange={handleChange}
                   placeholder="Enter OTP"
                   required
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -221,11 +222,13 @@ const ForgotPasswordPage = () => {
                     onChange={handleChange}
                     placeholder="New Password"
                     required
+                    disabled={isLoading}
                   />
                   <button
                     type="button"
                     onClick={handleTogglePasswordVisibility}
                     className="px-3 text-gray-600"
+                    disabled={isLoading}
                   >
                     {isPasswordVisible ? 'Hide' : 'Show'}
                   </button>
@@ -246,11 +249,13 @@ const ForgotPasswordPage = () => {
                     onChange={handleChange}
                     placeholder="Confirm Password"
                     required
+                    disabled={isLoading}
                   />
                   <button
                     type="button"
                     onClick={handleToggleConfirmPasswordVisibility}
                     className="px-3 text-gray-600"
+                    disabled={isLoading}
                   >
                     {isConfirmPasswordVisible ? 'Hide' : 'Show'}
                   </button>

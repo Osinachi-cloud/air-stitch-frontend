@@ -20,6 +20,12 @@ const menuItems = [
       },
       {
         icon: "/Bag.png",
+        label: "Vendors Orders",
+        href: "/vendors-order",
+        visible: ["admin", "teacher"],
+      },
+      {
+        icon: "/Bag.png",
         label: "Cart",
         href: "/cart",
         visible: ["admin", "teacher"],
@@ -81,7 +87,7 @@ const Menu = () => {
                 >
                   <Image src={item.icon} alt="" width={20} height={20} />
                   {/* <i className= {`${item.icon} `}></i> */}
-                  <i className= {`fa fa-user`}></i>
+                  <i className={`fa fa-user`}></i>
                   <span className="hidden lg:block">{item.label}</span>
                 </Link>
               );
