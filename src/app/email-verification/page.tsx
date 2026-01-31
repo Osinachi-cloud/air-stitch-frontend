@@ -8,7 +8,6 @@ import { AppDispatch } from '@/stores/store';
 import { errorToast } from '@/hooks/UseToast';
 import 'react-toastify/dist/ReactToastify.css';
 import './page.css';
-import { useFetch } from '@/hooks/useFetch'
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useAppSelector } from '@/redux/store';
 
@@ -17,37 +16,26 @@ type EmailVerificationForm = {
 }
 
 const EmailVerificationPage = () => {
-
   const initialState: EmailVerificationForm = {
     email: ""
   };
 
   const [authDetails, setAuthDetails] = useState(initialState);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const loginUrl = `${baseUrL}/verify-email`;
   const router = useRouter();
   
   const { setValue: saveEmailToStorage } = useLocalStorage<string>('email');
-
   const token = useAppSelector((state) => state.auth.userDetails).access_token;
 
   console.log("token ------> ",{token});
 
-  const { data: loginResponseData, isLoading, setIsLoading, callApi } = useFetch('POST', authDetails, loginUrl);
-  console.log(loginResponseData);
-  errorToast(loginResponseData?.message);
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handlePost();
-    console.log({ loginResponseData });
     console.log('Form values', authDetails);
   }
-
-  const handleTogglePasswordVisibility = () => {
-    setIsPasswordVisible((prev) => !prev);
-  };
 
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const value = evt.target.value;
@@ -68,7 +56,7 @@ const EmailVerificationPage = () => {
         body: JSON.stringify(authDetails)
       })
 
-      let apiResponseData: any = await apiResponse.json();
+      const apiResponseData = await apiResponse.json();
       console.log(apiResponseData);
       setIsLoading(false);
 
@@ -77,7 +65,7 @@ const EmailVerificationPage = () => {
         saveEmailToStorage(authDetails.email);
         console.log('Email saved to localStorage:', authDetails.email);
         
-        router.push('/login');
+        router.push('/signup');
       } else {
         errorToast(apiResponseData.message);
       }
@@ -85,7 +73,7 @@ const EmailVerificationPage = () => {
     } catch (e) {
       console.log(e);
       setIsLoading(false);
-      errorToast("Error login in");
+      errorToast("Error verifying email");
     }
   }
 
@@ -126,7 +114,7 @@ const EmailVerificationPage = () => {
               disabled={isLoading || !authDetails.email}
               className="w-full flex justify-center gap-6 text-white bg-[#37393f] focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-3.5 text-center disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
-              <span>Sign In</span>
+              <span>Verify Email</span>
               {
                 isLoading && <span className="spinner"></span>
               }

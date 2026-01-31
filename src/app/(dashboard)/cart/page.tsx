@@ -384,7 +384,8 @@ export default function CartPage() {
                                 <div className="flex justify-between items-center pt-3 border-t">
                                     <div className="text-lg font-semibold">Order Total</div>
                                     <div className="text-lg font-semibold text-green-600">
-                                        {formatNumberToNaira(sumCartAmount)}
+                                        {/* {formatNumberToNaira(sumCartAmount)} */}
+                                        {formatNumberToNaira(summaryData?.sum)}
                                     </div>
                                 </div>
                             </div>

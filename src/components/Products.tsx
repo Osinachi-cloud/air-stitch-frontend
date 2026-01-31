@@ -108,7 +108,7 @@ export const Products: React.FC = () => {
     id: product.productId,
     title: product.name,
     description: product.shortDescription,
-    price: `₦${(product.sellingPrice || product.price)?.toLocaleString() || '0'}`,
+    price: `₦${(product.price || product.price)?.toLocaleString() || '0'}`,
     image: product.productImage || "/images/placeholder-product.png",
     productId: product.productId,
   }));

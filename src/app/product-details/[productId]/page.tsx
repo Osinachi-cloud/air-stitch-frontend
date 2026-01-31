@@ -70,7 +70,7 @@ const ProductDetails = () => {
   const productId = params.productId as string;
 
   const [quantity, setQuantity] = useState(1);
-  const [selectedColor, setSelectedColor] = useState("black");
+  const [selectedColor, setSelectedColor] = useState("");
   const [measurement, setMeasurement] = useState("");
   const [sleeveType, setSleeveType] = useState<string>();
 

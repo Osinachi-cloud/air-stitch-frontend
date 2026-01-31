@@ -110,10 +110,10 @@ export default function OrderSummaryPage() {
     const grandTotal = subtotal + shippingCost;
 
     const handleInitializePayment = async () => {
-        if (!selectedChannel) {
-            errorToast("Please select a payment method");
-            return;
-        }
+        // if (!selectedChannel) {
+        //     errorToast("Please select a payment method");
+        //     return;
+        // }
 
         if (!orderRequest?.addressId) {
             errorToast("No address selected");
@@ -320,7 +320,7 @@ export default function OrderSummaryPage() {
                         </section>
 
                         {/* Payment Method Selection */}
-                        <section className="rounded-lg bg-white p-6 shadow-sm">
+                        {/* <section className="rounded-lg bg-white p-6 shadow-sm">
                             <h2 className="text-lg font-semibold mb-4">Select Payment Method</h2>
                             <div className="space-y-3">
                                 <label className="flex items-center gap-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
@@ -366,7 +366,7 @@ export default function OrderSummaryPage() {
                                     </div>
                                 </label>
                             </div>
-                        </section>
+                        </section> */}
                     </div>
 
                     {/* Right Column - Order Summary & Payment */}
@@ -393,7 +393,7 @@ export default function OrderSummaryPage() {
 
                             <button
                                 onClick={handleInitializePayment}
-                                disabled={isLoadingPayment || cartItems.length === 0 || !selectedChannel}
+                                disabled={isLoadingPayment || cartItems.length === 0 }
                                 className="w-full mt-6 py-4 bg-black text-white rounded-lg disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-gray-800 transition-colors font-medium flex items-center justify-center gap-3"
                             >
                                 {isLoadingPayment ? (
