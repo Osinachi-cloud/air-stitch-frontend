@@ -51,8 +51,6 @@ export default function CheckoutPage() {
     const [deliveryInstructions, setDeliveryInstructions] = useState<string>("");
     const [shippingMethod, setShippingMethod] = useState<string>("standard");
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [cartItems, setCartItems] = useState<CartProduct[]>([]);
-    const [totalAmount, setTotalAmount] = useState<number>(0);
     
     // New address form state
     const [newAddress, setNewAddress] = useState({
@@ -90,37 +88,6 @@ export default function CheckoutPage() {
         isLoading: summaryLoading,
         callApi: fetchSummary
     } = useFetch("GET", null, `${baseUrL}/sum-amount-by-quantity-by-customerId`);
-
-    useEffect(() => {
-        fetchAddresses();
-        fetchCart();
-        fetchSummary();
-    }, []);
-
-    useEffect(() => {
-        if (cartData) {
-            const items = 
-                cartData.data?.items || 
-                cartData.items || 
-                cartData.data || 
-                cartData || 
-                [];
-            
-            setCartItems(items);
-        }
-        
-        if (summaryData) {
-            const total = 
-                summaryData.total ||
-                summaryData.sum ||
-                summaryData.data?.total ||
-                summaryData.data?.sum ||
-                summaryData?.data ||
-                0;
-            
-            setTotalAmount(total);
-        }
-    }, [cartData, summaryData]);
 
     const addresses: Address[] = addressesData?.data || addressesData || [];
 
@@ -203,8 +170,8 @@ export default function CheckoutPage() {
                 addressId,
                 shippingMethod,
                 deliveryInstructions,
-                cartItems,
-                totalAmount: calculateTotalFromItems()
+                cartItems: cartData.data,
+                totalAmount: summaryData.sum
             };
 
             // Store order request in localStorage for order summary page
@@ -310,16 +277,6 @@ export default function CheckoutPage() {
 
     const calculateItemTotal = (item: CartProduct) => {
         return item.amountByQuantity || (item.amount * item.quantity);
-    };
-
-    const calculateTotalFromItems = () => {
-        if (totalAmount > 0) return totalAmount;
-        
-        const calculated = cartItems.reduce((sum, item) => {
-            return sum + calculateItemTotal(item);
-        }, 0);
-        
-        return calculated;
     };
 
     const isLoadingOverall = addressesLoading || cartLoading || summaryLoading;
@@ -555,7 +512,7 @@ export default function CheckoutPage() {
                         <section className="col-span-3 rounded-lg bg-[#f9f9f9] p-5 shadow-sm">
                             <h2 className="mb-4 text-sm font-semibold">Order Summary</h2>
 
-                            {cartItems.length === 0 ? (
+                            {cartData?.data?.length === 0 ? (
                                 <div className="text-center py-8">
                                     <p className="text-gray-500">Your cart is empty</p>
                                     <button
@@ -575,7 +532,7 @@ export default function CheckoutPage() {
                                     </div>
 
                                     {/* Cart Items */}
-                                    {cartItems.map((product) => (
+                                    {cartData?.data && cartData?.data?.map((product:any) => (
                                         <div key={`${product.productId}-${product.measurementTag}-${product.sleeveType}-${product.color}`} 
                                              className="mb-4 grid grid-cols-1 gap-4 border-t pt-4 md:grid-cols-4 md:items-center">
                                             <div className="flex gap-3 md:col-span-2">
@@ -636,7 +593,7 @@ export default function CheckoutPage() {
                                         <div className="space-y-2">
                                             <div className="flex justify-between items-center">
                                                 <span className="text-sm text-gray-600">Subtotal:</span>
-                                                <span className="font-semibold">{formatNumberToNaira(calculateTotalFromItems())}</span>
+                                                <span className="font-semibold">{formatNumberToNaira(summaryData?.sum)}</span>
                                             </div>
                                             <div className="flex justify-between items-center">
                                                 <span className="text-sm text-gray-600">Shipping:</span>
@@ -647,12 +604,12 @@ export default function CheckoutPage() {
                                             <div className="flex justify-between items-center pt-2 border-t">
                                                 <span className="text-sm font-medium">Total:</span>
                                                 <span className="text-lg font-bold">
-                                                    {formatNumberToNaira(calculateTotalFromItems() + (shippingMethod === "express" ? 5000 : 2000))}
+                                                    {formatNumberToNaira(summaryData?.sum + (shippingMethod === "express" ? 5000 : 2000))}
                                                 </span>
                                             </div>
                                             <div className="flex justify-between items-center">
                                                 <span className="text-sm text-gray-600">Items:</span>
-                                                <span className="text-sm">{cartItems.length} item{cartItems.length !== 1 ? 's' : ''}</span>
+                                                <span className="text-sm">{cartData?.data?.length} item{cartData?.data?.length !== 1 ? 's' : ''}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -679,7 +636,7 @@ export default function CheckoutPage() {
                                     <button
                                         type="button"
                                         onClick={handleProceedToReview}
-                                        disabled={isLoading || (!selectedAddress && !showNewAddress) || cartItems.length === 0}
+                                        disabled={isLoading || (!selectedAddress && !showNewAddress) || cartData?.data?.length === 0}
                                         className="w-full mt-6 py-3 bg-black text-white rounded-lg disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-gray-800 transition-colors font-medium flex items-center justify-center gap-2"
                                     >
                                         {isLoading ? (

@@ -7,6 +7,7 @@ import { useFetch } from "@/hooks/useFetch";
 import { baseUrL } from "@/env/URLs";
 import { errorToast, successToast } from "@/hooks/UseToast";
 import { formatNumberToNaira } from "@/app/utils/moneyUtils";
+import { usePost } from "@/hooks/usePost";
 
 type Address = {
     id: string;
@@ -75,22 +76,17 @@ export default function OrderSummaryPage() {
         callApi: fetchAddresses
     } = useFetch("GET", null, `${baseUrL}/addresses`);
 
-    useEffect(() => {
-        // Get order request from localStorage
-        const storedOrderRequest = localStorage.getItem('orderRequest');
-        if (storedOrderRequest) {
-            const parsedRequest = JSON.parse(storedOrderRequest);
-            console.log("Parsed Order Request:", parsedRequest);
-            setOrderRequest(parsedRequest);
-        } else {
-            console.log("No order request found in localStorage");
-            // If no order request, redirect to cart
-            errorToast("No order found. Please start again.");
-            router.push('/cart');
-        }
+    const {
+        data: cartData,
+        isLoading: cartLoading,
+        callApi: fetchCart
+    } = useFetch("GET", null, `${baseUrL}/get-cart?page=0&size=30`);
 
-        fetchAddresses();
-    }, []);
+    const {
+        data: summaryData,
+        isLoading: summaryLoading,
+        callApi: fetchSummary
+    } = useFetch("GET", null, `${baseUrL}/sum-amount-by-quantity-by-customerId`);
 
     useEffect(() => {
         if (addressesData && orderRequest?.addressId) {
@@ -104,9 +100,9 @@ export default function OrderSummaryPage() {
         }
     }, [addressesData, orderRequest]);
 
-    const cartItems = orderRequest?.cartItems || [];
+    const cartItems = cartData?.data || [];
     const shippingCost = orderRequest?.shippingMethod === "express" ? 5000 : 2000;
-    const subtotal = orderRequest?.totalAmount || 0;
+    const subtotal = summaryData?.sum || 0;
     const grandTotal = subtotal + shippingCost;
 
     const handleInitializePayment = async () => {
@@ -153,11 +149,12 @@ export default function OrderSummaryPage() {
 
             let res: any = await apiResponse.json();
             const redirect = res?.data?.authorization_url;
-            
+
             if (res.status) {
                 successToast("Payment initialized successfully");
                 if (redirect) {
                     window.location.href = redirect;
+                    handleClearCart();
                 } else {
                     console.warn("No authorizationUrl returned", res);
                     errorToast("Payment initialization failed");
@@ -173,6 +170,19 @@ export default function OrderSummaryPage() {
         }
     };
 
+    const {
+        callApi: clearCart,
+        isLoading: clearCartLoading
+    } = usePost("PUT", null, `${baseUrL}/clear-cart`, null);
+
+    const handleClearCart = async () => {
+        try {
+            await clearCart();
+        } catch (err) {
+            console.error('Error clearing cart:', err);
+        }
+    };
+
     const handleEditOrder = () => {
         router.push('/order-request');
     };
@@ -181,7 +191,7 @@ export default function OrderSummaryPage() {
         return item.amountByQuantity || (item.amount * item.quantity);
     };
 
-    if (!orderRequest) {
+    if (cartLoading && addressesLoading) {
         return (
             <div className="min-h-screen bg-[#f4f6f8] flex items-center justify-center">
                 <div className="text-center">
@@ -204,21 +214,21 @@ export default function OrderSummaryPage() {
                         <section className="rounded-lg bg-white p-6 shadow-sm">
                             <div className="flex items-center justify-between mb-4">
                                 <h2 className="text-lg font-semibold">Shipping Address</h2>
-                                <button 
+                                <button
                                     onClick={handleEditOrder}
                                     className="text-sm text-gray-500 hover:text-black"
                                 >
                                     ✎ Edit
                                 </button>
                             </div>
-                            {selectedAddress ? (
+                            {addressesData ? (
                                 <div>
-                                    <p className="font-medium">{selectedAddress.firstName} {selectedAddress.lastName}</p>
-                                    <p className="text-gray-600">{selectedAddress.street}</p>
-                                    <p className="text-gray-600">{selectedAddress.city}, {selectedAddress.state}</p>
-                                    <p className="text-gray-600">{selectedAddress.country} - {selectedAddress.postalCode}</p>
-                                    <p className="text-gray-600">{selectedAddress.phoneNumber}</p>
-                                    {orderRequest.deliveryInstructions && (
+                                    <p className="font-medium">{addressesData[0]?.firstName} {addressesData[0]?.lastName}</p>
+                                    <p className="text-gray-600">{addressesData[0]?.street}</p>
+                                    <p className="text-gray-600">{addressesData[0]?.city}, {addressesData[0]?.state}</p>
+                                    <p className="text-gray-600">{addressesData[0]?.country} - {addressesData[0]?.postalCode}</p>
+                                    <p className="text-gray-600">{addressesData[0]?.phoneNumber}</p>
+                                    {orderRequest?.deliveryInstructions && (
                                         <div className="mt-3 pt-3 border-t">
                                             <p className="text-sm font-medium">Delivery Instructions:</p>
                                             <p className="text-sm text-gray-600">{orderRequest.deliveryInstructions}</p>
@@ -238,7 +248,7 @@ export default function OrderSummaryPage() {
                         <section className="rounded-lg bg-white p-6 shadow-sm">
                             <div className="flex items-center justify-between mb-4">
                                 <h2 className="text-lg font-semibold">Shipping Method</h2>
-                                <button 
+                                <button
                                     onClick={handleEditOrder}
                                     className="text-sm text-gray-500 hover:text-black"
                                 >
@@ -246,22 +256,22 @@ export default function OrderSummaryPage() {
                                 </button>
                             </div>
                             <p className="capitalize font-medium">
-                                {orderRequest.shippingMethod === "express" ? "Express Shipping" : "Standard Shipping"}
+                                {orderRequest?.shippingMethod === "express" ? "Express Shipping" : "Standard Shipping"}
                             </p>
                             <p className="text-gray-600 text-sm mt-1">
-                                {orderRequest.shippingMethod === "express" 
-                                    ? "Delivery in 2-3 business days" 
+                                {orderRequest?.shippingMethod === "express"
+                                    ? "Delivery in 2-3 business days"
                                     : "Delivery in 5-7 business days"}
                             </p>
                             <p className="font-semibold mt-2">
-                                {orderRequest.shippingMethod === "express" ? "₦5,000" : "₦2,000"}
+                                {orderRequest?.shippingMethod === "express" ? "₦5,000" : "₦2,000"}
                             </p>
                         </section>
 
                         {/* Order Items */}
                         <section className="rounded-lg bg-white p-6 shadow-sm">
                             <h2 className="text-lg font-semibold mb-6">Order Items</h2>
-                            
+
                             {cartItems.length === 0 ? (
                                 <div className="text-center py-8">
                                     <p className="text-gray-500">No items in order</p>
@@ -274,9 +284,9 @@ export default function OrderSummaryPage() {
                                 </div>
                             ) : (
                                 <div className="space-y-6">
-                                    {cartItems.map((item) => (
-                                        <div key={`${item.productId}-${item.measurementTag}-${item.sleeveType}-${item.color}`} 
-                                             className="flex flex-col md:flex-row md:items-center gap-4 pb-4 border-b">
+                                    {cartItems && cartItems?.map((item: any) => (
+                                        <div key={`${item.productId}-${item.measurementTag}-${item.sleeveType}-${item.color}`}
+                                            className="flex flex-col md:flex-row md:items-center gap-4 pb-4 border-b">
                                             <div className="flex-1 flex gap-4">
                                                 <div className="w-20 h-20 bg-gray-100 flex items-center justify-center rounded overflow-hidden">
                                                     {item.productImage ? (
@@ -294,7 +304,7 @@ export default function OrderSummaryPage() {
                                                     <div className="flex items-center gap-3 mt-2">
                                                         <div className="flex items-center gap-1">
                                                             <span className="text-sm text-gray-600">Color:</span>
-                                                            <div 
+                                                            <div
                                                                 className="w-4 h-4 rounded border"
                                                                 style={{ backgroundColor: item.color }}
                                                             />
@@ -373,7 +383,7 @@ export default function OrderSummaryPage() {
                     <aside className="space-y-6">
                         <div className="rounded-lg bg-white p-6 shadow-sm">
                             <h2 className="text-lg font-semibold mb-6">Order Summary</h2>
-                            
+
                             <div className="space-y-3">
                                 <div className="flex justify-between">
                                     <span className="text-gray-600">Subtotal</span>
@@ -393,7 +403,7 @@ export default function OrderSummaryPage() {
 
                             <button
                                 onClick={handleInitializePayment}
-                                disabled={isLoadingPayment || cartItems.length === 0 }
+                                disabled={isLoadingPayment || cartItems.length === 0}
                                 className="w-full mt-6 py-4 bg-black text-white rounded-lg disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-gray-800 transition-colors font-medium flex items-center justify-center gap-3"
                             >
                                 {isLoadingPayment ? (

@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { RootState, useAppSelector } from "@/redux/store";
 import { useLocalStorage } from "./useLocalStorage";
 
 
 export const useFetch = (methodType: string, body: any, url: string) => {
-    const  { value , getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
-    
+    const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+
     console.log(methodType, body, url);
 
     const [data, setData] = useState<any>();
@@ -15,8 +15,8 @@ export const useFetch = (methodType: string, body: any, url: string) => {
     const token = getUserDetails()?.accessToken
 
     console.log("token ====>", token);
-    
-    const apiFetchOnRender = async() => {
+
+    const apiFetchOnRender = async () => {
         setIsLoading(true);
         try {
             const headers: Record<string, string> = {
@@ -48,7 +48,7 @@ export const useFetch = (methodType: string, body: any, url: string) => {
             setIsLoading(false);
             console.log(dataResponse);
 
-        } catch (e: any){
+        } catch (e: any) {
             console.log(e);
             setIsLoading(false);
             setError(e.message || "An error occurred while fetching data")
@@ -59,7 +59,8 @@ export const useFetch = (methodType: string, body: any, url: string) => {
         apiFetchOnRender();
     }, [url, methodType, JSON.stringify(body)]) 
 
-    const callApi = async() => {
+
+    const callApi = async () => {
         console.log("call Api for me");
         try {
             const headers: Record<string, string> = {
@@ -93,7 +94,7 @@ export const useFetch = (methodType: string, body: any, url: string) => {
             setIsLoading(false);
             console.log(dataResponse);
 
-        } catch (e: any){
+        } catch (e: any) {
             console.log(e);
             setIsLoading(false);
             // Ensure error is a string, not an Error object
@@ -101,15 +102,15 @@ export const useFetch = (methodType: string, body: any, url: string) => {
         }
     }
 
-    return {data, isLoading, setIsLoading, callApi, error};
+    return { data, isLoading, setIsLoading, callApi, error };
 }
 
 
 
 
 export const useCallFetch = (methodType: string, body: any, url: string, shouldCallApi: boolean) => {
-    const  { value , getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
-    
+    const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+
     console.log(methodType, body, url);
 
     const [data, setData] = useState<any>();
@@ -119,8 +120,8 @@ export const useCallFetch = (methodType: string, body: any, url: string, shouldC
     const token = getUserDetails()?.accessToken
 
     console.log("token ====>", token);
-    
-    const apiFetchOnRender = async() => {
+
+    const apiFetchOnRender = async () => {
         setIsLoading(true);
         try {
             const headers: Record<string, string> = {
@@ -152,7 +153,7 @@ export const useCallFetch = (methodType: string, body: any, url: string, shouldC
             setIsLoading(false);
             console.log(dataResponse);
 
-        } catch (e: any){
+        } catch (e: any) {
             console.log(e);
             setIsLoading(false);
             setError(e.message || "An error occurred while fetching data")
@@ -160,10 +161,10 @@ export const useCallFetch = (methodType: string, body: any, url: string, shouldC
     }
 
     useEffect(() => {
-       shouldCallApi && apiFetchOnRender();
-    }, [url, methodType, JSON.stringify(body)]) 
+        shouldCallApi && apiFetchOnRender();
+    }, [url, methodType, JSON.stringify(body)])
 
-    const callApi = async() => {
+    const callApi = async () => {
         console.log("call Api for me");
         try {
             const headers: Record<string, string> = {
@@ -197,7 +198,7 @@ export const useCallFetch = (methodType: string, body: any, url: string, shouldC
             setIsLoading(false);
             console.log(dataResponse);
 
-        } catch (e: any){
+        } catch (e: any) {
             console.log(e);
             setIsLoading(false);
             // Ensure error is a string, not an Error object
@@ -205,5 +206,5 @@ export const useCallFetch = (methodType: string, body: any, url: string, shouldC
         }
     }
 
-    return {data, isLoading, setIsLoading, callApi, error};
+    return { data, isLoading, setIsLoading, callApi, error };
 }

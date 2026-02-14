@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from 'next/navigation'
 import { baseUrL } from "@/env/URLs";
 import { useFetch } from "@/hooks/useFetch";
@@ -27,8 +27,6 @@ type CartProduct = {
 
 export default function CartPage() {
     const router = useRouter();
-    const [sumCartAmount, setSumCartAmount] = useState<number>(0);
-    const [selectedChannel, setSelectedChannel] = useState<string>("");
     const [pageRequest] = useState<PageRequest>({ page: 0, size: 30 });
 
     const { value, getUserDetails } = useLocalStorage("userDetails", null);
@@ -51,19 +49,6 @@ export default function CartPage() {
         callApi: clearCart,
         isLoading: clearCartLoading
     } = usePost("PUT", null, `${baseUrL}/clear-cart`, null);
-
-    useEffect(() => {
-        fetchCart();
-        fetchSummary();
-    }, []);
-
-    useEffect(() => {
-        console.log("cart data from useFetch ====> ", cartData);
-        if (summaryData) {
-            const total = summaryData?.total ?? summaryData?.data?.total ?? 0;
-            setSumCartAmount(total);
-        }
-    }, [cartData, summaryData]);
 
     const cartItems: CartProduct[] = React.useMemo(() => {
         if (!cartData) return [];

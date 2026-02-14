@@ -83,7 +83,7 @@ const ProductDetails = () => {
 
   const url = `${baseUrL}/get-product-by-id?productId=${productId}`;
   const bodyMeasurementUrl = `${baseUrL}/get-body-measurement-by-user`
-  const addToCartUrl = `${baseUrL}/add-product-cart-with-variation?productId=${productId}`;
+  const addToCartUrl = `${baseUrL}/increase-cart-with-variation?productId=${productId}&quantity=${addToCartRequestBody.quantity}`;
 
   // const requestBody: ProductFilterRequest = { productId };
 

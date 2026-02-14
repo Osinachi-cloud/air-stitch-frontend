@@ -30,6 +30,12 @@ const menuItems = [
         href: "/cart",
         visible: ["admin", "teacher"],
       },
+            {
+        icon: "/Bag.png",
+        label: "Like",
+        href: "/like",
+        visible: ["admin", "teacher"],
+      },
       {
         icon: "/folder.png",
         label: "Inventory",
