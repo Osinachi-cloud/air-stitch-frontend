@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import Image from "next/image";
+import { baseUrL } from "@/env/URLs";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 /* ===================== Types & Sample Data ===================== */
 
@@ -37,143 +39,42 @@ type Measurement = {
   };
 };
 
-const DEFAULTS: Measurement[] = [
-  {
-    id: "default",
-    name: "Default",
-    isDefault: true,
-    note: "This is your personal body measurement",
-    description: "Your complete body measurements for perfect fitting.",
-    measurements: {
-      // Top Body (Torso)
-      neck: 16,
-      chest: 42,
-      tummy: 38,
-      hipWidth: 44,
-      lengthNeckToHip: 28,
-      shoulder: 18,
-      // Hand
-      bicepWidth: 14,
-      elbowWidth: 12,
-      wristWidth: 8,
-      shortSleeveLength: 10,
-      elbowLength: 18,
-      longSleeveLength: 25,
-      // Lower Body
-      waist: 36,
-      lowerHipWidth: 44,
-      thighWidth: 22,
-      kneeWidth: 16,
-      ankleWidth: 10,
-      kneeLength: 22,
-      ankleLength: 32,
-    },
-  },
-  {
-    id: "uchechi",
-    name: "Uchechi Nnanna",
-    description: "Formal wear measurements.",
-    measurements: {
-      neck: 15,
-      chest: 40,
-      tummy: 36,
-      hipWidth: 42,
-      lengthNeckToHip: 26,
-      shoulder: 17,
-      bicepWidth: 13,
-      elbowWidth: 11,
-      wristWidth: 7,
-      shortSleeveLength: 9,
-      elbowLength: 17,
-      longSleeveLength: 24,
-      waist: 34,
-      lowerHipWidth: 42,
-      thighWidth: 21,
-      kneeWidth: 15,
-      ankleWidth: 9,
-      kneeLength: 21,
-      ankleLength: 31,
-    },
-  },
-  {
-    id: "olubi",
-    name: "Olubi Emmanuel",
-    description: "Casual fit.",
-    measurements: {
-      neck: 17,
-      chest: 44,
-      tummy: 40,
-      hipWidth: 46,
-      lengthNeckToHip: 29,
-      shoulder: 19,
-      bicepWidth: 15,
-      elbowWidth: 13,
-      wristWidth: 9,
-      shortSleeveLength: 11,
-      elbowLength: 19,
-      longSleeveLength: 26,
-      waist: 38,
-      lowerHipWidth: 46,
-      thighWidth: 23,
-      kneeWidth: 17,
-      ankleWidth: 11,
-      kneeLength: 23,
-      ankleLength: 33,
-    },
-  },
-  {
-    id: "habibi",
-    name: "Habibi Usman",
-    description: "Kaftan set.",
-    measurements: {
-      neck: 16.5,
-      chest: 43,
-      tummy: 39,
-      hipWidth: 45,
-      lengthNeckToHip: 28.5,
-      shoulder: 18.5,
-      bicepWidth: 14.5,
-      elbowWidth: 12.5,
-      wristWidth: 8.5,
-      shortSleeveLength: 10.5,
-      elbowLength: 18.5,
-      longSleeveLength: 25.5,
-      waist: 37,
-      lowerHipWidth: 45,
-      thighWidth: 22.5,
-      kneeWidth: 16.5,
-      ankleWidth: 10.5,
-      kneeLength: 22.5,
-      ankleLength: 32.5,
-    },
-  },
-  {
-    id: "babe",
-    name: "My Babe",
-    description: "Ankara dress.",
-    measurements: {
-      neck: 14,
-      chest: 38,
-      tummy: 34,
-      hipWidth: 40,
-      lengthNeckToHip: 25,
-      shoulder: 16,
-      bicepWidth: 12,
-      elbowWidth: 10,
-      wristWidth: 6,
-      shortSleeveLength: 8,
-      elbowLength: 16,
-      longSleeveLength: 23,
-      waist: 32,
-      lowerHipWidth: 40,
-      thighWidth: 20,
-      kneeWidth: 14,
-      ankleWidth: 8,
-      kneeLength: 20,
-      ankleLength: 30,
-    },
-  },
-];
+type BodyMeasurementRequest = {
+  id?: string | number;
+  tag: string;
+  neck: number;
+  shoulder: number;
+  chest: number;
+  tummy: number;
+  hipWidth: number;
+  neckToHipLength: number;
+  shortSleeveAtBiceps: number;
+  midSleeveAtElbow: number;
+  longSleeveAtWrist: number;
+  waist: number;
+  thigh: number;
+  knee: number;
+  ankle: number;
+  trouserLength: number;
+};
+
+type BodyMeasurementDto = {
+  tag: string;
+  neck: number;
+  shoulder: number;
+  chest: number;
+  tummy: number;
+  hipWidth: number;
+  neckToHipLength: number;
+  shortSleeveAtBiceps: number;
+  midSleeveAtElbow: number;
+  longSleeveAtWrist: number;
+  waist: number;
+  thigh: number;
+  knee: number;
+  ankle: number;
+  trouserLength: number;
+};
 
 /* ===================== UI Primitives ===================== */
 
@@ -502,14 +403,17 @@ function SlideOver({
 /* ===================== Page ===================== */
 
 export default function Page({
-  items = DEFAULTS,
+  items = [],
   onAddNew,
 }: {
   items?: Measurement[];
   onAddNew?: () => void;
 }) {
-  const defaultItem = items.find((m) => m.isDefault) ?? items[0];
-  const others = items.filter((m) => m.id !== defaultItem.id);
+  const [measurements, setMeasurements] = useState<Measurement[]>(items || []);
+  const defaultItem = measurements.find((m) => m.isDefault) ?? measurements[0];
+  const others = measurements.filter((m) => defaultItem && m.id !== defaultItem.id);
+
+  const { getUserDetails } = useLocalStorage("userDetails", null);
 
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -522,6 +426,67 @@ export default function Page({
   const [deletingMeasurement, setDeletingMeasurement] =
     useState<Measurement | null>(null);
 
+  const [formData, setFormData] = useState<BodyMeasurementRequest>({
+    tag: "",
+    neck: 0,
+    shoulder: 0,
+    chest: 0,
+    tummy: 0,
+    hipWidth: 0,
+    neckToHipLength: 0,
+    shortSleeveAtBiceps: 0,
+    midSleeveAtElbow: 0,
+    longSleeveAtWrist: 0,
+    waist: 0,
+    thigh: 0,
+    knee: 0,
+    ankle: 0,
+    trouserLength: 0,
+  });
+
+  useEffect(() => {
+    if (editingMeasurement && showNew) {
+      // Only populate form if we're editing — include id so updates send it
+      setFormData({
+        id: editingMeasurement.id,
+        tag: editingMeasurement.name || "",
+        neck: editingMeasurement.measurements?.neck || 0,
+        shoulder: editingMeasurement.measurements?.shoulder || 0,
+        chest: editingMeasurement.measurements?.chest || 0,
+        tummy: editingMeasurement.measurements?.tummy || 0,
+        hipWidth: editingMeasurement.measurements?.hipWidth || 0,
+        neckToHipLength: editingMeasurement.measurements?.lengthNeckToHip || 0,
+        shortSleeveAtBiceps: editingMeasurement.measurements?.bicepWidth || 0,
+        midSleeveAtElbow: editingMeasurement.measurements?.elbowWidth || 0,
+        longSleeveAtWrist: editingMeasurement.measurements?.wristWidth || 0,
+        waist: editingMeasurement.measurements?.waist || 0,
+        thigh: editingMeasurement.measurements?.thighWidth || 0,
+        knee: editingMeasurement.measurements?.kneeWidth || 0,
+        ankle: editingMeasurement.measurements?.ankleWidth || 0,
+        trouserLength: editingMeasurement.measurements?.ankleLength || 0,
+      });
+    } else if (!editingMeasurement && showNew) {
+      // Clear form for new measurement
+      setFormData({
+        tag: "",
+        neck: 0,
+        shoulder: 0,
+        chest: 0,
+        tummy: 0,
+        hipWidth: 0,
+        neckToHipLength: 0,
+        shortSleeveAtBiceps: 0,
+        midSleeveAtElbow: 0,
+        longSleeveAtWrist: 0,
+        waist: 0,
+        thigh: 0,
+        knee: 0,
+        ankle: 0,
+        trouserLength: 0,
+      });
+    }
+  }, [editingMeasurement, showNew]);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return others;
@@ -533,12 +498,14 @@ export default function Page({
   }, [others, query]);
 
   const selected =
-    (selectedId ? items.find((i) => i.id === selectedId) : null) ?? null;
+    (selectedId ? measurements.find((i) => i.id === selectedId) : null) ?? null;
 
   const handleEditDefault = () => {
-    setEditingMeasurement(defaultItem);
-    setShowDefaultModal(false);
-    setShowNew(true);
+    if (defaultItem) {
+      setEditingMeasurement(defaultItem);
+      setShowDefaultModal(false);
+      setShowNew(true);
+    }
   };
 
   const handleViewMeasurement = (measurement: Measurement) => {
@@ -561,10 +528,179 @@ export default function Page({
     setDeletingMeasurement(null);
   };
 
-  const handleSaveMeasurement = () => {
-    // Here you would typically save the measurement data
-    setShowNew(false);
-    setEditingMeasurement(null);
+  const createBodyMeasurement = async (data: BodyMeasurementRequest) => {
+    const userDetails = getUserDetails();
+    const token = userDetails?.accessToken;
+
+    if (!token) {
+      throw new Error("No authentication token found");
+    }
+
+    const response = await fetch(`${baseUrL}/create-body-measurement`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP ${response.status}: ${errorText}`);
+    }
+
+    return response.json();
+  };
+
+  const updateBodyMeasurement = async (data: BodyMeasurementRequest) => {
+    const userDetails = getUserDetails();
+    const token = userDetails?.accessToken;
+
+    if (!token) {
+      throw new Error("No authentication token found");
+    }
+
+    const response = await fetch(`${baseUrL}/update-body-measurement`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP ${response.status}: ${errorText}`);
+    }
+
+    return response.json();
+  };
+
+  const loadMeasurements = useCallback(async () => {
+    try {
+      const userDetails = getUserDetails();
+      const token = userDetails?.accessToken;
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      const response = await fetch(`${baseUrL}/get-body-measurement-by-user`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch measurements');
+      }
+
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        const transformedData: Measurement[] = data.map((m: any) => ({
+          id: m.id || m.tag,
+          name: m.tag,
+          description: m.description ?? `Measurement saved for ${m.tag}`,
+          measurements: {
+            neck: m.neck,
+            chest: m.chest,
+            tummy: m.tummy,
+            hipWidth: m.hipWidth,
+            lengthNeckToHip: m.neckToHipLength,
+            shoulder: m.shoulder,
+            bicepWidth: m.shortSleeveAtBiceps,
+            elbowWidth: m.midSleeveAtElbow,
+            wristWidth: m.longSleeveAtWrist,
+            shortSleeveLength: m.shortSleeveAtBiceps,
+            elbowLength: m.midSleeveAtElbow,
+            longSleeveLength: m.longSleeveAtWrist,
+            waist: m.waist,
+            lowerHipWidth: m.hipWidth,
+            thighWidth: m.thigh,
+            kneeWidth: m.knee,
+            ankleWidth: m.ankle,
+            kneeLength: m.trouserLength,
+            ankleLength: m.trouserLength,
+          },
+        }));
+        setMeasurements(transformedData);
+      }
+    } catch (error) {
+      console.error('Error loading measurements:', error);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    loadMeasurements();
+  }, [loadMeasurements]);
+
+  const handleSaveMeasurement = async () => {
+    try {
+      console.log('Starting to save measurement...');
+      
+      // Validate that tag is not empty
+      if (!formData.tag || formData.tag.trim() === "") {
+        alert('Please enter a measurement tag/name');
+        return;
+      }
+      
+      // Ensure all numeric fields are actually numbers
+      const cleanedFormData: BodyMeasurementRequest = {
+        tag: formData.tag,
+        neck: parseInt(formData.neck as any) || 0,
+        shoulder: parseInt(formData.shoulder as any) || 0,
+        chest: parseInt(formData.chest as any) || 0,
+        tummy: parseInt(formData.tummy as any) || 0,
+        hipWidth: parseInt(formData.hipWidth as any) || 0,
+        neckToHipLength: parseInt(formData.neckToHipLength as any) || 0,
+        shortSleeveAtBiceps: parseInt(formData.shortSleeveAtBiceps as any) || 0,
+        midSleeveAtElbow: parseInt(formData.midSleeveAtElbow as any) || 0,
+        longSleeveAtWrist: parseInt(formData.longSleeveAtWrist as any) || 0,
+        waist: parseInt(formData.waist as any) || 0,
+        thigh: parseInt(formData.thigh as any) || 0,
+        knee: parseInt(formData.knee as any) || 0,
+        ankle: parseInt(formData.ankle as any) || 0,
+        trouserLength: parseInt(formData.trouserLength as any) || 0,
+      };
+
+      // If we're editing, include the id so backend can identify the record
+      if (editingMeasurement && editingMeasurement.id) {
+        cleanedFormData.id = editingMeasurement.id;
+      }
+
+      const result = editingMeasurement
+        ? await updateBodyMeasurement(cleanedFormData)
+        : await createBodyMeasurement(cleanedFormData);
+
+      setShowNew(false);
+      setEditingMeasurement(null);
+      setFormData({
+        tag: "",
+        neck: 0,
+        shoulder: 0,
+        chest: 0,
+        tummy: 0,
+        hipWidth: 0,
+        neckToHipLength: 0,
+        shortSleeveAtBiceps: 0,
+        midSleeveAtElbow: 0,
+        longSleeveAtWrist: 0,
+        waist: 0,
+        thigh: 0,
+        knee: 0,
+        ankle: 0,
+        trouserLength: 0,
+      });
+
+      await loadMeasurements();
+    } catch (error: any) {
+      alert(`Error saving measurement: ${error?.message || 'Unknown error'}`);
+    }
   };
 
   return (
@@ -604,7 +740,10 @@ export default function Page({
             </div>
             <button
               className="inline-flex items-center justify-center rounded-xl border border-transparent bg-gray-900 px-6 py-3 text-sm font-medium text-white shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 transition-colors"
-              onClick={() => setShowNew(true)}
+              onClick={() => {
+                setEditingMeasurement(null);
+                setShowNew(true);
+              }}
             >
               Add New Measurement
             </button>
@@ -737,12 +876,13 @@ export default function Page({
         <div className="flex items-end justify-between gap-4 mb-8">
           <div className="w-full">
             <label className="text-sm font-medium text-gray-700">
-              User's Name
+              Measurement Tag
             </label>
             <input
               className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200"
-              placeholder="Input Name"
-              defaultValue={editingMeasurement?.name}
+              placeholder="e.g., Casual, Formal, etc."
+              value={formData.tag}
+              onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
             />
           </div>
           <button
@@ -758,111 +898,30 @@ export default function Page({
           {
             title: "Top Body (Torso)",
             fields: [
-              {
-                key: "neck",
-                label: "Neck",
-                value: editingMeasurement?.measurements?.neck,
-              },
-              {
-                key: "chest",
-                label: "Chest",
-                value: editingMeasurement?.measurements?.chest,
-              },
-              {
-                key: "tummy",
-                label: "Tummy",
-                value: editingMeasurement?.measurements?.tummy,
-              },
-              {
-                key: "hipWidth",
-                label: "Hip Width",
-                value: editingMeasurement?.measurements?.hipWidth,
-              },
-              {
-                key: "lengthNeckToHip",
-                label: "Length (Neck to Hip)",
-                value: editingMeasurement?.measurements?.lengthNeckToHip,
-              },
-              {
-                key: "shoulder",
-                label: "Shoulder",
-                value: editingMeasurement?.measurements?.shoulder,
-              },
+              { key: "neck", label: "Neck" },
+              { key: "chest", label: "Chest" },
+              { key: "tummy", label: "Tummy" },
+              { key: "hipWidth", label: "Hip Width" },
+              { key: "neckToHipLength", label: "Neck to Hip Length" },
+              { key: "shoulder", label: "Shoulder" },
             ],
           },
           {
-            title: "Hand",
+            title: "Sleeve",
             fields: [
-              {
-                key: "bicepWidth",
-                label: "Bicep Width",
-                value: editingMeasurement?.measurements?.bicepWidth,
-              },
-              {
-                key: "elbowWidth",
-                label: "Elbow Width",
-                value: editingMeasurement?.measurements?.elbowWidth,
-              },
-              {
-                key: "wristWidth",
-                label: "Wrist Width",
-                value: editingMeasurement?.measurements?.wristWidth,
-              },
-              {
-                key: "shortSleeveLength",
-                label: "Short Sleeve Length",
-                value: editingMeasurement?.measurements?.shortSleeveLength,
-              },
-              {
-                key: "elbowLength",
-                label: "Elbow Length",
-                value: editingMeasurement?.measurements?.elbowLength,
-              },
-              {
-                key: "longSleeveLength",
-                label: "Long Sleeve Length",
-                value: editingMeasurement?.measurements?.longSleeveLength,
-              },
+              { key: "shortSleeveAtBiceps", label: "Short Sleeve at Biceps" },
+              { key: "midSleeveAtElbow", label: "Mid Sleeve at Elbow" },
+              { key: "longSleeveAtWrist", label: "Long Sleeve at Wrist" },
             ],
           },
           {
             title: "Lower Body",
             fields: [
-              {
-                key: "waist",
-                label: "Waist",
-                value: editingMeasurement?.measurements?.waist,
-              },
-              {
-                key: "lowerHipWidth",
-                label: "Hip Width",
-                value: editingMeasurement?.measurements?.lowerHipWidth,
-              },
-              {
-                key: "thighWidth",
-                label: "Thigh Width",
-                value: editingMeasurement?.measurements?.thighWidth,
-              },
-              {
-                key: "kneeWidth",
-                label: "Knee Width",
-                value: editingMeasurement?.measurements?.kneeWidth,
-              },
-              {
-                key: "ankleWidth",
-                label: "Ankle Width",
-                value: editingMeasurement?.measurements?.ankleWidth,
-              },
-              {
-                key: "kneeLength",
-                label: "Knee Length (Waist to Knee)",
-                value: editingMeasurement?.measurements?.kneeLength,
-              },
-              {
-                key: "ankleLength",
-                label: "Ankle Length (Waist to Ankle)",
-                value: editingMeasurement?.measurements?.ankleLength,
-              },
+              { key: "waist", label: "Waist" },
+              { key: "thigh", label: "Thigh" },
+              { key: "knee", label: "Knee" },
+              { key: "ankle", label: "Ankle" },
+              { key: "trouserLength", label: "Trouser Length" },
             ],
           },
         ].map((section, index) => (
@@ -883,9 +942,16 @@ export default function Page({
                   </label>
                   <div className="relative mt-2">
                     <input
+                      type="number"
                       className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200 pr-10"
                       placeholder="0"
-                      defaultValue={field.value}
+                      value={formData[field.key as keyof BodyMeasurementRequest]}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [field.key]: parseInt(e.target.value) || 0,
+                        })
+                      }
                     />
                     <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500">
                       in
