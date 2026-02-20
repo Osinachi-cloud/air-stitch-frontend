@@ -11,7 +11,7 @@ type MenuItem = {
   icon: string;
   label: string;
   href: string;
-  visible: Role[];
+  //   visible: Role[];
 };
 
 type MenuSection = {
@@ -26,74 +26,27 @@ const menuItems: MenuSection[] = [
       {
         icon: "/Vector.png",
         label: "Account Overview",
-        href: "/Account-Overview",
-        visible: ["customer", "tailor"],
+        href: "/tailor",
       },
-      {
+       {
         icon: "/Bag.png",
         label: "Orders",
-        href: "/orders",
-        visible: ["customer"],
-      },
-      {
-        icon: "/Bag.png",
-        label: "Vendors Orders",
-        href: "/vendors-order",
-        visible: ["tailor"],
-      },
-      // {
-      //   icon: "/Bag.png",
-      //   label: "Cart",
-      //   href: "/cart",
-      //   visible: ["admin", "teacher"],
-      // },
-            {
-        icon: "/Bag.png",
-        label: "Like",
-        href: "/like",
-        visible: ["customer"],
-      },
-      {
-        icon: "/message.png",
-        label: "Pending Reviews",
-        href: "/pending-Review",
-        visible: ["customer"],
-      },
-      {
-        icon: "/Heart.png",
-        label: "Liked Items",
-        href: "/Liked-items",
-        visible: ["customer"],
-      },
-      {
-        icon: "/productCart.png",
-        label: "Cart",
-        href: "/cart",
-        visible: ["customer"],
+        href: "/Orders",
       },
       {
         icon: "/folder.png",
         label: "Inventory",
         href: "/list/Inventory",
-        visible: ["tailor"],
       },
       {
         icon: "/Activity 2.png",
         label: "Analytics",
         href: "/Analytics",
-        visible: ["tailor"],
-      },
-      {
-        icon: "/Activity 2.png",
-        label: "Measurements",
-        href: "/Measurements",
-        visible: ["customer"],
       },
       {
         icon: "/Setting 2.png",
         label: "Account Settings",
-        href: "/list/settings",
-        visible: ["customer", "tailor"],
+        href: "/tailor/account-settings",
       },
     ],
   },
@@ -104,13 +57,12 @@ const menuItems: MenuSection[] = [
         icon: "/logout.png",
         label: "Logout",
         href: "/logout",
-        visible: ["customer", "tailor"],
       },
     ],
   },
 ];
 
-export default function Menu({
+export default function TailorMenu({
   // Pass this from parent if you have it; otherwise we’ll fall back.
   role: roleProp,
 }: {
@@ -129,36 +81,8 @@ export default function Menu({
 
   return (
     <div className="text-sm">
-      {menuItems.map((i) => (
-        <div className="flex flex-col" key={i.title}>
-          <span className="hidden lg:block text-[#000] font-light my-4">
-            {/* {i.title} */}
-          </span>
-          {i.items.map((item) => {
-            if (item.visible.includes(role)) {
-              return (
-                <Link
-                  href={item.href}
-                  key={item.label}
-                  className="flex items-center justify-center lg:justify-start gap-4 text-[#000] border-b border-t-black-50 py-[1.5rem] md:px-2 rounded-md hover:bg-[#000] hover:text-[#fff]"
-                >
-                  <Image src={item.icon} alt="" width={20} height={20} />
-                  {/* <i className= {`${item.icon} `}></i> */}
-                  <i className={`fa fa-user`}></i>
-                  <span className="hidden lg:block">{item.label}</span>
-                </Link>
-              );
-            }
-          })}
-        </div>
-      ))}
-
-
-
-       {/* {menuItems.map((section) => {
-        const visibleItems = section.items.filter((item) =>
-          item.visible.includes(role)
-        );
+      {menuItems.map((section) => {
+        const visibleItems = section.items;
         if (visibleItems.length === 0) return null;
 
         return (
@@ -184,11 +108,7 @@ export default function Menu({
             ))}
           </div>
         );
-      })} */}
-
-
-
-
+      })}
     </div>
   );
 }
