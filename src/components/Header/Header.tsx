@@ -26,7 +26,7 @@ export const Header = () => {
                     </p>
                     <div className="bg-[#373636] flex justify-center items-center rounded w-[162px] md:w-[240px] mt-[1rem]">
                         <button className="text-white text-[13px] md:text-[1.5rem] px-[1rem] py-[1rem] md:py-[2rem] rounded-[8px] ">Get Started</button>
-                        <Image src="/icons/Arrow 1.png" alt="Product Image" className=" h-auto" width={100} height={100} />
+                        <Image src="/icons/Arrow 1.png" alt="Product Image" className=" h-auto" width={30} height={30} />
                     </div>
                 </div>
             </div>

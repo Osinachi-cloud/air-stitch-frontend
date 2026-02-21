@@ -1,3 +1,4 @@
+
 import React from 'react'
 import Script from 'next/script'
 import type { AppProps } from 'next/app'
@@ -7,8 +8,15 @@ import Head from 'next/head'
 import { store } from '../stores/store'
 import { Provider } from 'react-redux'
 import '../css/main.css'
-import { ToastContainer } from 'react-toastify'
+// import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { Poppins } from "next/font/google";
+
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+});
 
 export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -80,7 +88,8 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
             `}
       </Script> */}
 
-      <ToastContainer />
+
+      {/* <ToastContainer /> */}
       <Component {...pageProps} />
 
     </>

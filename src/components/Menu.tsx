@@ -1,8 +1,25 @@
-import { role } from "@/lib/data";
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+// If you use NextAuth on the client, you can uncomment this:
+// import { useSession } from "next-auth/react";
 
-const menuItems = [
+type Role = "customer" | "tailor";
+
+type MenuItem = {
+  icon: string;
+  label: string;
+  href: string;
+  visible: Role[];
+};
+
+type MenuSection = {
+  title: string;
+  items: MenuItem[];
+};
+
+const menuItems: MenuSection[] = [
   {
     title: "0",
     items: [
@@ -10,31 +27,55 @@ const menuItems = [
         icon: "/Vector.png",
         label: "Account Overview",
         href: "/Account-Overview",
-        visible: ["admin", "teacher", "student", "parent"],
+        visible: ["customer", "tailor"],
       },
       {
         icon: "/Bag.png",
         label: "Orders",
-        href: "/Orders",
-        visible: ["admin", "teacher"],
+        href: "/orders",
+        visible: ["customer"],
+      },
+      {
+        icon: "/Bag.png",
+        label: "Vendors Orders",
+        href: "/vendors-order",
+        visible: ["tailor"],
+      },
+      {
+        icon: "/Heart.png",
+        label: "Liked Items",
+        href: "/like",
+        visible: ["customer"],
+      },
+      {
+        icon: "/productCart.png",
+        label: "Cart",
+        href: "/cart",
+        visible: ["customer"],
       },
       {
         icon: "/folder.png",
         label: "Inventory",
         href: "/list/Inventory",
-        visible: ["admin", "teacher"],
+        visible: ["tailor"],
       },
       {
         icon: "/Activity 2.png",
         label: "Analytics",
         href: "/Analytics",
-        visible: ["admin", "teacher"],
+        visible: ["tailor"],
+      },
+      {
+        icon: "/Activity 2.png",
+        label: "Measurements",
+        href: "/Measurements",
+        visible: ["customer"],
       },
       {
         icon: "/Setting 2.png",
         label: "Account Settings",
         href: "/list/settings",
-        visible: ["admin"],
+        visible: ["customer", "tailor"],
       },
     ],
   },
@@ -42,22 +83,32 @@ const menuItems = [
     title: "1",
     items: [
       {
-        icon: "/profile.png",
-        label: "Profile",
-        href: "/profile",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
-      {
         icon: "/logout.png",
         label: "Logout",
         href: "/logout",
-        visible: ["admin", "teacher", "student", "parent"],
+        visible: ["customer", "tailor"],
       },
     ],
   },
 ];
 
-const Menu = () => {
+export default function Menu({
+  // Pass this from parent if you have it; otherwise we’ll fall back.
+  role: roleProp,
+}: {
+  role?: Role;
+}) {
+  // If you’re using NextAuth client-side, you can derive role like this:
+  // const { data: session, status } = useSession();
+  // const authRole = session?.user?.role as Role | undefined;
+
+  // FINAL effective role with a safe fallback so the menu always renders:
+  const role: Role = roleProp /* ?? authRole */ ?? "customer";
+
+  if (process.env.NODE_ENV !== "production") {
+    console.log("[Menu] effective role:", role);
+  }
+
   return (
     <div className="text-sm">
       {menuItems.map((i) => (
@@ -75,7 +126,7 @@ const Menu = () => {
                 >
                   <Image src={item.icon} alt="" width={20} height={20} />
                   {/* <i className= {`${item.icon} `}></i> */}
-                  <i className= {`fa fa-user`}></i>
+                  <i className={`fa fa-user`}></i>
                   <span className="hidden lg:block">{item.label}</span>
                 </Link>
               );
@@ -83,8 +134,43 @@ const Menu = () => {
           })}
         </div>
       ))}
+
+
+
+       {/* {menuItems.map((section) => {
+        const visibleItems = section.items.filter((item) =>
+          item.visible.includes(role)
+        );
+        if (visibleItems.length === 0) return null;
+
+        return (
+          <div className="flex flex-col" key={section.title}>
+            <span className="hidden lg:block text-black font-light my-4" />
+            {visibleItems.map((item) => (
+              <Link
+                href={item.href}
+                key={item.label}
+                className="group flex items-center justify-center lg:justify-start gap-4 rounded-md py-[1.5rem] md:px-2 text-black hover:bg-black hover:text-white transition-colors"
+              >
+                <Image
+                  src={item.icon}
+                  alt={`${item.label} icon`}
+                  width={20}
+                  height={20}
+                  className="transition group-hover:invert"
+                />
+                <span className="hidden lg:block transition-colors group-hover:text-white">
+                  {item.label}
+                </span>
+              </Link>
+            ))}
+          </div>
+        );
+      })} */}
+
+
+
+
     </div>
   );
-};
-
-export default Menu;
+}
