@@ -4,22 +4,13 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useCallFetch, useFetch } from '@/hooks/useFetch';
 import {
   ProductOrderRequest,
-  ProductOrderStatistics,
-  Order,
   OrderDetail,
-  OrdersResponse,
-  OrderStatsResponse,
-  SingleOrderResponse,
   OrderStatus,
 } from '@/types/order';
 import { baseUrL } from '@/env/URLs';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import MobileOrderItem from './MobileOrderItem';
 
-interface VendorOrdersProps {
-  vendorId?: string;
-  baseUrl?: string;
-}
 
 // Define status options properly typed
 const statusOptions = {
@@ -33,9 +24,16 @@ const statusOptions = {
   completed: 'COMPLETED' as OrderStatus,
 };
 
-const VendorOrders: React.FC<VendorOrdersProps> = ({
-  vendorId
-}) => {
+// const VendorOrders: React.FC<VendorOrdersProps> = ({
+//   vendorId
+// }) => {
+
+const VendorOrders: React.FC = () => {
+    const { value, getUserDetails } = useLocalStorage("userDetails", null);
+  const token = getUserDetails()?.accessToken;
+  const vendorId = getUserDetails()?.vendorId;
+
+
   const [productOrderRequest, setProductOrderRequest] = useState<ProductOrderRequest>({
     page: 0,
     size: 10,
@@ -109,8 +107,7 @@ const VendorOrders: React.FC<VendorOrdersProps> = ({
     callApi: refetchStats
   } = useFetch('GET', null, orderStatsUrl);
 
-  const { value, getUserDetails } = useLocalStorage("userDetails", null);
-  const token = getUserDetails()?.accessToken;
+
 
   const fetchOrderDetail = async (orderId: string) => {
     setIsLoadingOrderDetail(true);
