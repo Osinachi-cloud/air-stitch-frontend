@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { baseUrL } from "@/env/URLs";
 import { useFetch } from "@/hooks/useFetch";
@@ -12,60 +12,7 @@ import {
   Star
 } from "lucide-react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-
-/* ===================== Types ===================== */
-
-// This matches your API exactly
-type ApiMeasurement = {
-  tag: string;
-  neck: number;
-  shoulder: number;
-  chest: number;
-  tummy: number;
-  hipWidth: number;
-  neckToHipLength: number;
-  shortSleeveAtBiceps: number;
-  midSleeveAtElbow: number;
-  longSleeveAtWrist: number;
-  waist: number;
-  thigh: number;
-  knee: number;
-  ankle: number;
-  trouserLength: number;
-  isDefault: boolean;
-};
-
-// UI Model
-type Measurement = {
-  id: string;
-  name: string;
-  isDefault?: boolean;
-  description?: string;
-  tag?: string;
-  measurements: {
-    neck: number;
-    chest: number;
-    tummy: number;
-    hipWidth: number;
-    lengthNeckToHip: number;
-    shoulder: number;
-    bicepWidth: number;
-    elbowWidth: number;
-    wristWidth: number;
-    shortSleeveLength: number;
-    elbowLength: number;
-    longSleeveLength: number;
-    waist: number;
-    lowerHipWidth: number;
-    thighWidth: number;
-    kneeWidth: number;
-    ankleWidth: number;
-    kneeLength: number;
-    ankleLength: number;
-  };
-};
-
-/* ===================== UI Components ===================== */
+import { errorToast, successToast } from "@/hooks/UseToast";
 
 const PageHeader = () => (
   <div className="px-2 pt-2 pb-6">
@@ -96,8 +43,6 @@ const SectionTitle = ({ children, className = "" }: { children: React.ReactNode;
 const Subtle = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
   <p className={`text-sm text-gray-600 ${className}`}>{children}</p>
 );
-
-/* ===================== Measurement Table ===================== */
 
 const MeasurementTable = ({ measurements }: { measurements?: Measurement["measurements"] }) => {
   if (!measurements) return <div className="text-center py-8 text-gray-500">No measurement data available</div>;
@@ -160,8 +105,6 @@ const MeasurementTable = ({ measurements }: { measurements?: Measurement["measur
   );
 };
 
-/* ===================== Action Icons ===================== */
-
 const ActionIcons = ({ onView, onEdit, onDelete }: { onView: () => void; onEdit: () => void; onDelete: () => void }) => (
   <div className="flex items-center gap-2">
     <button onClick={onView} className="p-2 text-gray-400 hover:text-gray-600 transition-colors rounded-lg hover:bg-gray-100" title="View Details">
@@ -176,10 +119,8 @@ const ActionIcons = ({ onView, onEdit, onDelete }: { onView: () => void; onEdit:
   </div>
 );
 
-/* ===================== SlideOver ===================== */
-
 const SlideOver = ({ open, onClose, title, children }: { open: boolean; onClose: () => void; title?: string; children: React.ReactNode }) => {
-  useEffect(() => {
+  React.useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     document.addEventListener("keydown", onKey);
     if (open) {
@@ -206,8 +147,6 @@ const SlideOver = ({ open, onClose, title, children }: { open: boolean; onClose:
   );
 };
 
-/* ===================== Helper Functions ===================== */
-
 const mapApiToUIMeasurements = (apiData: ApiMeasurement): Measurement["measurements"] => ({
   neck: apiData.neck,
   chest: apiData.chest,
@@ -226,12 +165,12 @@ const mapApiToUIMeasurements = (apiData: ApiMeasurement): Measurement["measureme
   thighWidth: apiData.thigh,
   kneeWidth: apiData.knee,
   ankleWidth: apiData.ankle,
-  kneeLength: apiData.trouserLength - 12, // Approximate (waist to knee)
+  kneeLength: apiData.trouserLength - 12,
   ankleLength: apiData.trouserLength,
 });
 
-const mapApiToUIMeasurement = (apiItem: ApiMeasurement, index: number): Measurement => ({
-  id: `measurement-${index}`,
+const mapApiToUIMeasurement = (apiItem: ApiMeasurement): Measurement => ({
+  id: apiItem.tag, // Use tag as id since it's unique per user
   name: apiItem.tag.split('-')[0] || apiItem.tag,
   tag: apiItem.tag,
   description: `${apiItem.tag} measurements`,
@@ -239,73 +178,28 @@ const mapApiToUIMeasurement = (apiItem: ApiMeasurement, index: number): Measurem
   measurements: mapApiToUIMeasurements(apiItem)
 });
 
-/* ===================== Main Page ===================== */
-
 export default function Page() {
   const [showNew, setShowNew] = useState(false);
   const [showDefaultModal, setShowDefaultModal] = useState(false);
   const [editingMeasurement, setEditingMeasurement] = useState<Measurement | null>(null);
   const [viewingMeasurement, setViewingMeasurement] = useState<Measurement | null>(null);
   const [deletingMeasurement, setDeletingMeasurement] = useState<Measurement | null>(null);
-  const [measurements, setMeasurements] = useState<Measurement[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [selectedTag, setSelectedTag] = useState<string>("");
 
   const { getUserDetails } = useLocalStorage("userDetails", null);
   const token = getUserDetails()?.accessToken;
+  const email = getUserDetails()?.emailAddress;
 
-  // Fetch all measurements
+  // Fetch all measurements - useFetch handles the useEffect internally
   const { data: measurementsData, isLoading: measurementsLoading, callApi: fetchMeasurements } = 
     useFetch("GET", null, `${baseUrL}/get-body-measurement-by-user`);
 
-  // Fetch by tag when selected
-  const { data: taggedData, callApi: fetchByTag } = 
-    useFetch("GET", null, selectedTag ? `${baseUrL}/get-body-measurement-by-user-by-tag?tag=${selectedTag}` : "");
-
-  useEffect(() => { 
-    fetchMeasurements(); 
-  }, []);
-
-  // Handle tag selection
-  useEffect(() => {
-    if (selectedTag) {
-      fetchByTag();
-    } else {
-      fetchMeasurements();
-    }
-  }, [selectedTag]);
-  
-  // Update measurements from API
-  useEffect(() => {
-    if (measurementsData && Array.isArray(measurementsData)) {
-      const mapped = measurementsData.map((item: ApiMeasurement, index: number) => 
-        mapApiToUIMeasurement(item, index)
-      );
-      // Sort so default is first
-      const sorted = [...mapped].sort((a, b) => {
-        if (a.isDefault) return -1;
-        if (b.isDefault) return 1;
-        return 0;
-      });
-      setMeasurements(sorted);
-    }
+  // Transform API data to UI format
+  const measurements = React.useMemo(() => {
+    if (!measurementsData || !Array.isArray(measurementsData)) return [];
+    return measurementsData.map((item: ApiMeasurement) => mapApiToUIMeasurement(item));
   }, [measurementsData]);
-
-  useEffect(() => {
-    if (taggedData && Array.isArray(taggedData)) {
-      const mapped = taggedData.map((item: ApiMeasurement, index: number) => 
-        mapApiToUIMeasurement(item, index)
-      );
-      // Sort so default is first
-      const sorted = [...mapped].sort((a, b) => {
-        if (a.isDefault) return -1;
-        if (b.isDefault) return 1;
-        return 0;
-      });
-      setMeasurements(sorted);
-    }
-  }, [taggedData]);
 
   const defaultItem = measurements.find(m => m.isDefault);
   const savedItems = measurements.filter(m => !m.isDefault);
@@ -321,7 +215,6 @@ export default function Page() {
   const handleSaveMeasurement = async (formData: any) => {
     setIsSaving(true);
     try {
-      // Convert form data to API format
       const apiRequest: ApiMeasurement = {
         tag: formData.tag,
         neck: Number(formData.neck),
@@ -338,7 +231,7 @@ export default function Page() {
         knee: Number(formData.knee),
         ankle: Number(formData.ankle),
         trouserLength: Number(formData.trouserLength),
-        isDefault: formData.isDefault === 'on' // Checkbox value
+        isDefault: formData.isDefault === 'on'
       };
 
       const url = editingMeasurement ? `${baseUrL}/update-body-measurement` : `${baseUrL}/create-body-measurement`;
@@ -353,7 +246,12 @@ export default function Page() {
         body: JSON.stringify(apiRequest),
       });
 
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      if (!response.ok) {
+        errorToast(`Failed to ${method === "PUT"? "Update": "Create"}`)
+        throw new Error(`HTTP error! status: ${response.status}`);
+      } else{
+        successToast(`${method === "PUT"? "Updated": "Created"} successfully`)
+      }
       
       await fetchMeasurements();
       setShowNew(false);
@@ -366,19 +264,24 @@ export default function Page() {
   };
 
   const handleConfirmDelete = async () => {
-    if (!deletingMeasurement) return;
+    if (!deletingMeasurement || !email) return;
     setIsDeleting(true);
     try {
-      // Note: You'll need to add a delete endpoint that uses tag
-      const response = await fetch(`${baseUrL}/delete-body-measurement/${deletingMeasurement.tag}`, {
+      const response = await fetch(`${baseUrL}/delete-body-measurement?tag=${deletingMeasurement.tag}&email=${encodeURIComponent(email)}`, {
         method: 'DELETE',
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
       });
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      setMeasurements(prev => prev.filter(m => m.id !== deletingMeasurement.id));
+      if (!response.ok){
+          successToast(`Failed to Delete`);
+          throw new Error(`HTTP error! status: ${response.status}`);
+      } else{
+        successToast(`Deleted successfully`);
+      }
+      
+      await fetchMeasurements();
       setDeletingMeasurement(null);
     } catch (error) {
       console.error("Error deleting measurement:", error);
@@ -402,6 +305,32 @@ export default function Page() {
     setEditingMeasurement(null);
   };
 
+  const getFieldDefaultValue = (fieldKey: string) => {
+    if (!editingMeasurement?.measurements) return undefined;
+    
+    const measurements = editingMeasurement.measurements;
+    
+    const fieldMap: Record<string, keyof typeof measurements> = {
+      'neck': 'neck',
+      'shoulder': 'shoulder',
+      'chest': 'chest',
+      'tummy': 'tummy',
+      'hipWidth': 'hipWidth',
+      'neckToHipLength': 'lengthNeckToHip',
+      'shortSleeveAtBiceps': 'shortSleeveLength',
+      'midSleeveAtElbow': 'elbowLength',
+      'longSleeveAtWrist': 'longSleeveLength',
+      'waist': 'waist',
+      'thigh': 'thighWidth',
+      'knee': 'kneeWidth',
+      'ankle': 'ankleWidth',
+      'trouserLength': 'ankleLength'
+    };
+    
+    const measurementKey = fieldMap[fieldKey];
+    return measurementKey ? measurements[measurementKey] : undefined;
+  };
+
   if (measurementsLoading) {
     return (
       <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
@@ -419,21 +348,6 @@ export default function Page() {
         <PageHeader />
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-          {/* Tag Selection Dropdown */}
-          <div className="mb-6 max-w-md">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Tag</label>
-            <select
-              value={selectedTag}
-              onChange={(e) => setSelectedTag(e.target.value)}
-              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200"
-            >
-              <option value="">All Measurements</option>
-              {measurements.map((m) => (
-                <option key={m.id} value={m.tag}>{m.tag}</option>
-              ))}
-            </select>
-          </div>
-
           {/* Toolbar */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8">
             <div className="w-full max-w-md">
@@ -597,19 +511,7 @@ export default function Page() {
                         step="0.1"
                         className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200 pr-10"
                         placeholder="0"
-                        // defaultValue={
-                        //   editingMeasurement?.measurements?.[
-                        //     field.key === 'neckToHipLength' ? 'lengthNeckToHip' :
-                        //     field.key === 'shortSleeveAtBiceps' ? 'shortSleeveLength' :
-                        //     field.key === 'midSleeveAtElbow' ? 'elbowLength' :
-                        //     field.key === 'longSleeveAtWrist' ? 'longSleeveLength' :
-                        //     field.key === 'thigh' ? 'thighWidth' :
-                        //     field.key === 'knee' ? 'kneeWidth' :
-                        //     field.key === 'ankle' ? 'ankleWidth' :
-                        //     field.key === 'trouserLength' ? 'ankleLength' :
-                        //     field.key
-                        //   ]
-                        // }
+                        defaultValue={getFieldDefaultValue(field.key)}
                         required
                       />
                       <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500">in</span>
