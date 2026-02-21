@@ -135,3 +135,8 @@ export interface SingleOrderResponse {
     getOrderByOrderId: OrderDetail;
   };
 }
+
+export interface VendorOrdersProps {
+  vendorId?: string;
+  baseUrl?: string;
+}
