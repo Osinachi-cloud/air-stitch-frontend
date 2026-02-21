@@ -28,7 +28,7 @@ export default function AccountOverviewPage() {
 
   const fetchCustomerUrl = useMemo(() =>
     `${baseUrL}/customer-details?emailAddress=${encodeURIComponent(email === undefined ? "" : email)}`,
-    []
+    [email]
   );
 
   const {

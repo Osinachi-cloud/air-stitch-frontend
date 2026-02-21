@@ -1,11 +1,10 @@
 "use client"
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useParams } from "next/navigation";
 import { useFetch } from "@/hooks/useFetch";
 import { baseUrL } from "@/env/URLs";
 import { useRouter } from 'next/navigation';
 import { ProductDto, ProductVariation, Review } from "@/types/product";
-import { useMemo } from 'react';
 import { usePost } from "@/hooks/usePost";
 
 const ProductDetails = () => {
@@ -17,6 +16,28 @@ const ProductDetails = () => {
   const [measurement, setMeasurement] = useState("");
   const [sleeveType, setSleeveType] = useState<string>();
 
+  // ✅ Get productId safely (with fallback)
+  const productId = params?.productId as string || '';
+  
+  // ✅ ALL HOOKS MUST BE HERE - BEFORE any conditional returns
+  const addToCartRequestBody = useMemo(() => ({
+    color: selectedColor,
+    sleeveType: sleeveType,
+    measurementTag: measurement,
+    quantity: quantity
+  }), [selectedColor, sleeveType, measurement, quantity]);
+
+  // Only construct URLs if productId exists, otherwise use empty strings
+  const url = productId ? `${baseUrL}/get-product-by-id?productId=${productId}` : '';
+  const bodyMeasurementUrl = `${baseUrL}/get-body-measurement-by-user`;
+  const addToCartUrl = productId ? `${baseUrL}/increase-cart-with-variation?productId=${productId}&quantity=${addToCartRequestBody.quantity}` : '';
+
+  // Always call hooks - they'll handle empty URLs gracefully
+  const { data, isLoading, error } = useFetch("GET", null, url);
+  const { data: bodyMeasurementData, isLoading: bodyMeasurementLoading, error: bodyMeasurementError } = useFetch("GET", null, bodyMeasurementUrl);
+  const { callApi } = usePost("POST", addToCartRequestBody, addToCartUrl, "cart");
+
+  // ✅ NOW you can have conditional returns
   if (!params || !params.productId) {
     return (
       <div className="px-2 md:px-6 py-10 w-[90%] m-auto">
@@ -27,23 +48,6 @@ const ProductDetails = () => {
     );
   }
 
-  const productId = params.productId as string;
-
-  const addToCartRequestBody = useMemo(() => ({
-    color: selectedColor,
-    sleeveType: sleeveType,
-    measurementTag: measurement,
-    quantity: quantity
-  }), [selectedColor, sleeveType, measurement, quantity]);
-
-  const url = `${baseUrL}/get-product-by-id?productId=${productId}`;
-  const bodyMeasurementUrl = `${baseUrL}/get-body-measurement-by-user`;
-  const addToCartUrl = `${baseUrL}/increase-cart-with-variation?productId=${productId}&quantity=${addToCartRequestBody.quantity}`;
-
-  const { data, isLoading, error } = useFetch("GET", null, url);
-  const { data: bodyMeasurementData, isLoading: bodyMeasurementLoading, error: bodyMeasurementError } = useFetch("GET", null, bodyMeasurementUrl);
-  const { callApi } = usePost("POST", addToCartRequestBody, addToCartUrl, "cart");
-
   const product: ProductDto | null = data || null;
 
   const reviews: Review[] = [
@@ -51,16 +55,6 @@ const ProductDetails = () => {
     { name: "Johnny Doe", rating: 4, comment: "Lorem ipsum dolor sit amet consectetur..." },
     { name: "Uchenna Chizara", rating: 3, comment: "Lorem ipsum dolor sit amet consectetur..." },
   ];
-
-  if (!productId) {
-    return (
-      <div className="px-2 md:px-6 py-10 w-[90%] m-auto">
-        <div className="flex justify-center items-center py-20">
-          <div className="text-lg text-red-600">Error: Product ID is missing</div>
-        </div>
-      </div>
-    );
-  }
 
   if (isLoading) {
     return (
@@ -85,7 +79,7 @@ const ProductDetails = () => {
   }
 
   const uniqueSleeveTypes = [...new Set(data.productVariation.map((product: ProductVariation) => product.sleeveType))];
-
+  
   return (
     <>
       <div className="px-2 md:px-6 py-10 w-[90%] m-auto">
