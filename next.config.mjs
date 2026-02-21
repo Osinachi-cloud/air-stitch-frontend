@@ -7,7 +7,7 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    reactStrictMode: false,
+    reactStrictMode: true,
     compiler: {
       // warnings: {
       //   extraAttributes: 'off',
