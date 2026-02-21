@@ -178,10 +178,18 @@ export default function LikesPage() {
                                                 {/* Product Image */}
                                                 <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gray-100 flex-shrink-0 rounded-md overflow-hidden">
                                                     {product.productImage ? (
-                                                        <img
-                                                            src={product.productImage}
+                                                        // <img
+                                                        //     src={product.productImage}
+                                                        //     alt={product.name}
+                                                        //     className="w-full h-full object-cover"
+                                                        // />
+
+                                                        <Image
+                                                            src={product.productImage || "/images/placeholder-product.png"}
                                                             alt={product.name}
-                                                            className="w-full h-full object-cover"
+                                                            width={500}
+                                                            height={500}
+                                                            className="w-full h-auto rounded-lg"
                                                         />
                                                     ) : (
                                                         <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs sm:text-sm">
@@ -307,8 +315,8 @@ export default function LikesPage() {
                                                     onClick={() => handlePageChange(i)}
                                                     disabled={deletingId !== null || addingToCartId !== null}
                                                     className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg text-sm sm:text-base font-medium transition-colors ${pageRequest.page === i
-                                                            ? 'bg-black text-white'
-                                                            : 'border border-gray-300 hover:bg-gray-50'
+                                                        ? 'bg-black text-white'
+                                                        : 'border border-gray-300 hover:bg-gray-50'
                                                         } disabled:opacity-50 disabled:cursor-not-allowed`}
                                                     aria-label={`Go to page ${i + 1}`}
                                                     aria-current={pageRequest.page === i ? 'page' : undefined}

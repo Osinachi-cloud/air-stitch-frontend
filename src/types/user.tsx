@@ -86,10 +86,10 @@ export interface IUserData {
     vendorId: string | null;
     tier: string | null;
     country: string | null;
-    password: string | null; // Likely always null or should be omitted in a secure client
+    password: string | null; 
     firstName: string;
     lastName: string;
-    emailAddress: string;
+    emailAddress: string | number | boolean;
     phoneNumber: string;
     hasPin: boolean;
     roleDto: IRoleDto;

@@ -153,8 +153,8 @@ const mapApiToUIMeasurement = (apiItem: ApiMeasurement): Measurement => {
     id: apiItem.tag,
     name: name,
     tag: apiItem.tag,
-    description: `${name}'s measurements`,
-    isDefault: apiItem.default,  // ✅ Map API's 'default' to UI's 'isDefault'
+    description: `${name}&apos;s measurements`,
+    isDefault: apiItem.default, 
     
     measurements: {
       // Top Body
@@ -169,9 +169,9 @@ const mapApiToUIMeasurement = (apiItem: ApiMeasurement): Measurement => {
       bicepWidth: apiItem.shortSleeveAtBiceps,
       elbowWidth: apiItem.midSleeveAtElbow,
       wristWidth: apiItem.longSleeveAtWrist,
-      shortSleeveLength: apiItem.shortSleeveAtBiceps, // If this is correct
-      elbowLength: apiItem.midSleeveAtElbow,          // If this is correct
-      longSleeveLength: apiItem.longSleeveAtWrist,     // If this is correct
+      shortSleeveLength: apiItem.shortSleeveAtBiceps,
+      elbowLength: apiItem.midSleeveAtElbow,       
+      longSleeveLength: apiItem.longSleeveAtWrist,
       
       // Lower Body
       waist: apiItem.waist,
@@ -179,7 +179,7 @@ const mapApiToUIMeasurement = (apiItem: ApiMeasurement): Measurement => {
       thighWidth: apiItem.thigh,
       kneeWidth: apiItem.knee,
       ankleWidth: apiItem.ankle,
-      kneeLength: apiItem.trouserLength - 12, // Your calculation
+      kneeLength: apiItem.trouserLength - 12, 
       ankleLength: apiItem.trouserLength,
     }
   };
@@ -363,7 +363,6 @@ export default function Page() {
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
             {/* Left column */}
             <div className="space-y-6">
-              {/* Default Measurement Card - Always shows if there's a default */}
               {defaultItem && (
                 <div className="rounded-2xl border-2 border-gray-900 bg-white p-6 relative">
                   <div className="absolute -top-3 left-4 bg-gray-900 text-white px-3 py-1 rounded-lg text-xs font-medium flex items-center gap-1">
@@ -389,7 +388,7 @@ export default function Page() {
 
                 {savedItems.length === 0 ? (
                   <div className="rounded-xl border-2 border-dashed border-gray-200 p-8 text-center">
-                    <p className="text-sm text-gray-500">No saved measurements yet.</p>
+                    <p className="text-sm text-gray-500">No measurements yet</p>
                   </div>
                 ) : (
                   <div className="space-y-3">

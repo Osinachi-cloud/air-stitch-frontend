@@ -43,11 +43,12 @@ export interface SleeveOption {
 }
 
 export interface Review {
-  id: string;
-  rating: number;
-  comment: string;
-  author: string;
-  date: string;
+  id?: string;
+  rating: number ;
+  comment?: string;
+  author?: string;
+  date?: string;
+  name?: string;
 }
 
 export interface RelatedProduct {
@@ -60,4 +61,44 @@ export interface RelatedProduct {
 export interface ProductVariation {
   color: string;
   sleeveType: string;
+}
+
+
+
+// export interface Review {
+//   name: string;
+//   rating: number;
+//   comment: string;
+// }
+
+export interface ProductDto {
+  name: string;
+  code: string;
+  productImage: string;
+  price: number;
+  quantity: number;
+  outOfStock: boolean;
+  category: string;
+  provider: string;
+  fixedPrice: boolean;
+  country: string;
+  publishStatus: string;
+  discount: number;
+  productId: string;
+  shortDescription: string;
+  longDescription: string;
+  materialUsed: string;
+  readyIn: string;
+  sellingPrice: number;
+  amountByQuantity: number;
+  liked: boolean;
+  vendor: any;
+  productVariation: Array<{
+    color: string;
+    sleeveType: string;
+  }>;
+}
+
+export interface ProductFilterRequest {
+  productId: string;
 }
