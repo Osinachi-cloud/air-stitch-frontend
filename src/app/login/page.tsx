@@ -31,16 +31,7 @@ const LoginPage = () => {
   const loginUrl = `${baseUrL}/customer-login`;
   const router = useRouter();
   
-  const userDetails = useAppSelector((state) => state.auth.userDetails);
-  const  { value , getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
-
-  useEffect(() => {
-    console.log("Updated User Details:" , userDetails);
-    console.log("value =======>>>", getUserDetails()?.accessToken);
-    if (userDetails && userDetails.access_token) {
-      router.push('/');
-    }
-  }, [userDetails, router]);
+  const  { setValue: setStoredValue } = useLocalStorage("userDetails", null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

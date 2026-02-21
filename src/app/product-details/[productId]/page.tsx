@@ -1,78 +1,33 @@
 "use client"
-import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams } from "next/navigation";
-import { useFetch } from "@/hooks/useFetch"; // Adjust import path as needed
+import { useFetch } from "@/hooks/useFetch";
 import { baseUrL } from "@/env/URLs";
 import { useRouter } from 'next/navigation';
-// import { RootState } from "@/stores/store";
-import { useSelector } from "react-redux";
-import { RootState, useAppSelector } from "@/redux/store";
-import { ProductVariation } from "@/types/product";
-import { useCallback, useMemo } from 'react';
+import { ProductDto, ProductVariation, Review } from "@/types/product";
+import { useMemo } from 'react';
 import { usePost } from "@/hooks/usePost";
-import { errorToast } from "@/hooks/UseToast";
-// import { ToastContainer } from "react-toastify";
-
-
-interface Review {
-  name: string;
-  rating: number;
-  comment: string;
-}
-
-interface ProductDto {
-  name: string;
-  code: string;
-  productImage: string;
-  price: number;
-  quantity: number;
-  outOfStock: boolean;
-  category: string;
-  provider: string;
-  fixedPrice: boolean;
-  country: string;
-  publishStatus: string;
-  discount: number;
-  productId: string;
-  shortDescription: string;
-  longDescription: string;
-  materialUsed: string;
-  readyIn: string;
-  sellingPrice: number;
-  amountByQuantity: number;
-  liked: boolean;
-  vendor: any;
-  productVariation: Array<{
-    color: string;
-    sleeveType: string;
-  }>;
-}
-
-interface ProductFilterRequest {
-  productId: string;
-}
 
 const ProductDetails = () => {
   const params = useParams();
+  const router = useRouter();
+  
+  const [quantity, setQuantity] = useState(1);
+  const [selectedColor, setSelectedColor] = useState("");
+  const [measurement, setMeasurement] = useState("");
+  const [sleeveType, setSleeveType] = useState<string>();
 
-  // Add null check for params
-  if (!params) {
+  if (!params || !params.productId) {
     return (
       <div className="px-2 md:px-6 py-10 w-[90%] m-auto">
         <div className="flex justify-center items-center py-20">
-          <div className="text-lg text-red-600">Error: Unable to load product details</div>
+          <div className="text-lg text-red-600">Error: Product ID is missing</div>
         </div>
       </div>
     );
   }
 
   const productId = params.productId as string;
-
-  const [quantity, setQuantity] = useState(1);
-  const [selectedColor, setSelectedColor] = useState("");
-  const [measurement, setMeasurement] = useState("");
-  const [sleeveType, setSleeveType] = useState<string>();
 
   const addToCartRequestBody = useMemo(() => ({
     color: selectedColor,
@@ -82,26 +37,14 @@ const ProductDetails = () => {
   }), [selectedColor, sleeveType, measurement, quantity]);
 
   const url = `${baseUrL}/get-product-by-id?productId=${productId}`;
-  const bodyMeasurementUrl = `${baseUrL}/get-body-measurement-by-user`
+  const bodyMeasurementUrl = `${baseUrL}/get-body-measurement-by-user`;
   const addToCartUrl = `${baseUrL}/increase-cart-with-variation?productId=${productId}&quantity=${addToCartRequestBody.quantity}`;
-
-  // const requestBody: ProductFilterRequest = { productId };
 
   const { data, isLoading, error } = useFetch("GET", null, url);
   const { data: bodyMeasurementData, isLoading: bodyMeasurementLoading, error: bodyMeasurementError } = useFetch("GET", null, bodyMeasurementUrl);
-  const { data: addToCartResponse, isLoading: addToCartLoading, error: addToCartError, callApi } = usePost("POST", addToCartRequestBody, addToCartUrl, "cart");
-  const router = useRouter();
+  const { callApi } = usePost("POST", addToCartRequestBody, addToCartUrl, "cart");
+
   const product: ProductDto | null = data || null;
-
-  // errorToast(error || 'Login failed');
-  // errorToast(error || 'Login failed');
-  // errorToast(addToCartError || 'error processing request');
-
-  // useEffect(() => {
-  //   if (product?.productVariation && product.productVariation.length > 0) {
-  //     setSelectedColor(product.productVariation[0].color || "black");
-  //   }
-  // }, [product]);
 
   const reviews: Review[] = [
     { name: "Abiola Yewande", rating: 5, comment: "Lorem ipsum dolor sit amet consectetur..." },
@@ -226,38 +169,6 @@ const ProductDetails = () => {
             </div>
 
             {/* Measurement */}
-            {/* <div>
-              <select
-                value={measurement}
-                onChange={(e) => setMeasurement(e.target.value)}
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring"
-              > 
-                            <option disabled>Select Measurement</option>
-
-              {
-                  !bodyMeasurementLoading ? (
-                    !bodyMeasurementError ?
-                      (
-                        bodyMeasurementData && bodyMeasurementData.length > 0 ? (
-                          bodyMeasurementData.map((bm: any) => (
-                            
-                            <option key={bm.tag} value={bm.tag}>{bm.tag}</option>
-                          ))
-                        ) : (
-                          <option value="">No measurements found</option>
-                        )
-                      ) : (
-                        <option value="">Error loading measurements : {bodyMeasurementError}</option>
-                      )
-                  ) : (
-                    <option>Loading measurements...</option>
-                  )
-                }
-              </select>
-            </div> */}
-
-
-            {/* Measurement */}
             <div>
               <select
                 value={measurement}
@@ -364,7 +275,7 @@ const ProductDetails = () => {
 
             <h2 className="text-2xl font-semibold mb-4">Review (3)</h2>
             <div className="space-y-6">
-              {reviews.map((review, idx) => (
+              {reviews.map((review: Review, idx) => (
                 <div key={idx}>
                   <p className="font-bold">{review.name}</p>
                   <div className="flex gap-1">

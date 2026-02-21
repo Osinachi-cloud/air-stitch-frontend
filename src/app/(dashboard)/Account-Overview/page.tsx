@@ -1,11 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import Image from 'next/image';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { baseUrL } from '@/env/URLs';
 import { User } from '@/types/user';
+import { useFetch } from "@/hooks/useFetch";
 
 interface CustomerOverview {
   firstName?: string;
@@ -19,71 +20,23 @@ interface CustomerOverview {
 export default function AccountOverviewPage() {
   const router = useRouter();
   const { getUserDetails } = useLocalStorage<User>('userDetails');
-  const [customer, setCustomer] = useState<CustomerOverview>({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const stored = getUserDetails();
+  console.log("Stored user details:", stored);
 
-  const fetchCustomerData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const stored = getUserDetails();
-      console.log("Stored user details:", stored);
-      
-      const email = stored?.emailAddress;
-      const token = stored?.accessToken;
+  const email = stored?.emailAddress;
+  const token = stored?.accessToken;
 
-      if (!email) {
-        throw new Error('No email found in localStorage. Please login again.');
-      }
+  const fetchCustomerUrl = useMemo(() =>
+    `${baseUrL}/customer-details?emailAddress=${encodeURIComponent(email === undefined ? "" : email)}`,
+    []
+  );
 
-      const url = `${baseUrL}/customer-details?emailAddress=${encodeURIComponent(email)}`;
-      console.log("Fetching from URL:", url);
-      
-      const res = await fetch(url, {
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-        cache: 'no-cache'
-      });
-
-      if (!res.ok) {
-        throw new Error(`Failed to fetch customer details: ${res.status}`);
-      }
-
-      const data = await res.json();
-      console.log("Received customer data:", data);
-      
-      setCustomer({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        emailAddress: data.emailAddress,
-        phoneNumber: data.phoneNumber,
-        profileImage: data.profileImage,
-        country: data.country,
-      });
-    } catch (err) {
-      console.error('Failed to load customer details', err);
-      setError(err instanceof Error ? err.message : 'Failed to load data');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCustomerData();
-
-    // Listen for updates from settings page
-    const handleUserDetailsUpdated = () => {
-      console.log("User details updated event received");
-      fetchCustomerData();
-    };
-
-    window.addEventListener('userDetailsUpdated', handleUserDetailsUpdated);
-    
-    return () => {
-      window.removeEventListener('userDetailsUpdated', handleUserDetailsUpdated);
-    };
-  }, []);
+  const {
+    data: customer,
+    isLoading: loading,
+    error,
+    callApi: fetchCustomerData
+  } = useFetch("GET", null, fetchCustomerUrl);
 
   if (loading) {
     return (
@@ -106,7 +59,7 @@ export default function AccountOverviewPage() {
             </svg>
           </div>
           <p className="text-red-600 mb-4">Error: {error}</p>
-          <button 
+          <button
             onClick={() => fetchCustomerData()}
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
           >
@@ -117,10 +70,10 @@ export default function AccountOverviewPage() {
     );
   }
 
-  const fullName = `${customer.firstName || ''} ${customer.lastName || ''}`.trim() || '—';
-  const email = customer.emailAddress || '—';
-  const phone = customer.phoneNumber ? `+234 ${customer.phoneNumber}` : '—';
-  const address = customer.country 
+  const fullName = `${customer?.firstName || ''} ${customer?.lastName || ''}`.trim() || '—';
+  const emailAddress = customer?.emailAddress || '—';
+  const phone = customer?.phoneNumber ? `+234 ${customer?.phoneNumber}` : '—';
+  const address = customer?.country
     ? `No. 93 Skyfield Apartments, Yaba, ${customer.country}`
     : 'No. 93 Skyfield Apartments, Yaba, Lagos';
 
@@ -135,12 +88,12 @@ export default function AccountOverviewPage() {
           {/* Left: Profile Image */}
           <div className="flex items-start justify-center md:justify-start">
             <Image
-              src={customer.profileImage || "/images/Men.png"}
+              src={customer?.profileImage || "/images/Men.png"}
               alt="Profile"
               width={160}
               height={160}
               className="h-40 w-40 rounded-full object-cover border-4 border-gray-200"
-              unoptimized={customer.profileImage?.startsWith('data:image')}
+              unoptimized={customer?.profileImage?.startsWith('data:image')}
             />
           </div>
 
@@ -153,7 +106,7 @@ export default function AccountOverviewPage() {
               </h2>
               <div className="mt-2 text-sm text-gray-700 leading-6">
                 <div className="font-medium">{fullName}</div>
-                <div className="text-gray-600">{email}</div>
+                <div className="text-gray-600">{emailAddress}</div>
                 <div className="text-gray-600">{phone}</div>
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
