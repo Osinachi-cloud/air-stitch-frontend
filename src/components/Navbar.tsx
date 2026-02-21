@@ -93,7 +93,7 @@ const Navbar = () => {
       <div className="grid grid-cols-4 p-4 items-center">
         {/* LEFT: Dynamic page title */}
         <div className="hidden md:flex items-center gap-2 text-[24px] px-2">
-          <h1>{pageTitle}</h1>
+          <h1>{}</h1>
         </div>
 
         {/* RIGHT: Icons & User */}
@@ -116,7 +116,7 @@ const Navbar = () => {
       <div className="border-t border-gray-200 w-full"></div>
 
       {/* Path display section */}
-      <div className="flex items-center gap-2 px-6 py-2 bg-white text-gray-600 text-sm">
+      {/* <div className="flex items-center gap-2 px-6 py-2 bg-white text-gray-600 text-sm">
         <Image
             src="/images/Home-Icon.png"
             alt="Home"
@@ -126,7 +126,7 @@ const Navbar = () => {
           />
         <span className="text-gray-500">/</span>
         <span className="text-blue-600 font-medium">{pageTitle}</span>
-      </div>
+      </div> */}
     </div>
   );
 };

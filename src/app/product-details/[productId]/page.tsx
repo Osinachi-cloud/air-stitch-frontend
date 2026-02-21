@@ -226,17 +226,21 @@ const ProductDetails = () => {
             </div>
 
             {/* Measurement */}
-            <div>
+            {/* <div>
               <select
                 value={measurement}
                 onChange={(e) => setMeasurement(e.target.value)}
                 className="w-full p-2 border rounded-md focus:outline-none focus:ring"
-              > {
+              > 
+                            <option disabled>Select Measurement</option>
+
+              {
                   !bodyMeasurementLoading ? (
                     !bodyMeasurementError ?
                       (
                         bodyMeasurementData && bodyMeasurementData.length > 0 ? (
                           bodyMeasurementData.map((bm: any) => (
+                            
                             <option key={bm.tag} value={bm.tag}>{bm.tag}</option>
                           ))
                         ) : (
@@ -250,6 +254,43 @@ const ProductDetails = () => {
                   )
                 }
               </select>
+            </div> */}
+
+
+            {/* Measurement */}
+            <div>
+              <select
+                value={measurement}
+                onChange={(e) => setMeasurement(e.target.value)}
+                className="w-full p-2 border rounded-md focus:outline-none focus:ring"
+              >
+                <option value="" disabled>Select Measurement</option>
+
+                {!bodyMeasurementLoading ? (
+                  !bodyMeasurementError ? (
+                    bodyMeasurementData && bodyMeasurementData.length > 0 ? (
+                      bodyMeasurementData.map((bm: any) => (
+                        <option key={bm.tag} value={bm.tag}>
+                          {bm.tag}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>No measurements found</option>
+                    )
+                  ) : (
+                    <option value="" disabled>Error loading measurements: {bodyMeasurementError}</option>
+                  )
+                ) : (
+                  <option value="" disabled>Loading measurements...</option>
+                )}
+              </select>
+
+              {/* Debug info - remove in production */}
+              {bodyMeasurementData && bodyMeasurementData.length === 1 && (
+                <p className="text-xs text-gray-500 mt-1">
+                  Found 1 measurement. Selected: {measurement || "none"}
+                </p>
+              )}
             </div>
 
             <div className="flex items-center gap-4">

@@ -1,3 +1,4 @@
+// Fix the ApiMeasurement type - remove isDefault
 type ApiMeasurement = {
   tag: string;
   neck: number;
@@ -14,8 +15,8 @@ type ApiMeasurement = {
   knee: number;
   ankle: number;
   trouserLength: number;
-  isDefault: boolean;
-};
+  default: boolean; 
+}
 
 type Measurement = {
   id: string;
@@ -23,6 +24,8 @@ type Measurement = {
   isDefault?: boolean;
   description?: string;
   tag?: string;
+  default?: boolean;
+
   measurements: {
     neck: number;
     chest: number;

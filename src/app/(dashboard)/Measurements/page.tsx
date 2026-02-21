@@ -4,15 +4,14 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { baseUrL } from "@/env/URLs";
 import { useFetch } from "@/hooks/useFetch";
-import { 
-  Eye, 
-  Edit, 
-  Trash2, 
+import {
+  Eye,
+  Edit,
+  Trash2,
   Plus,
   Star
 } from "lucide-react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { errorToast, successToast } from "@/hooks/UseToast";
 
 const PageHeader = () => (
   <div className="px-2 pt-2 pb-6">
@@ -26,18 +25,17 @@ const PageHeader = () => (
 const Chip = ({ label, active = false, onClick }: { label: string; active?: boolean; onClick?: () => void }) => (
   <button
     onClick={onClick}
-    className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-      active
+    className={`px-4 py-2 text-nowrap sm:text-[10px] rounded-xl text-sm font-medium border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${active
         ? "bg-gray-900 text-white border-gray-900 focus:ring-gray-900 shadow-sm"
         : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400 focus:ring-gray-300 shadow-sm"
-    }`}
+      }`}
   >
     {label}
   </button>
 );
 
 const SectionTitle = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-  <h2 className={`text-lg font-semibold text-gray-900 ${className}`}>{children}</h2>
+  <h2 className={`text-[16px] font-semibold text-gray-900 ${className}`}>{children}</h2>
 );
 
 const Subtle = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
@@ -147,36 +145,45 @@ const SlideOver = ({ open, onClose, title, children }: { open: boolean; onClose:
   );
 };
 
-const mapApiToUIMeasurements = (apiData: ApiMeasurement): Measurement["measurements"] => ({
-  neck: apiData.neck,
-  chest: apiData.chest,
-  tummy: apiData.tummy,
-  hipWidth: apiData.hipWidth,
-  lengthNeckToHip: apiData.neckToHipLength,
-  shoulder: apiData.shoulder,
-  bicepWidth: apiData.shortSleeveAtBiceps,
-  elbowWidth: apiData.midSleeveAtElbow,
-  wristWidth: apiData.longSleeveAtWrist,
-  shortSleeveLength: apiData.shortSleeveAtBiceps,
-  elbowLength: apiData.midSleeveAtElbow,
-  longSleeveLength: apiData.longSleeveAtWrist,
-  waist: apiData.waist,
-  lowerHipWidth: apiData.hipWidth,
-  thighWidth: apiData.thigh,
-  kneeWidth: apiData.knee,
-  ankleWidth: apiData.ankle,
-  kneeLength: apiData.trouserLength - 12,
-  ankleLength: apiData.trouserLength,
-});
-
-const mapApiToUIMeasurement = (apiItem: ApiMeasurement): Measurement => ({
-  id: apiItem.tag, // Use tag as id since it's unique per user
-  name: apiItem.tag.split('-')[0] || apiItem.tag,
-  tag: apiItem.tag,
-  description: `${apiItem.tag} measurements`,
-  isDefault: apiItem.isDefault,
-  measurements: mapApiToUIMeasurements(apiItem)
-});
+const mapApiToUIMeasurement = (apiItem: ApiMeasurement): Measurement => {
+  // Extract name from tag (e.g., "Michael-slim" -> "Michael")
+  const name = apiItem.tag.split('-')[0] || apiItem.tag;
+  
+  return {
+    id: apiItem.tag,
+    name: name,
+    tag: apiItem.tag,
+    description: `${name}'s measurements`,
+    isDefault: apiItem.default,  // ✅ Map API's 'default' to UI's 'isDefault'
+    
+    measurements: {
+      // Top Body
+      neck: apiItem.neck,
+      chest: apiItem.chest,
+      tummy: apiItem.tummy,
+      hipWidth: apiItem.hipWidth,
+      lengthNeckToHip: apiItem.neckToHipLength,
+      shoulder: apiItem.shoulder,
+      
+      // Hand - Fix the mappings
+      bicepWidth: apiItem.shortSleeveAtBiceps,
+      elbowWidth: apiItem.midSleeveAtElbow,
+      wristWidth: apiItem.longSleeveAtWrist,
+      shortSleeveLength: apiItem.shortSleeveAtBiceps, // If this is correct
+      elbowLength: apiItem.midSleeveAtElbow,          // If this is correct
+      longSleeveLength: apiItem.longSleeveAtWrist,     // If this is correct
+      
+      // Lower Body
+      waist: apiItem.waist,
+      lowerHipWidth: apiItem.hipWidth,
+      thighWidth: apiItem.thigh,
+      kneeWidth: apiItem.knee,
+      ankleWidth: apiItem.ankle,
+      kneeLength: apiItem.trouserLength - 12, // Your calculation
+      ankleLength: apiItem.trouserLength,
+    }
+  };
+};
 
 export default function Page() {
   const [showNew, setShowNew] = useState(false);
@@ -192,7 +199,7 @@ export default function Page() {
   const email = getUserDetails()?.emailAddress;
 
   // Fetch all measurements - useFetch handles the useEffect internally
-  const { data: measurementsData, isLoading: measurementsLoading, callApi: fetchMeasurements } = 
+  const { data: measurementsData, isLoading: measurementsLoading, callApi: fetchMeasurements } =
     useFetch("GET", null, `${baseUrL}/get-body-measurement-by-user`);
 
   // Transform API data to UI format
@@ -231,28 +238,23 @@ export default function Page() {
         knee: Number(formData.knee),
         ankle: Number(formData.ankle),
         trouserLength: Number(formData.trouserLength),
-        isDefault: formData.isDefault === 'on'
+        default: formData.isDefault === 'on'
       };
 
       const url = editingMeasurement ? `${baseUrL}/update-body-measurement` : `${baseUrL}/create-body-measurement`;
       const method = editingMeasurement ? 'PUT' : 'POST';
-      
+
       const response = await fetch(url, {
         method,
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(apiRequest),
       });
 
-      if (!response.ok) {
-        errorToast(`Failed to ${method === "PUT"? "Update": "Create"}`)
-        throw new Error(`HTTP error! status: ${response.status}`);
-      } else{
-        successToast(`${method === "PUT"? "Updated": "Created"} successfully`)
-      }
-      
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
       await fetchMeasurements();
       setShowNew(false);
       setEditingMeasurement(null);
@@ -269,18 +271,13 @@ export default function Page() {
     try {
       const response = await fetch(`${baseUrL}/delete-body-measurement?tag=${deletingMeasurement.tag}&email=${encodeURIComponent(email)}`, {
         method: 'DELETE',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
       });
-      if (!response.ok){
-          successToast(`Failed to Delete`);
-          throw new Error(`HTTP error! status: ${response.status}`);
-      } else{
-        successToast(`Deleted successfully`);
-      }
-      
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
       await fetchMeasurements();
       setDeletingMeasurement(null);
     } catch (error) {
@@ -307,9 +304,9 @@ export default function Page() {
 
   const getFieldDefaultValue = (fieldKey: string) => {
     if (!editingMeasurement?.measurements) return undefined;
-    
+
     const measurements = editingMeasurement.measurements;
-    
+
     const fieldMap: Record<string, keyof typeof measurements> = {
       'neck': 'neck',
       'shoulder': 'shoulder',
@@ -326,7 +323,7 @@ export default function Page() {
       'ankle': 'ankleWidth',
       'trouserLength': 'ankleLength'
     };
-    
+
     const measurementKey = fieldMap[fieldKey];
     return measurementKey ? measurements[measurementKey] : undefined;
   };
@@ -374,8 +371,8 @@ export default function Page() {
                   </div>
                   <div className="flex items-start justify-between mt-2">
                     <div>
-                      <SectionTitle>Default Body Measurement</SectionTitle>
-                      <Subtle className="mt-2">This is your personal body measurement</Subtle>
+                      <SectionTitle>Default Measurement</SectionTitle>
+                      {/* <Subtle className="mt-2">This is your personal body measurement</Subtle> */}
                       {defaultItem.tag && <Subtle className="mt-1">Tag: {defaultItem.tag}</Subtle>}
                     </div>
                     <Chip label="View Details" onClick={() => setShowDefaultModal(true)} />
@@ -386,7 +383,7 @@ export default function Page() {
               {/* Saved Measurements */}
               <div className="rounded-2xl border border-gray-200 bg-white p-6">
                 <div className="mb-6">
-                  <SectionTitle>Saved Measurements</SectionTitle>
+                  <SectionTitle>Other Measurements</SectionTitle>
                   <Subtle className="mt-2">You can have up to 10 different measurements</Subtle>
                 </div>
 
@@ -400,7 +397,12 @@ export default function Page() {
                       <div key={m.id} className="rounded-xl border border-gray-200 bg-white p-4 hover:bg-gray-50">
                         <div className="flex items-center justify-between">
                           <div>
-                            <div className="font-medium">{m.name}</div>
+                            <div>
+                              <span className="font-medium">{m.name}
+                              </span>
+                              {m.default && <span>DEFAULT</span>
+                              }
+                            </div>
                             {m.description && <div className="mt-1 text-sm text-gray-600">{m.description}</div>}
                             {m.tag && <div className="mt-1 text-xs text-gray-500">Tag: {m.tag}</div>}
                           </div>
@@ -439,14 +441,14 @@ export default function Page() {
           <p className="text-sm text-gray-500 mb-6">Measurements in inches</p>
 
           <div className="space-y-4 mb-8">
-            <input 
-              name="tag" 
-              placeholder="Tag *" 
-              required 
+            <input
+              name="tag"
+              placeholder="Tag *"
+              required
               defaultValue={editingMeasurement?.tag || ''}
-              className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:border-gray-400 focus:outline-none" 
+              className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:border-gray-400 focus:outline-none"
             />
-            
+
             {/* Make Default checkbox */}
             <div className="flex items-center gap-2">
               <input

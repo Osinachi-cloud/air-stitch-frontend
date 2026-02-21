@@ -41,28 +41,10 @@ const menuItems: MenuSection[] = [
         href: "/vendors-order",
         visible: ["tailor"],
       },
-      // {
-      //   icon: "/Bag.png",
-      //   label: "Cart",
-      //   href: "/cart",
-      //   visible: ["admin", "teacher"],
-      // },
-            {
-        icon: "/Bag.png",
-        label: "Like",
-        href: "/like",
-        visible: ["customer"],
-      },
-      {
-        icon: "/message.png",
-        label: "Pending Reviews",
-        href: "/pending-Review",
-        visible: ["customer"],
-      },
       {
         icon: "/Heart.png",
         label: "Liked Items",
-        href: "/Liked-items",
+        href: "/like",
         visible: ["customer"],
       },
       {

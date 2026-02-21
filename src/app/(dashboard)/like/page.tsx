@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { baseUrL } from "@/env/URLs";
@@ -23,6 +23,7 @@ type LikedProduct = {
 };
 
 export default function LikesPage() {
+
     const router = useRouter();
     const [pageRequest, setPageRequest] = useState<PageRequest>({ page: 0, size: 5 });
     const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -32,11 +33,16 @@ export default function LikesPage() {
     const { value, getUserDetails } = useLocalStorage("userDetails", null);
     const token = getUserDetails()?.accessToken;
 
+    const likesUrl = useMemo(() =>
+        `${baseUrL}/get-all-product-likes?page=${pageRequest.page}&size=${pageRequest.size}`,
+        [pageRequest.page, pageRequest.size]
+    );
+
     const {
         data: likedProductsData,
         isLoading: likedProductsLoading,
         callApi: fetchLikes
-    } = useFetch("GET", null, `${baseUrL}/get-all-product-likes?page=${pageRequest.page}&size=${pageRequest.size}`);
+    } = useFetch("GET", null, likesUrl);
 
     // Set initial loading to false once we have data or if there's an error
     useEffect(() => {
@@ -58,11 +64,11 @@ export default function LikesPage() {
                 totalElements: 0
             };
         }
-        
+
         const totalElements = likedProductsData?.total || 0;
         const totalPages = Math.ceil(totalElements / pageRequest.size) || 1;
         const currentPage = likedProductsData?.page || 0;
-        
+
         return {
             totalPages: Math.max(totalPages, 1),
             currentPage: currentPage,
@@ -96,7 +102,7 @@ export default function LikesPage() {
     const handleRemoveLike = async (productId: string) => {
         try {
             setDeletingId(productId);
-            
+
             const response = await fetch(`${baseUrL}/delete-product-like/${productId}`, {
                 method: "DELETE",
                 headers: {
@@ -112,10 +118,10 @@ export default function LikesPage() {
 
             // Show success message
             successToast("Item removed from likes");
-            
+
             // Refresh the likes list
             await fetchLikes();
-            
+
         } catch (err) {
             console.error('Error removing like:', err);
             errorToast("Failed to remove item from likes");
@@ -166,7 +172,7 @@ export default function LikesPage() {
                                     >
                                         {/* Mobile Layout */}
                                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-                                            
+
                                             {/* LEFT: Image + Info */}
                                             <div className="flex items-center gap-3 sm:gap-6 flex-1">
                                                 {/* Product Image */}
@@ -260,7 +266,7 @@ export default function LikesPage() {
                             <p className="text-sm text-gray-500 mb-3">
                                 Page {pageRequest.page + 1} of {paginationInfo.totalPages}
                             </p>
-                            
+
                             {/* Pagination controls */}
                             <div className="flex justify-center items-center gap-1 sm:gap-2">
                                 {/* Previous Button */}
@@ -275,15 +281,15 @@ export default function LikesPage() {
 
                                 {/* Page Numbers - Responsive */}
                                 <div className="flex items-center gap-1 sm:gap-2 mx-2">
-                                    {paginationInfo.totalPages > 0 && 
+                                    {paginationInfo.totalPages > 0 &&
                                         Array.from({ length: paginationInfo.totalPages }, (_, i) => {
                                             // Show limited page numbers on mobile
-                                            const showOnMobile = 
-                                                paginationInfo.totalPages <= 7 || 
-                                                i === 0 || 
-                                                i === paginationInfo.totalPages - 1 || 
+                                            const showOnMobile =
+                                                paginationInfo.totalPages <= 7 ||
+                                                i === 0 ||
+                                                i === paginationInfo.totalPages - 1 ||
                                                 Math.abs(i - pageRequest.page) <= 1;
-                                            
+
                                             if (!showOnMobile) {
                                                 // Show ellipsis
                                                 if (i === 1 && pageRequest.page > 3) {
@@ -294,17 +300,16 @@ export default function LikesPage() {
                                                 }
                                                 return null;
                                             }
-                                            
+
                                             return (
                                                 <button
                                                     key={i}
                                                     onClick={() => handlePageChange(i)}
                                                     disabled={deletingId !== null || addingToCartId !== null}
-                                                    className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg text-sm sm:text-base font-medium transition-colors ${
-                                                        pageRequest.page === i
+                                                    className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg text-sm sm:text-base font-medium transition-colors ${pageRequest.page === i
                                                             ? 'bg-black text-white'
                                                             : 'border border-gray-300 hover:bg-gray-50'
-                                                    } disabled:opacity-50 disabled:cursor-not-allowed`}
+                                                        } disabled:opacity-50 disabled:cursor-not-allowed`}
                                                     aria-label={`Go to page ${i + 1}`}
                                                     aria-current={pageRequest.page === i ? 'page' : undefined}
                                                 >

@@ -3,60 +3,53 @@ import Link from "next/link"
 import { useEffect, useState, useCallback, useRef } from "react";
 import { usePost, usePostWithoutRouting } from "@/hooks/usePost";
 
-export const Product = ({id, image, title, description, price, productId, getLikeUrl, isLiked = false}: any) => {
-    const [liked, setLiked] = useState(isLiked);
-    const [isProcessing, setIsProcessing] = useState(false);
-    const buttonRef = useRef<HTMLDivElement>(null);
+export const Product = ({ 
+  image, 
+  title, 
+  description, 
+  price, 
+  productId, 
+  onLike,  // Changed from getLikeUrl
+  isLiked = false,
+  isLiking = false // Optional
+}: any) => {
+  const [liked, setLiked] = useState(isLiked);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const scrollPositionRef = useRef(0);
+  const buttonRef = useRef<HTMLDivElement>(null);
+
+
+  useEffect(() => {
+    setLiked(isLiked);
+  }, [isLiked]);
+
+  const handleLikeClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     
-    // Store scroll position before any state updates
-    const scrollPositionRef = useRef(0);
-
-    // Get the URL for this specific product
-    const likeUrl = getLikeUrl(productId);
+    if (isProcessing || isLiking) return;
     
-    const { callApi } = usePostWithoutRouting("POST", null, likeUrl);
+    scrollPositionRef.current = window.scrollY;
+    setIsProcessing(true);
+    
+    try {
+      await onLike(productId); // Call the parent's like function
+      setLiked(!liked);
+      
+      requestAnimationFrame(() => {
+        window.scrollTo(0, scrollPositionRef.current);
+        setTimeout(() => {
+          window.scrollTo(0, scrollPositionRef.current);
+        }, 50);
+      });
+      
+    } catch (error) {
+      console.error('Error liking product:', error);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
-    useEffect(() => {
-        setLiked(isLiked);
-    }, [isLiked]);
-
-    const handleLikeClick = async (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        // Prevent multiple clicks while processing
-        if (isProcessing) return;
-        
-        // Store current scroll position BEFORE any state changes
-        scrollPositionRef.current = window.scrollY;
-        
-        setIsProcessing(true);
-        
-        try {
-            await callApi();
-            
-            // Optimistically update the UI
-            setLiked(!liked);
-            
-            // Use a combination of techniques to ensure scroll position is maintained
-            // First, use requestAnimationFrame to ensure DOM updates are complete
-            requestAnimationFrame(() => {
-                window.scrollTo(0, scrollPositionRef.current);
-                
-                // Double-check after a short delay (for any async layout shifts)
-                setTimeout(() => {
-                    window.scrollTo(0, scrollPositionRef.current);
-                }, 50);
-            });
-            
-        } catch (error) {
-            console.error('Error liking product:', error);
-        } finally {
-            setIsProcessing(false);
-        }
-    };
-
-    // Prevent any unwanted scroll behavior on mount/unmount
     useEffect(() => {
         return () => {
             // Cleanup if needed

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from 'next/navigation'
 import { baseUrL } from "@/env/URLs";
 import { useFetch } from "@/hooks/useFetch";
@@ -27,28 +27,74 @@ type CartProduct = {
 
 export default function CartPage() {
     const router = useRouter();
-    const [pageRequest] = useState<PageRequest>({ page: 0, size: 30 });
+    // const [pageRequest] = useState<PageRequest>({ page: 0, size: 30 });
 
     const { value, getUserDetails } = useLocalStorage("userDetails", null);
     const token = getUserDetails()?.accessToken;
+
+    // const {
+    //     data: cartData,
+    //     isLoading: cartLoading,
+    //     error: cartError,
+    //     callApi: fetchCart
+    // } = useFetch("GET", null, `${baseUrL}/get-cart?page=${pageRequest.page}&size=${pageRequest.size}`);
+
+    // const {
+    //     data: summaryData,
+    //     isLoading: summaryLoading,
+    //     callApi: fetchSummary
+    // } = useFetch("GET", null, `${baseUrL}/sum-amount-by-quantity-by-customerId`);
+
+    // const {
+    //     callApi: clearCart,
+    //     isLoading: clearCartLoading
+    // } = usePost("PUT", null, `${baseUrL}/clear-cart`, null);
+
+
+    // For cart data with pagination
+    const [pageRequest, setPageRequest] = useState<PageRequest>({ page: 0, size: 5 });
+
+
+    const cartUrl = useMemo(() =>
+        `${baseUrL}/get-cart?page=${pageRequest.page}&size=${pageRequest.size}`,
+        [pageRequest.page, pageRequest.size] 
+    );
 
     const {
         data: cartData,
         isLoading: cartLoading,
         error: cartError,
         callApi: fetchCart
-    } = useFetch("GET", null, `${baseUrL}/get-cart?page=${pageRequest.page}&size=${pageRequest.size}`);
+    } = useFetch("GET", null, cartUrl);
+
+    const summaryUrl = useMemo(() =>
+        `${baseUrL}/sum-amount-by-quantity-by-customerId`,
+        [] 
+    );
 
     const {
         data: summaryData,
         isLoading: summaryLoading,
         callApi: fetchSummary
-    } = useFetch("GET", null, `${baseUrL}/sum-amount-by-quantity-by-customerId`);
+    } = useFetch("GET", null, summaryUrl);
+
+    const clearCartUrl = useMemo(() =>
+        `${baseUrL}/clear-cart`,
+        []
+    );
 
     const {
         callApi: clearCart,
         isLoading: clearCartLoading
-    } = usePost("PUT", null, `${baseUrL}/clear-cart`, null);
+    } = usePost("PUT", null, clearCartUrl, null);
+
+    useEffect(() => {
+        if (cartData) {
+            fetchSummary();
+        }
+    }, [cartData]);
+
+
 
     const cartItems: CartProduct[] = React.useMemo(() => {
         if (!cartData) return [];
@@ -148,8 +194,8 @@ export default function CartPage() {
     };
 
     return (
-        <div className="p-3 md:p-6 lg:p-8">
-            <h1 className="text-2xl md:text-4xl font-bold text-center mb-6 md:mb-8">Shopping Cart</h1>
+        <div className="p-3 md:p-6 lg:p-8 h-[100vh]">
+            <h1 className="text-2xl md:text-4xl font-bold mb-6 md:mb-8">Shopping Cart</h1>
 
             {isLoading ? (
                 <div className="flex items-center justify-center h-64">
@@ -344,9 +390,9 @@ export default function CartPage() {
                         <div className="p-4 bg-gray-50 border rounded-lg">
                             <h2 className="text-lg font-semibold mb-3">Apply Discount Code</h2>
                             <div className="flex gap-2">
-                                <input 
-                                    className="flex-1 p-3 border rounded text-sm" 
-                                    placeholder="Enter discount code" 
+                                <input
+                                    className="flex-1 p-1 w-[70%] sm:p-3 border rounded text-sm"
+                                    placeholder="Enter discount code"
                                 />
                                 <button className="px-2 py-3 bg-black text-white rounded text-[12px] font-medium hover:bg-gray-800 transition-colors">
                                     Apply
@@ -356,7 +402,7 @@ export default function CartPage() {
 
                         <div className="p-4 bg-gray-50 border rounded-lg">
                             <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
-                            
+
                             <div className="space-y-3">
                                 <div className="flex justify-between items-center">
                                     <div className="text-gray-600">Subtotal</div>
