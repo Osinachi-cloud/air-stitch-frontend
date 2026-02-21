@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import type { ReactElement } from 'react'
 import { useRouter } from 'next/navigation'
 import { baseUrL } from '@/env/URLs';
-import { getAuthResponse } from '@/redux/features/authSlice';
+// import { getAuthResponse } from '@/redux/features/authSlice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/stores/store';
 import { errorToast } from '@/hooks/UseToast';
@@ -92,7 +92,7 @@ const LoginPage = () => {
         errorToast(apiResponseData.message);
       }
 
-      dispatch(getAuthResponse(apiResponseData.data))
+      // dispatch(getAuthResponse(apiResponseData.data))
 
     } catch (e) {
       console.log(e);
