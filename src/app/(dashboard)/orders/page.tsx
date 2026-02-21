@@ -129,7 +129,8 @@ const Orders = () => {
       PAYMENT_COMPLETED: { bg: 'bg-[#fef2dc]', text: 'text-[orange]', label: 'PAID' },
       VENDOR_PROCESSING_START: { bg: 'bg-[#d9fcd1]', text: 'text-[#30a532]', label: 'STARTED' },
       VENDOR_PROCESSING_COMPLETED: { bg: 'bg-[#d4e1f9]', text: 'text-[#387dfd]', label: 'COMPLETED' },
-      REJECTED: { bg: 'bg-[#fdeae9]', text: 'text-[#F57E77]', label: 'REJECTED' }
+      REJECTED: { bg: 'bg-[#fdeae9]', text: 'text-[#F57E77]', label: 'REJECTED' },
+      ""   :  {bg: 'bg-[#f9f9f9]' ,  text: 'text-[#f9f9f9]',label: ''}
     };
 
     const config = statusConfig[status] || statusConfig.PROCESSING;
