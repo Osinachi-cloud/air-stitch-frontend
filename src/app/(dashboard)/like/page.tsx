@@ -44,7 +44,7 @@ export default function LikesPage() {
         callApi: fetchLikes
     } = useFetch("GET", null, likesUrl);
 
-    // Set initial loading to false once we have data or if there's an error
+
     useEffect(() => {
         if (!likedProductsLoading) {
             setIsInitialLoading(false);
@@ -178,12 +178,6 @@ export default function LikesPage() {
                                                 {/* Product Image */}
                                                 <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gray-100 flex-shrink-0 rounded-md overflow-hidden">
                                                     {product.productImage ? (
-                                                        // <img
-                                                        //     src={product.productImage}
-                                                        //     alt={product.name}
-                                                        //     className="w-full h-full object-cover"
-                                                        // />
-
                                                         <Image
                                                             src={product.productImage || "/images/placeholder-product.png"}
                                                             alt={product.name}
@@ -350,7 +344,7 @@ export default function LikesPage() {
                         </svg>
                     </div>
                     <h3 className="text-lg sm:text-xl font-medium text-gray-900 mb-2">No liked items yet</h3>
-                    <p className="text-sm sm:text-base text-gray-500 mb-4 sm:mb-6">Start exploring and like products you're interested in</p>
+                    <p className="text-sm sm:text-base text-gray-500 mb-4 sm:mb-6">Start exploring and like products</p>
                     <button
                         onClick={() => router.push('/')}
                         className="bg-black text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base font-medium hover:bg-gray-800 transition-colors"
