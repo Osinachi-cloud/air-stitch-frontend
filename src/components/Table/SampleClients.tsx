@@ -4,7 +4,7 @@ import { useSampleClients } from '../../hooks/sampleData'
 import { Client } from '../../interfaces'
 import Button from '../Button'
 import Buttons from '../Buttons'
-import CardBoxModal from '../CardBox/Modal'
+// import CardBoxModal from '../CardBox/Modal'
 import UserAvatar from '../UserAvatar'
 
 const TableSampleClients = () => {
@@ -34,7 +34,7 @@ const TableSampleClients = () => {
 
   return (
     <>
-      <CardBoxModal
+      {/* <CardBoxModal
         title="Sample modal"
         buttonColor="info"
         buttonLabel="Done"
@@ -46,9 +46,9 @@ const TableSampleClients = () => {
           Lorem ipsum dolor sit amet <b>adipiscing elit</b>
         </p>
         <p>This is sample modal</p>
-      </CardBoxModal>
+      </CardBoxModal> */}
 
-      <CardBoxModal
+      {/* <CardBoxModal
         title="Please confirm"
         buttonColor="danger"
         buttonLabel="Confirm"
@@ -60,7 +60,7 @@ const TableSampleClients = () => {
           Lorem ipsum dolor sit amet <b>adipiscing elit</b>
         </p>
         <p>This is sample modal</p>
-      </CardBoxModal>
+      </CardBoxModal> */}
 
       <table>
         <thead>
