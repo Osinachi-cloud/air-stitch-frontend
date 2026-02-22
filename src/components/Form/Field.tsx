@@ -44,7 +44,7 @@ const FormField = ({ icons = [], ...props }: Props) => {
         </label>
       )}
       <div className={`${elementWrapperClass}`}>
-        {Children.map(props.children, (child: ReactElement, index) => (
+        {/* {Children.map(props.children, (child: ReactElement, index) => (
           <div className="relative">
             {cloneElement(child, {
               className: `${controlClassName} ${icons[index] ? 'pl-10' : ''}`,
@@ -58,7 +58,7 @@ const FormField = ({ icons = [], ...props }: Props) => {
               />
             )}
           </div>
-        ))}
+        ))} */}
       </div>
       {props.help && (
         <div className="text-xs text-gray-500 dark:text-slate-400 mt-1">{props.help}</div>
