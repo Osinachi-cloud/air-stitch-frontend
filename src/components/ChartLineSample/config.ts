@@ -19,13 +19,13 @@ const randomChartData = (n: number) => {
 const datasetObject = (color: string, points: number) => {
   return {
     fill: false,
-    borderColor: chartColors.default[color],
+    // borderColor: chartColors.default[color],
     borderWidth: 2,
     borderDash: [],
     borderDashOffset: 0.0,
-    pointBackgroundColor: chartColors.default[color],
+    // pointBackgroundColor: chartColors.default[color],
     pointBorderColor: 'rgba(255,255,255,0)',
-    pointHoverBackgroundColor: chartColors.default[color],
+    // pointHoverBackgroundColor: chartColors.default[color],
     pointBorderWidth: 20,
     pointHoverRadius: 4,
     pointHoverBorderWidth: 15,

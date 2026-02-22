@@ -13,7 +13,7 @@ type Props = {
 const FormFilePicker = ({ label, icon, accept, color, isRoundIcon }: Props) => {
   const [file, setFile] = useState(null)
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event:any) => {
     setFile(event.currentTarget.files[0])
   }
 
@@ -25,7 +25,7 @@ const FormFilePicker = ({ label, icon, accept, color, isRoundIcon }: Props) => {
         <Button
           className={`${isRoundIcon ? 'w-12 h-12' : ''} ${showFilename ? 'rounded-r-none' : ''}`}
           iconSize={isRoundIcon ? 24 : undefined}
-          label={isRoundIcon ? null : label}
+          // label={isRoundIcon ? null : label}
           icon={icon}
           color={color}
           roundedFull={isRoundIcon}
@@ -40,7 +40,7 @@ const FormFilePicker = ({ label, icon, accept, color, isRoundIcon }: Props) => {
       </label>
       {showFilename && (
         <div className="px-4 py-2 max-w-full flex-grow-0 overflow-x-hidden bg-gray-100 dark:bg-slate-800 border-gray-200 dark:border-slate-700 border rounded-r">
-          <span className="text-ellipsis max-w-full line-clamp-1">{file.name}</span>
+          {/* <span className="text-ellipsis max-w-full line-clamp-1">{file.name}</span> */}
         </div>
       )}
     </div>
