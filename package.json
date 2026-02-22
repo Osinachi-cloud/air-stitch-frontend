@@ -6,7 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "type-check": "tsc --noEmit",
+    "lint": "next lint",
+    "validate": "yarn type-check && yarn lint && yarn build",
+    "clean": "yarn clean:next && yarn clean:modules",
+    "clean:next": "rimraf .next",
+    "clean:modules": "rimraf node_modules",
+    "rebuild": "yarn clean && yarn install && yarn build",
+    "clean:all": "rimraf .next node_modules yarn.lock"
   },
   "dependencies": {
     "@mdi/js": "^7.4.47",
@@ -34,6 +41,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "postcss": "^8",
+    "rimraf": "^6.1.3",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

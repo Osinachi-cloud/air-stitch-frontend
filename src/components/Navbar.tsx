@@ -64,7 +64,7 @@ const ROUTE_TITLES: Record<string, string> = {
 /** Fallback: prettify last URL segment */
 function titleFromPath(pathname: string) {
   const seg =
-    pathname.split("?")[0].split("#")[0].split("/").filter(Boolean).pop() ?? "";
+    pathname?.split("?")[0]?.split("#")[0]?.split("/").filter(Boolean).pop() ?? "";
   if (!seg) return "Overview";
   return seg.replace(/-/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
 
