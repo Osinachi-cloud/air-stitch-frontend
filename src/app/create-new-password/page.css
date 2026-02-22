@@ -11,6 +11,10 @@
     z-index: 1000;
 }
 
+.just-testing {
+    background-color: transparent
+}
+
 
 .spinner {
     width: 20px;
