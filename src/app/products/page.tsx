@@ -6,15 +6,15 @@ import { ColorOption, SizeOption, SleeveOption } from '@/types/product';
 
 const ProductPage = () => {
   const { product, loading, error } = useProduct('men-black-kaftan');
-  const [selectedColor, setSelectedColor] = useState<ColorOption | undefined>(null);
-  const [selectedSize, setSelectedSize] = useState<SizeOption | null>(null);
-  const [selectedSleeve, setSelectedSleeve] = useState<SleeveOption | null>(null);
+  const [selectedColor, setSelectedColor] = useState<ColorOption | null | undefined>(null);
+  const [selectedSize, setSelectedSize] = useState<SizeOption | null | undefined>(null);
+  const [selectedSleeve, setSelectedSleeve] = useState<SleeveOption | null | undefined>(null);
 
   useState(() => {
     if (product) {
-      setSelectedColor(product?.colors[0]);
-      setSelectedSize(product?.sizes[1]); 
-      setSelectedSleeve(product.sleeveLengths[0]);
+      if(product.colors) setSelectedColor(product?.colors[0]);
+      if(product.sizes) setSelectedSize(product?.sizes[1]); 
+      if(product.sleeveLengths) setSelectedSleeve(product.sleeveLengths[0]);
     }
   });
 

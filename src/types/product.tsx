@@ -10,7 +10,7 @@ export interface Product {
   deliveryTime: string;
   images: string[];
   features: string[];
-  colors: ColorOption[] | null;
+  colors: ColorOption[];
   sizes: SizeOption[];
   sleeveLengths: SleeveOption[];
   reviews: Review[];
