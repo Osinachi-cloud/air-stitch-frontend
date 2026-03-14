@@ -8,6 +8,7 @@ import { useFetch } from "@/hooks/useFetch";
 import { useAppSelector } from "@/redux/store";
 import { usePost } from "@/hooks/usePost";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { isTokenExpired } from "@/hooks/jwtHooks";
 
 export const Products: React.FC = () => {
   const { getUserDetails } = useLocalStorage("userDetails", null);
@@ -20,8 +21,18 @@ export const Products: React.FC = () => {
     publishStatus: 'PUBLISHED',
   }).toString();
   
-  const productsUrl = `${baseUrL}/get-all-products-by-auth?${queryParams}`;
-  const { data: productsData, isLoading: productsLoading, error: productsError } = useFetch("GET", null, productsUrl);
+  const authProductsUrl = `${baseUrL}/get-all-products-by-auth?${queryParams}`;
+  const productsUrl = `${baseUrL}/get-all-products?${queryParams}`;
+
+  const actualUrl = (): string => {
+     if(token == null || token == undefined || isTokenExpired(token)){
+       return productsUrl;
+     } else{
+      return  authProductsUrl;
+     }
+  }
+  
+  const { data: productsData, isLoading: productsLoading, error: productsError } = useFetch("GET", null, actualUrl());
 
   // Fetch user's liked products if user is logged in
   const { data: likedProductsData, isLoading: likedLoading } = useFetch(
