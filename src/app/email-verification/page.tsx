@@ -65,7 +65,7 @@ const EmailVerificationPage = () => {
         saveEmailToStorage(authDetails.email);
         console.log('Email saved to localStorage:', authDetails.email);
         
-        router.push('/signup');
+        router.push('/otpverification');
       } else {
         errorToast(apiResponseData.message);
       }
