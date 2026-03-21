@@ -1,15 +1,23 @@
-// import { useEffect, useState } from "react"
+// import { useEffect, useState, useRef } from "react"
 // import { RootState, useAppSelector } from "@/redux/store";
 // import { useLocalStorage } from "./useLocalStorage";
 // import { errorToast, successToast } from "./UseToast";
 // import { useRouter } from 'next/navigation';
 
-
-
-// export const usePost = (methodType: string, body: any, url: string, route:string | null) => {
+// export const usePost = (methodType: string, body: any, url: string, route: string | null) => {
 //     const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+    
+//     // Add instance tracking
+//     const instanceId = useRef(Math.random().toString(36).substring(7));
+//     const hasLoggedCreation = useRef(false);
+    
+//     // Only log creation once
+//     if (!hasLoggedCreation.current) {
+//         console.log(`📝 Post Hook ${instanceId.current} CREATED for:`, url);
+//         hasLoggedCreation.current = true;
+//     }
 
-//     console.log(methodType, body, url);
+//     console.log(`📦 Post Instance ${instanceId.current} -`, methodType, body, url);
 
 //     const [data, setData] = useState<any>();
 //     const [isLoading, setIsLoading] = useState(false);
@@ -18,17 +26,23 @@
 //     const token = getUserDetails()?.accessToken;
 //     const router = useRouter();
 
-//     console.log("token ====>", token);
-
+//     console.log(`🔑 Post Instance ${instanceId.current} token ====>`, token);
 
 //     const callApi = async () => {
-//         console.log("call Api for me");
+//         // Prevent multiple simultaneous calls
+//         if (isLoading) {
+//             console.log(`⏭️ Post Instance ${instanceId.current} - Already loading, skipping`);
+//             return;
+//         }
+        
+//         console.log(`🚀 Post Instance ${instanceId.current} - Calling API:`, url);
+//         setIsLoading(true);
+        
 //         try {
 //             const headers: Record<string, string> = {
 //                 'Content-Type': 'application/json',
 //             };
 
-//             // Add Authorization header only if token is provided
 //             if (token) {
 //                 headers.Authorization = `Bearer ${token}`;
 //             }
@@ -38,7 +52,6 @@
 //                 headers: headers,
 //             };
 
-//             // Add body for non-GET requests
 //             if (body && methodType !== 'GET') {
 //                 fetchOptions.body = JSON.stringify(body);
 //             }
@@ -53,50 +66,62 @@
 //             const dataResponse = await apiResponse.json();
 //             successToast(dataResponse?.message); 
 //             setData(dataResponse?.message);
-//             setIsLoading(false);
-//             console.log(dataResponse);
-//             if(route !== null && route !== undefined){
-//                 router.push(`/${route}`)
+//             console.log(`✅ Post Instance ${instanceId.current} - Success:`, dataResponse);
+            
+//             if (route !== null && route !== undefined) {
+//                 router.push(`/${route}`);
 //             }
 
 //         } catch (e: any) {
-//             console.log(e.message);
-//             setIsLoading(false);
+//             console.log(`❌ Post Instance ${instanceId.current} - Error:`, e.message);
 //             const msg = e?.message || "Error processing request";
-//             errorToast(msg); 
-
+//             errorToast(msg);
 //             setError(msg);
+//         } finally {
+//             setIsLoading(false);
 //         }
 //     }
 
 //     return { data, isLoading, setIsLoading, callApi, error };
 // }
-
-
 
 // export const usePostWithoutRouting = (methodType: string, body: any, url: string) => {
 //     const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+    
+//     // Add instance tracking
+//     const instanceId = useRef(Math.random().toString(36).substring(7));
+//     const hasLoggedCreation = useRef(false);
+    
+//     if (!hasLoggedCreation.current) {
+//         console.log(`📝 Post Hook (no routing) ${instanceId.current} CREATED for:`, url);
+//         hasLoggedCreation.current = true;
+//     }
 
-//     console.log(methodType, body, url);
+//     console.log(`📦 Post Instance ${instanceId.current} -`, methodType, body, url);
 
 //     const [data, setData] = useState<any>();
 //     const [isLoading, setIsLoading] = useState(false);
 //     const [error, setError] = useState<string | null>(null);
 
 //     const token = getUserDetails()?.accessToken;
-//     const router = useRouter();
 
-//     console.log("token ====>", token);
-
+//     console.log(`🔑 Post Instance ${instanceId.current} token ====>`, token);
 
 //     const callApi = async () => {
-//         console.log("call Api for me");
+//         // Prevent multiple simultaneous calls
+//         if (isLoading) {
+//             console.log(`⏭️ Post Instance ${instanceId.current} - Already loading, skipping`);
+//             return;
+//         }
+        
+//         console.log(`🚀 Post Instance ${instanceId.current} - Calling API:`, url);
+//         setIsLoading(true);
+        
 //         try {
 //             const headers: Record<string, string> = {
 //                 'Content-Type': 'application/json',
 //             };
 
-//             // Add Authorization header only if token is provided
 //             if (token) {
 //                 headers.Authorization = `Bearer ${token}`;
 //             }
@@ -106,7 +131,6 @@
 //                 headers: headers,
 //             };
 
-//             // Add body for non-GET requests
 //             if (body && methodType !== 'GET') {
 //                 fetchOptions.body = JSON.stringify(body);
 //             }
@@ -121,17 +145,15 @@
 //             const dataResponse = await apiResponse.json();
 //             successToast(dataResponse?.message); 
 //             setData(dataResponse?.message);
-//             setIsLoading(false);
-//             console.log(dataResponse);
-    
+//             console.log(`✅ Post Instance ${instanceId.current} - Success:`, dataResponse);
 
 //         } catch (e: any) {
-//             console.log(e.message);
-//             setIsLoading(false);
+//             console.log(`❌ Post Instance ${instanceId.current} - Error:`, e.message);
 //             const msg = e?.message || "Error processing request";
-//             errorToast(msg); 
-
+//             errorToast(msg);
 //             setError(msg);
+//         } finally {
+//             setIsLoading(false);
 //         }
 //     }
 
@@ -142,14 +164,16 @@
 
 
 
-import { useEffect, useState, useRef } from "react"
-import { RootState, useAppSelector } from "@/redux/store";
+
+import { useState, useRef } from "react"
 import { useLocalStorage } from "./useLocalStorage";
 import { errorToast, successToast } from "./UseToast";
 import { useRouter } from 'next/navigation';
+import { useAuth } from "./jwtHooks"; // ADD THIS
 
 export const usePost = (methodType: string, body: any, url: string, route: string | null) => {
     const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+    const { checkTokenAndRedirect } = useAuth(); // ADD THIS
     
     // Add instance tracking
     const instanceId = useRef(Math.random().toString(36).substring(7));
@@ -179,6 +203,9 @@ export const usePost = (methodType: string, body: any, url: string, route: strin
             return;
         }
         
+        // ADD THIS - Check token before posting
+        if (token && !checkTokenAndRedirect()) return;
+        
         console.log(`🚀 Post Instance ${instanceId.current} - Calling API:`, url);
         setIsLoading(true);
         
@@ -202,6 +229,12 @@ export const usePost = (methodType: string, body: any, url: string, route: strin
 
             const apiResponse = await fetch(url, fetchOptions);
 
+            // ADD THIS - Check if response is 401
+            if (apiResponse.status === 401) {
+                checkTokenAndRedirect();
+                return;
+            }
+
             if (!apiResponse.ok) {
                 const errorText = await apiResponse.text();
                 throw new Error(`HTTP error! status: ${apiResponse.status}, message: ${errorText}`);
@@ -210,7 +243,7 @@ export const usePost = (methodType: string, body: any, url: string, route: strin
             const dataResponse = await apiResponse.json();
             successToast(dataResponse?.message); 
             setData(dataResponse?.message);
-            console.log(`✅ Post Instance ${instanceId.current} - Success:`, dataResponse);
+            console.log(`✅ Successful Post Instance ${instanceId.current} - Success:`, dataResponse);
             
             if (route !== null && route !== undefined) {
                 router.push(`/${route}`);
@@ -231,6 +264,7 @@ export const usePost = (methodType: string, body: any, url: string, route: strin
 
 export const usePostWithoutRouting = (methodType: string, body: any, url: string) => {
     const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+    const { checkTokenAndRedirect } = useAuth(); // ADD THIS
     
     // Add instance tracking
     const instanceId = useRef(Math.random().toString(36).substring(7));
@@ -258,6 +292,9 @@ export const usePostWithoutRouting = (methodType: string, body: any, url: string
             return;
         }
         
+        // ADD THIS - Check token before posting
+        if (token && !checkTokenAndRedirect()) return;
+        
         console.log(`🚀 Post Instance ${instanceId.current} - Calling API:`, url);
         setIsLoading(true);
         
@@ -280,6 +317,12 @@ export const usePostWithoutRouting = (methodType: string, body: any, url: string
             }
 
             const apiResponse = await fetch(url, fetchOptions);
+
+            // ADD THIS - Check if response is 401
+            if (apiResponse.status === 401) {
+                checkTokenAndRedirect();
+                return;
+            }
 
             if (!apiResponse.ok) {
                 const errorText = await apiResponse.text();
