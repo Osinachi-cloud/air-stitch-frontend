@@ -441,6 +441,146 @@ export const useFetch = (methodType: string, body: any, url: string | null) => {
     };
 }
 
+
+export const useCallFetch = (methodType: string, body: any, url: string | null, shouldCallApi: boolean) => {
+    const instanceId = useRef(Math.random().toString(36).substring(7));
+    const [data, setData] = useState<any>();
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [responseStatus, setResponseStatus] = useState<number | null>(null);
+    
+    const { getUserDetails } = useLocalStorage("userDetails", null);
+    const token = getUserDetails()?.accessToken
+    const { checkTokenAndRedirect } = useAuth(); // ADD THIS
+
+    // Use refs to track fetch state
+    const hasFetched = useRef(false);
+    const abortControllerRef = useRef<AbortController | null>(null);
+
+    // Memoize body to prevent unnecessary re-fetches
+    const bodyString = body ? JSON.stringify(body) : null;
+
+    const apiFetchOnRender = async () => {
+        // Don't fetch if no URL
+        if (!url) {
+            console.log(`⏭️ Instance ${instanceId.current} - No URL provided`);
+            return;
+        }
+
+        // ADD THIS - Check token before fetching
+        if (token && !checkTokenAndRedirect()) return;
+
+        // Cancel previous request if exists
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+        }
+
+        // Create new abort controller
+        abortControllerRef.current = new AbortController();
+
+        // Prevent double fetch in development with Strict Mode
+        if (hasFetched.current && process.env.NODE_ENV === 'development') {
+            console.log(`⏭️ Instance ${instanceId.current} - Skipping duplicate fetch`);
+            return;
+        }
+        
+        hasFetched.current = true;
+        setIsLoading(true);
+        setError(null);
+        
+        try {
+            const headers: Record<string, string> = {
+                'Content-Type': 'application/json',
+                ...(token && { 'Authorization': `Bearer ${token}` })
+            };
+
+            const fetchOptions: RequestInit = {
+                method: methodType,
+                headers: headers,
+                signal: abortControllerRef.current.signal,
+            };
+
+            if (body && methodType !== 'GET') {
+                fetchOptions.body = JSON.stringify(body);
+            }
+
+            console.log(`🌐 Instance ${instanceId.current} - Fetching:`, url);
+            const apiResponse = await fetch(url, fetchOptions);
+            
+            setResponseStatus(apiResponse.status);
+
+            // ADD THIS - Check if response is 401
+            if (apiResponse.status === 401) {
+                checkTokenAndRedirect();
+                return;
+            }
+
+            // Check if response is JSON
+            const contentType = apiResponse.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                const textResponse = await apiResponse.text();
+                console.error('Non-JSON response:', textResponse);
+                throw new Error(`Expected JSON but got ${contentType || 'no content-type'}`);
+            }
+
+            const dataResponse = await apiResponse.json();
+            
+            if (!apiResponse.ok) {
+                throw new Error(dataResponse.message || `HTTP error! status: ${apiResponse.status}`);
+            }
+
+            setData(dataResponse);
+            console.log(`✅ Instance ${instanceId.current} - Success:`, dataResponse);
+
+        } catch (e: any) {
+            // Don't set error if it's an abort error
+            if (e.name === 'AbortError') {
+                console.log(`🛑 Instance ${instanceId.current} - Request aborted`);
+                return;
+            }
+            
+            console.log(`❌ Instance ${instanceId.current} - Error:`, e);
+            setError(e.message || "An error occurred while fetching data");
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        if (url && shouldCallApi) {
+            apiFetchOnRender();
+        }
+        
+        return () => {
+            hasFetched.current = false;
+            if (abortControllerRef.current) {
+                abortControllerRef.current.abort();
+            }
+        };
+    }, [url, methodType, bodyString, token]);
+
+    const callApi = async () => {
+        // For manual calls, always allow
+        hasFetched.current = false;
+        
+        // Cancel any ongoing request
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+        }
+        
+        await apiFetchOnRender();
+    }
+
+    return { 
+        data, 
+        isLoading, 
+        setIsLoading, 
+        callApi, 
+        error,
+        responseStatus 
+    };
+}
+
 export const useDownload = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
