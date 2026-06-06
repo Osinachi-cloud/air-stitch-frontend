@@ -18,7 +18,7 @@ export const Header = () => {
                         Browse from our different styles that suits your everyday needs, doesn&apos;t leave your pocket empty and saves time spent visiting tailor shops.
                     </p>
                     <Link
-                        href="/signup"
+                        href="/email-verification"
                         className="flex items-center gap-2 bg-white text-black text-[14px] font-medium px-6 py-2.5 rounded w-fit border border-gray-400 hover:bg-gray-100 transition-colors"
                     >
                         Get Started

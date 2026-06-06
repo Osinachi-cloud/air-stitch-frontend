@@ -1,11 +1,12 @@
+import Link from "next/link";
 
 export const LandingBanner = () => {
     return (
         <>
-            <div className="bg-cover bg-center" 
+            <div className="bg-cover bg-center"
             style={{ backgroundImage: "url('/images/landing-bg.png')" }}>
                 <div>
-                    
+
                     {/* <app-navbar></app-navbar> */}
                 </div>
                 <div className="text-[#fff] py-[130px] font-medium font-sans w-[86%] mx-auto grid gap-[2rem]">
@@ -16,9 +17,9 @@ export const LandingBanner = () => {
                         <br />
                         market platform
                     </p>
-                    <div className="bg-[#fff] p-[1rem] text-[#000] flex justify-center items-center rounded w-[162px] md:w-[200px] mt-[1rem]">
+                    <Link href="/email-verification" className="bg-[#fff] p-[1rem] text-[#000] flex justify-center items-center rounded w-[162px] md:w-[200px] mt-[1rem]">
                         Get Started
-                    </div>
+                    </Link>
                 </div>
             </div>
         </>

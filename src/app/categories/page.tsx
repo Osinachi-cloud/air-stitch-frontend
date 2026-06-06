@@ -187,7 +187,7 @@ export default function CategoriesPage() {
                             Browse Products
                         </Link>
                         <Link
-                            href="/signup"
+                            href="/email-verification"
                             className="border border-white text-white text-[14px] font-medium px-6 py-3 rounded hover:bg-white/10 transition-colors"
                         >
                             Get Started
