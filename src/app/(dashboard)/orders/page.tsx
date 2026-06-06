@@ -1,12 +1,14 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { Order, ProductOrderStatistics, ProductOrderRequest, Status, OrderStatus } from '@/types/order';
 import { mockOrderService } from './mockData';
 import { baseUrL } from '@/env/URLs';
 import { useFetch } from '@/hooks/useFetch';
 
 const Orders = () => {
+  const router = useRouter();
   const [orderTotal, setOrderTotal] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -143,10 +145,17 @@ const Orders = () => {
   };
 
   return (
-    <div className="bg-[#F5F4F7] min-h-screen p-2 md:p-4 lg:p-6">
+    <div className="py-6 w-full">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-20 gap-4">
         <div>
-          <h2 className="text-[#15192C] font-semibold text-xl md:text-2xl leading-8">Orders Summary</h2>
+          <div className="flex items-center gap-3">
+            <button onClick={() => router.back()} className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-500 text-gray-600 hover:border-gray-900 hover:text-gray-900 hover:bg-gray-50 transition-all">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+              </svg>
+            </button>
+            <h2 className="text-[#15192C] font-semibold text-xl md:text-2xl leading-8">Orders Summary</h2>
+          </div>
         </div>
         <div className="flex justify-center gap-2 items-center bg-white p-3 md:p-4 rounded-xl cursor-pointer w-full md:w-auto">
           <div className="flex justify-center h-5">
@@ -409,3 +418,4 @@ const Orders = () => {
 };
 
 export default Orders;
+

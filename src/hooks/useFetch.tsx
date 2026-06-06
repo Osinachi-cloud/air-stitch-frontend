@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react"
 import { RootState, useAppSelector } from "@/redux/store";
 import { useLocalStorage } from "./useLocalStorage";
+import { usePathname } from "next/navigation";
 
 
 export const useFetchs = (methodType: string, body: any, url: string) => {
-    const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+    const storageKey = usePathname()?.startsWith("/tailor") ? "tailorDetails" : "customerDetails";
+    const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage(storageKey, null);
 
     console.log(methodType, body, url);
 
@@ -112,8 +114,11 @@ export const useFetch = (methodType: string, body: any, url: string) => {
     const [data, setData] = useState<any>();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    
-    const { getUserDetails } = useLocalStorage("userDetails", null);
+
+    const storageKey = typeof window !== "undefined" && window.location.pathname.startsWith("/tailor")
+        ? "tailorDetails"
+        : "customerDetails";
+    const { getUserDetails } = useLocalStorage(storageKey, null);
     const token = getUserDetails()?.accessToken
 
     // Use a ref to track if this is the first render
@@ -165,13 +170,9 @@ export const useFetch = (methodType: string, body: any, url: string) => {
     }
 
     useEffect(() => {
-        // In development with Strict Mode, this will run twice
-        // but our hasFetched ref will prevent double API calls
         apiFetchOnRender();
-        
-        // Cleanup function
         return () => {
-            console.log(`🧹 Instance ${instanceId.current} - Cleanup`);
+            hasFetched.current = false;
         };
     }, [url, methodType, JSON.stringify(body)]);
 
@@ -188,7 +189,8 @@ export const useFetch = (methodType: string, body: any, url: string) => {
 
 
 export const useCallFetch = (methodType: string, body: any, url: string, shouldCallApi: boolean) => {
-    const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+    const storageKey = usePathname()?.startsWith("/tailor") ? "tailorDetails" : "customerDetails";
+    const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage(storageKey, null);
 
     console.log(methodType, body, url);
 

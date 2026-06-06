@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
@@ -30,7 +30,7 @@ export default function LikesPage() {
     const [addingToCartId, setAddingToCartId] = useState<string | null>(null);
     const [isInitialLoading, setIsInitialLoading] = useState(true);
 
-    const { value, getUserDetails } = useLocalStorage("userDetails", null);
+    const { value, getUserDetails } = useLocalStorage("customerDetails", null);
     const token = getUserDetails()?.accessToken;
 
     const likesUrl = useMemo(() =>
@@ -146,10 +146,17 @@ export default function LikesPage() {
     }
 
     return (
-        <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <div className="py-6 w-full">
             {/* Header */}
             <div className="mb-6 sm:mb-8">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">My Likes</h1>
+                <div className="flex items-center gap-3">
+                  <button onClick={() => router.back()} className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-500 text-gray-600 hover:border-gray-900 hover:text-gray-900 hover:bg-gray-50 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                  </button>
+                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">My Likes</h1>
+                </div>
                 <p className="text-sm sm:text-base text-gray-500 mt-1 sm:mt-2">
                     {paginationInfo.totalElements} {paginationInfo.totalElements === 1 ? 'item' : 'items'} liked
                 </p>
@@ -356,3 +363,4 @@ export default function LikesPage() {
         </div>
     );
 }
+

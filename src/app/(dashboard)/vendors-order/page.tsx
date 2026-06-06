@@ -1,6 +1,7 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { useCallFetch, useFetch } from '@/hooks/useFetch';
 import {
   ProductOrderRequest,
@@ -29,7 +30,8 @@ const statusOptions = {
 // }) => {
 
 const VendorOrders: React.FC = () => {
-    const { value, getUserDetails } = useLocalStorage("userDetails", null);
+    const router = useRouter();
+    const { value, getUserDetails } = useLocalStorage("customerDetails", null);
   const token = getUserDetails()?.accessToken;
   const vendorId = getUserDetails()?.vendorId;
 
@@ -337,11 +339,18 @@ const VendorOrders: React.FC = () => {
   }
 
   return (
-    <div className="bg-[#F5F4F7] min-h-screen p-2 md:p-4 lg:p-6 xl:p-6">
+    <div className="py-6 w-full">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-20 gap-4">
         <div>
-          <h2 className="text-[#15192C] font-semibold text-xl md:text-2xl xl:text-[27px] leading-4">Vendor Orders Summary</h2>
+          <div className="flex items-center gap-3">
+            <button onClick={() => router.back()} className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-500 text-gray-600 hover:border-gray-900 hover:text-gray-900 hover:bg-gray-50 transition-all">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+              </svg>
+            </button>
+            <h2 className="text-[#15192C] font-semibold text-xl md:text-2xl xl:text-[27px] leading-4">Vendor Orders Summary</h2>
+          </div>
         </div>
         <div className="flex justify-center gap-2 items-center bg-white p-3 md:p-4 rounded-xl cursor-pointer w-full md:w-auto hover:bg-gray-50">
           <div className="flex justify-center h-5">
@@ -843,3 +852,4 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
 };
 
 export default VendorOrders;
+

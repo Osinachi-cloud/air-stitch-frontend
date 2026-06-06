@@ -143,13 +143,15 @@
 
 
 import { useEffect, useState, useRef } from "react"
+import { usePathname } from "next/navigation";
 import { RootState, useAppSelector } from "@/redux/store";
 import { useLocalStorage } from "./useLocalStorage";
 import { errorToast, successToast } from "./UseToast";
 import { useRouter } from 'next/navigation';
 
 export const usePost = (methodType: string, body: any, url: string, route: string | null) => {
-    const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+    const storageKey = usePathname()?.startsWith("/tailor") ? "tailorDetails" : "customerDetails";
+    const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage(storageKey, null);
     
     // Add instance tracking
     const instanceId = useRef(Math.random().toString(36).substring(7));
@@ -230,7 +232,8 @@ export const usePost = (methodType: string, body: any, url: string, route: strin
 }
 
 export const usePostWithoutRouting = (methodType: string, body: any, url: string) => {
-    const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+    const storageKey = usePathname()?.startsWith("/tailor") ? "tailorDetails" : "customerDetails";
+    const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage(storageKey, null);
     
     // Add instance tracking
     const instanceId = useRef(Math.random().toString(36).substring(7));

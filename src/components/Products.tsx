@@ -10,7 +10,7 @@ import { usePost } from "@/hooks/usePost";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 export const Products: React.FC = () => {
-  const { getUserDetails } = useLocalStorage("userDetails", null);
+  const { getUserDetails } = useLocalStorage("customerDetails", null);
   const token = getUserDetails()?.accessToken;
 
   // Build query parameters for products
@@ -20,7 +20,9 @@ export const Products: React.FC = () => {
     publishStatus: 'PUBLISHED',
   }).toString();
   
-  const productsUrl = `${baseUrL}/get-all-products-by-auth?${queryParams}`;
+  const productsUrl = token
+    ? `${baseUrL}/get-all-products-by-auth?${queryParams}`
+    : `${baseUrL}/get-all-products?${queryParams}`;
   const { data: productsData, isLoading: productsLoading, error: productsError } = useFetch("GET", null, productsUrl);
 
   // Fetch user's liked products if user is logged in

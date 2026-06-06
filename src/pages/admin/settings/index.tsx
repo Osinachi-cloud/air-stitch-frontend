@@ -1,13 +1,12 @@
-
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { baseUrL } from '@/env/URLs';
-import { User } from '@/types/user';
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { baseUrL } from "@/env/URLs";
+import { User } from "@/types/user";
 import { useRouter } from "next/navigation";
 
 interface CountryType {
@@ -30,8 +29,8 @@ interface CustomerData {
 
 const AdminSettings: React.FC = () => {
   const router = useRouter();
-  const { getUserDetails, setValue } = useLocalStorage<User>('userDetails');
-  
+  const { getUserDetails, setValue } = useLocalStorage<User>("customerDetails");
+
   // State
   const [customer, setCustomer] = useState<CustomerData>({
     firstName: "",
@@ -42,15 +41,20 @@ const AdminSettings: React.FC = () => {
     address: "",
     city: "",
     state: "",
-    profileImage: null,
+    profileImage: null
   });
-  
+
   const [phoneNumber, setPhoneNumber] = useState("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [selectedCountry, setSelectedCountry] = useState<CountryType | null>(null);
+  const [selectedCountry, setSelectedCountry] = useState<CountryType | null>(
+    null
+  );
   const [loading, setLoading] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
-  const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+  const [message, setMessage] = useState<{
+    text: string;
+    type: "success" | "error";
+  } | null>(null);
 
   // Refs for all inputs
   const firstNameRef = useRef<HTMLInputElement>(null);
@@ -60,7 +64,7 @@ const AdminSettings: React.FC = () => {
   const cityRef = useRef<HTMLInputElement>(null);
   const stateRef = useRef<HTMLInputElement>(null);
   const countryRef = useRef<HTMLInputElement>(null);
-  
+
   // Track if data has been loaded
   const dataLoadedRef = useRef(false);
   const isMountedRef = useRef(true);
@@ -68,77 +72,76 @@ const AdminSettings: React.FC = () => {
   // Load customer data - ONLY ONCE
   useEffect(() => {
     isMountedRef.current = true;
-    
+
     const loadCustomerData = async () => {
-      // Prevent double loading
       if (dataLoadedRef.current) {
-        console.log("Data already loaded, skipping...");
         return;
       }
 
       try {
         const stored = getUserDetails();
-        console.log("Loading customer data...");
-        
         const email = stored?.emailAddress;
         const token = stored?.accessToken;
 
         if (!email) {
           if (isMountedRef.current) {
-            setMessage({ text: "No email found. Please login again.", type: 'error' });
+            setMessage({
+              text: "No email found. Please login again.",
+              type: "error"
+            });
           }
           return;
         }
 
         const url = `${baseUrL}/customer-details?emailAddress=${encodeURIComponent(email)}`;
-        
+
         const res = await fetch(url, {
-          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined
         });
-        
+
         if (res.ok && isMountedRef.current) {
           const data = await res.json();
-          console.log("Customer data loaded successfully");
-          
-          // Mark as loaded
           dataLoadedRef.current = true;
-          
-          // Update state
+
           setCustomer({
             firstName: data.firstName || "",
             lastName: data.lastName || "",
             emailAddress: data.emailAddress || "",
             phoneNumber: data.phoneNumber || "",
             country: data.country || "",
-            address: data.address || "No. 93 Skyfield Apartments",
-            city: data.city || "Yaba",
-            state: data.state || "Lagos",
-            profileImage: data.profileImage || null,
+            address: data.address || "",
+            city: data.city || "",
+            state: data.state || "",
+            profileImage: data.profileImage || null
           });
-          
-          // Update ref values (for uncontrolled inputs)
-          if (firstNameRef.current) firstNameRef.current.value = data.firstName || "";
-          if (lastNameRef.current) lastNameRef.current.value = data.lastName || "";
-          if (emailRef.current) emailRef.current.value = data.emailAddress || "";
-          if (addressRef.current) addressRef.current.value = data.address || "No. 93 Skyfield Apartments";
-          if (cityRef.current) cityRef.current.value = data.city || "Yaba";
-          if (stateRef.current) stateRef.current.value = data.state || "Lagos";
+
+          if (firstNameRef.current)
+            firstNameRef.current.value = data.firstName || "";
+          if (lastNameRef.current)
+            lastNameRef.current.value = data.lastName || "";
+          if (emailRef.current)
+            emailRef.current.value = data.emailAddress || "";
           if (countryRef.current) countryRef.current.value = data.country || "";
-          
+
           if (data.phoneNumber) {
             setPhoneNumber(data.phoneNumber);
           }
-          
+
           if (data.profileImage) {
             setSelectedImage(data.profileImage);
           }
+
+          loadAddressData(token);
         }
       } catch (err) {
         console.error("Failed to load customer data", err);
         if (isMountedRef.current) {
-          setMessage({ 
-            text: err instanceof Error ? err.message : "Failed to load customer data", 
-            type: 'error' 
+          setMessage({
+            text:
+              err instanceof Error
+                ? err.message
+                : "Failed to load customer data",
+            type: "error"
           });
         }
       }
@@ -150,94 +153,167 @@ const AdminSettings: React.FC = () => {
     return () => {
       isMountedRef.current = false;
     };
-  }, []); // Empty dependency array - only runs once
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Load address data from dedicated endpoint
+  const loadAddressData = async (token: string | undefined) => {
+    if (!token) return;
+    try {
+      const res = await fetch(`${baseUrL}/addresses`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok && isMountedRef.current) {
+        const data = await res.json();
+        const addressItem = Array.isArray(data) ? data[0] : data;
+        if (addressItem) {
+          if (addressRef.current)
+            addressRef.current.value = addressItem.fullAddress || "";
+          if (cityRef.current) cityRef.current.value = addressItem.city || "";
+          if (stateRef.current)
+            stateRef.current.value = addressItem.state || "";
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load address data", err);
+    }
+  };
 
   // Show message helper
-  const showMessage = (text: string, type: 'success' | 'error') => {
+  const showMessage = (text: string, type: "success" | "error") => {
     setMessage({ text, type });
     setTimeout(() => setMessage(null), 3000);
   };
 
   // Dispatch update event
   const dispatchUpdateEvent = (updatedData: any) => {
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('userDetailsUpdated', { 
-        detail: updatedData 
-      }));
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("userDetailsUpdated", {
+          detail: updatedData
+        })
+      );
     }
   };
 
-  // Collect form values from refs
+  // Collect form values from refs (excluding address)
   const collectFormValues = () => {
     return {
-      firstName: firstNameRef.current?.value || '',
-      lastName: lastNameRef.current?.value || '',
-      emailAddress: emailRef.current?.value || '',
+      firstName: firstNameRef.current?.value || "",
+      lastName: lastNameRef.current?.value || "",
+      emailAddress: emailRef.current?.value || "",
       phoneNumber: phoneNumber,
-      country: countryRef.current?.value || '',
-      address: addressRef.current?.value || '',
-      city: cityRef.current?.value || '',
-      state: stateRef.current?.value || '',
-      profileImage: selectedImage || null,
+      country: countryRef.current?.value || "",
+      city: cityRef.current?.value || "",
+      state: stateRef.current?.value || "",
+      profileImage: selectedImage || null
     };
+  };
+
+  // Handle address update via dedicated endpoint
+  const handleAddressUpdate = async (token: string | undefined) => {
+    try {
+      const address = addressRef.current?.value || "";
+      const city = cityRef.current?.value || "";
+      const state = stateRef.current?.value || "";
+      const country = countryRef.current?.value || "";
+
+      if (!address && !city && !state) {
+        console.log("No address fields to update");
+        return;
+      }
+
+      const addressData = {
+        fullAddress: address || "",
+        city: city || "",
+        state: state || "",
+        country: country || ""
+      };
+
+      const url = `${baseUrL}/addresses`;
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify(addressData)
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Address update failed:", errorText);
+        return null;
+      }
+
+      const addressResponse = await res.json();
+      return addressResponse;
+    } catch (err) {
+      console.error("Address update error:", err);
+      return null;
+    }
   };
 
   // Handle update
   const handleUpdate = async () => {
     setLoading(true);
-    
+
     try {
       const stored = getUserDetails();
       const token = stored?.accessToken;
       const email = emailRef.current?.value || stored?.emailAddress;
 
       if (!email) {
-        showMessage("No email found", 'error');
+        showMessage("No email found", "error");
         return;
       }
 
       const updateData = collectFormValues();
-      console.log("Sending update data:", updateData);
 
-      const url = `${baseUrL}/update-customer?emailAddress=${encodeURIComponent(email)}`;
-      const res = await fetch(url, {
+      const profileUrl = `${baseUrL}/update-customer?emailAddress=${encodeURIComponent(email)}`;
+      const profileRes = await fetch(profileUrl, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
         },
-        body: JSON.stringify(updateData),
+        body: JSON.stringify(updateData)
       });
 
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Update failed: ${res.status} - ${errorText}`);
+      if (!profileRes.ok) {
+        const errorText = await profileRes.text();
+        throw new Error(
+          `Profile update failed: ${profileRes.status} - ${errorText}`
+        );
       }
 
-      const updated = await res.json();
-      console.log("Update successful:", updated);
-      
-      // Update localStorage
+      const updated = await profileRes.json();
+
+      // Update address separately via dedicated endpoint
+      await handleAddressUpdate(token);
+
+      // Update localStorage with profile data
       const currentStored = getUserDetails();
       const updatedUser = {
         ...currentStored,
         ...updated,
         accessToken: currentStored?.accessToken,
-        refreshToken: currentStored?.refreshToken,
+        refreshToken: currentStored?.refreshToken
       };
-      
+
       setValue(updatedUser as User);
       dispatchUpdateEvent(updated);
-      
-      showMessage("Profile updated successfully!", 'success');
-      
+
+      showMessage("Profile updated successfully!", "success");
+
       setTimeout(() => {
         router.push("/Account-Overview");
       }, 1500);
-      
     } catch (err) {
       console.error("Update error:", err);
-      showMessage(err instanceof Error ? err.message : "Update failed. Please try again.", 'error');
+      showMessage(
+        err instanceof Error ? err.message : "Update failed. Please try again.",
+        "error"
+      );
     } finally {
       setLoading(false);
     }
@@ -249,38 +325,57 @@ const AdminSettings: React.FC = () => {
     if (!file) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      showMessage("Image size should be less than 5MB", 'error');
+      showMessage("Image size should be less than 5MB", "error");
       return;
     }
 
-    if (!file.type.startsWith('image/')) {
-      showMessage("Please upload an image file", 'error');
+    if (!file.type.startsWith("image/")) {
+      showMessage("Please upload an image file", "error");
       return;
     }
 
     setImageUploading(true);
-    
+
     try {
-      const imageData = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-      
       const stored = getUserDetails();
       const token = stored?.accessToken;
       const email = emailRef.current?.value || stored?.emailAddress;
 
       if (!email) {
-        showMessage("No email found", 'error');
+        showMessage("No email found", "error");
         return;
       }
 
-      const url = `${baseUrL}/update-customer-profile-image?emailAddress=${encodeURIComponent(email)}&profileImage=${encodeURIComponent(imageData)}`;
+      // Compress + resize image to keep base64 small enough for DB column
+      const imageData = await new Promise<string>((resolve, reject) => {
+        const img = new window.Image();
+        img.onload = () => {
+          const MAX = 300;
+          const scale = Math.min(MAX / img.width, MAX / img.height, 1);
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          canvas.getContext("2d")?.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL("image/jpeg", 0.7));
+        };
+        img.onerror = reject;
+        img.src = URL.createObjectURL(file);
+      });
+
+      const url = `${baseUrL}/update-customer-profile-image?emailAddress=${encodeURIComponent(email)}`;
+      // Strip data URL prefix — backend expects raw base64 only
+      const rawBase64 = imageData.split(",")[1] ?? imageData;
+
+      const body = new URLSearchParams();
+      body.append("profileImage", rawBase64);
+
       const res = await fetch(url, {
         method: "POST",
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        body: body.toString()
       });
 
       if (!res.ok) {
@@ -288,51 +383,60 @@ const AdminSettings: React.FC = () => {
       }
 
       const data = await res.json();
-      
+
       setSelectedImage(imageData);
-      setCustomer(prev => ({ ...prev, profileImage: imageData }));
-      
+      setCustomer((prev) => ({ ...prev, profileImage: imageData }));
+
       const currentStored = getUserDetails();
       const updatedUser = {
         ...currentStored,
         profileImage: imageData,
-        ...data,
+        ...data
       };
-      
+
       setValue(updatedUser as User);
       dispatchUpdateEvent({ profileImage: imageData, ...data });
-      
-      showMessage("Profile image updated successfully!", 'success');
+
+      showMessage("Profile image updated successfully!", "success");
     } catch (err) {
       console.error("Failed to upload image", err);
-      showMessage("Image upload failed. Please try again.", 'error');
+      showMessage("Image upload failed. Please try again.", "error");
     } finally {
       setImageUploading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8 flex justify-center">
-      <div className="bg-white rounded-2xl shadow-md p-10 w-full max-w-8xl border border-gray-200">
+    <div className="py-6">
+      <div className="bg-white rounded-2xl shadow-sm p-4 md:p-10 w-full border border-gray-200">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h2 className="text-3xl font-semibold text-gray-800">
-              Account Settings
-            </h2>
-            <p className="text-gray-600 mt-1">Update your profile information</p>
+            <div className="flex items-center gap-3 mb-2">
+              <button onClick={() => router.back()} className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-500 text-gray-600 hover:border-gray-900 hover:text-gray-900 hover:bg-gray-50 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+              </button>
+              <h2 className="text-3xl font-semibold text-gray-800">Account Settings</h2>
+            </div>
+            <p className="text-gray-600 mt-1">
+              Update your profile information
+            </p>
           </div>
-          
+
           <div className="flex items-center gap-4">
             {message && (
-              <div className={`px-4 py-2 rounded-md ${
-                message.type === 'success' 
-                  ? 'bg-green-50 text-green-700 border border-green-200' 
-                  : 'bg-red-50 text-red-700 border border-red-200'
-              }`}>
+              <div
+                className={`px-4 py-2 rounded-md ${
+                  message.type === "success"
+                    ? "bg-green-50 text-green-700 border border-green-200"
+                    : "bg-red-50 text-red-700 border border-red-200"
+                }`}
+              >
                 {message.text}
               </div>
             )}
-            
+
             <button
               onClick={handleUpdate}
               disabled={loading}
@@ -372,7 +476,7 @@ const AdminSettings: React.FC = () => {
                   type="text"
                   placeholder="Enter first name"
                   defaultValue={customer.firstName || ""}
-                  className="w-[410px] border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-[#EFF1F999]"
+                  className="w-full max-w-[410px] border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-[#EFF1F999]"
                 />
               </div>
             </div>
@@ -403,7 +507,7 @@ const AdminSettings: React.FC = () => {
                   type="text"
                   placeholder="Enter last name"
                   defaultValue={customer.lastName || ""}
-                  className="w-[410px] border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-[#EFF1F999]"
+                  className="w-full max-w-[410px] border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-[#EFF1F999]"
                 />
               </div>
             </div>
@@ -434,7 +538,7 @@ const AdminSettings: React.FC = () => {
                   type="email"
                   placeholder="Enter email address"
                   defaultValue={customer.emailAddress || ""}
-                  className="w-[410px] border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-[#EFF1F999]"
+                  className="w-full max-w-[410px] border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-[#EFF1F999]"
                 />
               </div>
             </div>
@@ -452,21 +556,23 @@ const AdminSettings: React.FC = () => {
                     value={phoneNumber ? `+234${phoneNumber}` : ""}
                     onChange={(value: string, country: CountryType) => {
                       setSelectedCountry(country);
-                      const cleaned = value.replace(/\D/g, "").replace("234", "");
+                      const cleaned = value
+                        .replace(/\D/g, "")
+                        .replace("234", "");
                       setPhoneNumber(cleaned);
                     }}
                     inputStyle={{
                       border: "none",
                       background: "transparent",
                       width: "75px",
-                      height: "38px",
+                      height: "38px"
                     }}
                     buttonStyle={{
                       background: "transparent",
-                      border: "none",
+                      border: "none"
                     }}
                     containerStyle={{
-                      width: "95px",
+                      width: "95px"
                     }}
                     disableCountryCode={true}
                     disableDropdown={false}
@@ -481,7 +587,7 @@ const AdminSettings: React.FC = () => {
                     setPhoneNumber(e.target.value.replace(/\D/g, ""))
                   }
                   placeholder="Enter phone number"
-                  className="w-72 rounded-md border border-gray-300 bg-[#EFF1F999] px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full max-w-[288px] rounded-md border border-gray-300 bg-[#EFF1F999] px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
@@ -516,13 +622,13 @@ const AdminSettings: React.FC = () => {
                 <input
                   ref={addressRef}
                   type="text"
-                  placeholder="No. 93 Skyfield Apartments"
+                  placeholder="Enter address"
                   defaultValue={customer.address || ""}
-                  className="w-[410px] border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-[#EFF1F999]"
+                  className="w-full max-w-[410px] border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-[#EFF1F999]"
                 />
               </div>
             </div>
-            
+
             {/* City */}
             <div>
               <label className="block text-sm font-medium text-gray-600 mb-1 py-1.5 rounded-t-md w-full">
@@ -553,13 +659,13 @@ const AdminSettings: React.FC = () => {
                 <input
                   ref={cityRef}
                   type="text"
-                  placeholder="Yaba"
+                  placeholder="Enter city"
                   defaultValue={customer.city || ""}
-                  className="w-[410px] border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-[#EFF1F999]"
+                  className="w-full max-w-[410px] border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-[#EFF1F999]"
                 />
               </div>
             </div>
-            
+
             {/* Country & State */}
             <div className="flex gap-2">
               {/* Country */}
@@ -586,9 +692,9 @@ const AdminSettings: React.FC = () => {
                   <input
                     ref={countryRef}
                     type="text"
-                    placeholder="Nigeria"
+                    placeholder="Enter country"
                     defaultValue={customer.country || ""}
-                    className="w-[200px] border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-[#EFF1F999]"
+                    className="w-full max-w-[200px] border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-[#EFF1F999]"
                   />
                 </div>
               </div>
@@ -617,9 +723,9 @@ const AdminSettings: React.FC = () => {
                   <input
                     ref={stateRef}
                     type="text"
-                    placeholder="Lagos"
+                    placeholder="Enter state"
                     defaultValue={customer.state || ""}
-                    className="w-[200px] border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-[#EFF1F999]"
+                    className="w-full max-w-[200px] border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-[#EFF1F999]"
                   />
                 </div>
               </div>
@@ -636,14 +742,14 @@ const AdminSettings: React.FC = () => {
                   width={160}
                   height={160}
                   className="w-full h-full rounded-full object-cover border-4 border-gray-200"
-                  unoptimized={selectedImage?.startsWith('data:image')}
+                  unoptimized={selectedImage?.startsWith("data:image")}
                 />
 
                 {/* Upload Button */}
                 <label
                   htmlFor="profile-upload"
                   className={`absolute -bottom-1 -right-1 w-10 h-10 cursor-pointer bg-white rounded-full shadow-lg flex items-center justify-center border border-gray-200 hover:bg-gray-50 transition-colors ${
-                    imageUploading ? 'opacity-50 cursor-not-allowed' : ''
+                    imageUploading ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                 >
                   {imageUploading ? (
@@ -669,19 +775,12 @@ const AdminSettings: React.FC = () => {
                 </label>
               </div>
             </div>
-            
-            <p className="text-sm text-gray-500 text-center mt-4">
-              Click the upload icon to change profile picture
-              <br />
-              Max size: 5MB
-            </p>
-            
+
             <button
               type="button"
               onClick={() => router.push("/admin/account-overview")}
               className="mt-4 text-blue-600 hover:text-blue-800 text-sm font-medium"
             >
-              ← Back to Account Overview
             </button>
           </div>
         </div>

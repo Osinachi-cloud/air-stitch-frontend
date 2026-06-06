@@ -1,10 +1,9 @@
 "use client"
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { useAppSelector } from "@/redux/store";
 import Image from "next/image";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { User } from "@/types/user";
 
 
 
@@ -70,13 +69,21 @@ function titleFromPath(pathname: string) {
 
 }
 
-const Navbar = () => {
-  const userDetails = useAppSelector((state) => state.auth.userDetails);
+const Navbar = ({ onMenuClick }: { onMenuClick?: () => void }) => {
   const pathname = usePathname();
+  const storageKey = pathname?.startsWith("/tailor") ? "tailorDetails" : "customerDetails";
+  const { getUserDetails } = useLocalStorage<User>(storageKey as any);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log(userDetails);
-  }, [userDetails]);
+    const load = () => {
+      const stored = getUserDetails();
+      setProfileImage(stored?.profileImage ?? null);
+    };
+    load();
+    window.addEventListener("userDetailsUpdated", load);
+    return () => window.removeEventListener("userDetailsUpdated", load);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const pageTitle = useMemo(() => {
     if (!pathname) return "Overview";
@@ -88,26 +95,37 @@ const Navbar = () => {
   }, [pathname]);
 
   return (
-    <div className="w-full">
+    <div className="bg-white rounded-xl overflow-hidden">
       {/* Top Navbar */}
-      <div className="grid grid-cols-4 p-4 items-center">
-        {/* LEFT: Dynamic page title */}
-        <div className="hidden md:flex items-center gap-2 text-[24px] px-2">
-          <h1>{}</h1>
+      <div className="flex items-center justify-between px-6 py-4">
+        {/* LEFT: Hamburger (mobile) + page title */}
+        <div className="flex items-center gap-3">
+          {onMenuClick && (
+            <button
+              className="lg:hidden p-1 rounded-md hover:bg-gray-100"
+              onClick={onMenuClick}
+            >
+              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          )}
+          <h1 className="text-[20px] font-medium text-gray-800">{pageTitle}</h1>
         </div>
 
         {/* RIGHT: Icons & User */}
-        <div className="flex items-center gap-6 justify-end w-full col-span-3">
-          <div className="bg-white rounded-full w-7 h-7 flex items-center justify-center cursor-pointer border border-gray-200 hover:bg-gray-100">
-            <Image src="/Notification.png" alt="" width={20} height={20} />
+        <div className="flex items-center gap-4">
+          <div className="flex items-center justify-center cursor-pointer">
+            <Image src="/Notification.png" alt="Notifications" width={22} height={22} />
           </div>
 
           <Image
-            src="/images/Michael.png"
+            src={profileImage || "/images/Michael.png"}
             alt="User Avatar"
-            width={40}
-            height={40}
-            className="rounded-md"
+            width={32}
+            height={32}
+            className="rounded-md object-cover w-8 h-8 min-w-[32px] min-h-[32px]"
+            unoptimized={!!profileImage?.startsWith("data:image")}
           />
         </div>
       </div>
@@ -115,18 +133,17 @@ const Navbar = () => {
       {/* Full-width underline */}
       <div className="border-t border-gray-200 w-full"></div>
 
-      {/* Path display section */}
-      {/* <div className="flex items-center gap-2 px-6 py-2 bg-white text-gray-600 text-sm">
+      {/* Breadcrumb */}
+      <div className="flex items-center gap-2 px-6 py-2 bg-white text-gray-500 text-sm">
         <Image
-            src="/images/Home-Icon.png"
-            alt="Home"
-            width={20}
-            height={20}
-            className="rounded-md"
-          />
-        <span className="text-gray-500">/</span>
-        <span className="text-blue-600 font-medium">{pageTitle}</span>
-      </div> */}
+          src="/images/Home-Icon.png"
+          alt="Home"
+          width={16}
+          height={16}
+        />
+        <span>/</span>
+        <span className="text-gray-500">{pageTitle}</span>
+      </div>
     </div>
   );
 };
