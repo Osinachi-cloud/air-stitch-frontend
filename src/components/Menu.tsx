@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 // If you use NextAuth on the client, you can uncomment this:
 // import { useSession } from "next-auth/react";
 
@@ -93,12 +94,14 @@ const menuItems: MenuSection[] = [
 ];
 
 export default function Menu({
-  // Pass this from parent if you have it; otherwise we’ll fall back.
+  // Pass this from parent if you have it; otherwise we'll fall back.
   role: roleProp,
 }: {
   role?: Role;
 }) {
-  // If you’re using NextAuth client-side, you can derive role like this:
+  const pathname = usePathname();
+
+  // If you're using NextAuth client-side, you can derive role like this:
   // const { data: session, status } = useSession();
   // const authRole = session?.user?.role as Role | undefined;
 
@@ -118,13 +121,18 @@ export default function Menu({
           </span>
           {i.items.map((item) => {
             if (item.visible.includes(role)) {
+              const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
               return (
                 <Link
                   href={item.href}
                   key={item.label}
-                  className="flex items-center justify-center lg:justify-start gap-4 text-[#000] border-b border-t-black-50 py-[1.5rem] md:px-2 rounded-md hover:bg-[#000] hover:text-[#fff]"
+                  className={`flex items-center justify-center lg:justify-start gap-4 border-b border-t-black-50 py-[1.5rem] md:px-2 rounded-md transition-colors duration-200 ${
+                    isActive
+                      ? 'bg-[#000] text-[#fff]'
+                      : 'text-[#000] hover:bg-[#000] hover:text-[#fff]'
+                  }`}
                 >
-                  <Image src={item.icon} alt="" width={20} height={20} />
+                  <Image src={item.icon} alt="" width={20} height={20} className={isActive ? 'invert' : ''} />
                   {/* <i className= {`${item.icon} `}></i> */}
                   <i className={`fa fa-user`}></i>
                   <span className="hidden lg:block">{item.label}</span>

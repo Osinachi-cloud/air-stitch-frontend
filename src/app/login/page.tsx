@@ -74,19 +74,28 @@ const LoginPage = () => {
       setStoredValue(apiResponseData);
 
     if (apiResponse.ok) {
+      // Normalize user data: handle both wrapped (ILoginResponse) and direct (IUserData) formats
+      const userData = apiResponseData.data || apiResponseData;
+      
       const transformedUserDetails = {
-        access_token: apiResponseData.accessToken, 
-        refresh_token: apiResponseData.refreshToken, 
+        access_token: userData.accessToken || userData.access_token, 
+        refresh_token: userData.refreshToken || userData.refresh_token, 
         permissions: [], 
-        roles: [apiResponseData.role] 
+        roles: [userData.role] 
       };
       
       console.log("Transformed user details:", transformedUserDetails);
       dispatch(loginSuccess(transformedUserDetails));
-      router.push("/")
+      
+      // Store normalized user data in localStorage for navbar/jwtHooks
+      setStoredValue(userData);
+      
+      // Always redirect to home page — use window.location for reliability
+      window.location.href = "/";
+      return;
  
       } else {
-        errorToast(apiResponseData.error || 'Error Login in');
+        errorToast(apiResponseData.error || apiResponseData.message || 'Error Login in');
       }
 
     } catch (e) {

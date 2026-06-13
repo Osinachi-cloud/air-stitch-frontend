@@ -3,10 +3,23 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
+interface UserData {
+  firstName?: string;
+  lastName?: string;
+  profileImage?: string | null;
+  accessToken?: string;
+}
+
+const getInitials = (firstName?: string, lastName?: string): string => {
+  const f = firstName?.trim()?.[0] || '';
+  const l = lastName?.trim()?.[0] || '';
+  return (f + l).toUpperCase();
+};
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<UserData | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,9 +39,19 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    const userDetails = localStorage.getItem('userDetails');
-    setIsLoggedIn(!!userDetails);
+    const stored = localStorage.getItem('userDetails');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        setUser(parsed);
+      } catch {
+        setUser(null);
+      }
+    }
   }, []);
+
+  const isLoggedIn = !!user?.accessToken;
+  const initials = getInitials(user?.firstName, user?.lastName);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -89,15 +112,37 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Get Early Access Button - Right */}
+          {/* Profile / Login Button - Right */}
           <div className="hidden md:block flex-shrink-0">
-            <Link
-              href={isLoggedIn ? "/Account-Overview" : "/login"}
-              onClick={closeMenu}
-              className="bg-black text-white px-5 py-2 rounded text-xs font-medium hover:bg-white hover:text-black transition-all duration-300 hover:translate-x-0.5 whitespace-nowrap"
-            >
-              {isLoggedIn ? "Account" : "Login"}
-            </Link>
+            {isLoggedIn ? (
+              <Link
+                href="/Account-Overview"
+                onClick={closeMenu}
+                className="flex items-center gap-2"
+              >
+                {user?.profileImage ? (
+                  <Image
+                    src={user.profileImage}
+                    alt="Profile"
+                    width={36}
+                    height={36}
+                    className="rounded-full object-cover border border-gray-200"
+                  />
+                ) : (
+                  <div className="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center text-sm font-semibold border border-gray-200">
+                    {initials || 'U'}
+                  </div>
+                )}
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                onClick={closeMenu}
+                className="bg-black text-white px-5 py-2 rounded text-xs font-medium hover:bg-white hover:text-black transition-all duration-300 hover:translate-x-0.5 whitespace-nowrap"
+              >
+                Login
+              </Link>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -185,13 +230,36 @@ const Navbar = () => {
             Login
           </Link> */}
           
-          <Link
-            href={isLoggedIn ? "/Account-Overview" : "/login"}
-            onClick={closeMenu}
-            className="bg-black text-white px-8 py-3 rounded text-sm font-medium hover:bg-white hover:text-black transition-all duration-300 mt-4"
-          >
-            {isLoggedIn ? "Account" : "Login"}
-          </Link>
+          {isLoggedIn ? (
+            <Link
+              href="/Account-Overview"
+              onClick={closeMenu}
+              className="flex items-center justify-center gap-2 mt-4"
+            >
+              {user?.profileImage ? (
+                <Image
+                  src={user.profileImage}
+                  alt="Profile"
+                  width={40}
+                  height={40}
+                  className="rounded-full object-cover border border-gray-200"
+                />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center text-sm font-semibold border border-gray-200">
+                  {initials || 'U'}
+                </div>
+              )}
+              <span className="text-sm font-medium">My Account</span>
+            </Link>
+          ) : (
+            <Link
+              href="/login"
+              onClick={closeMenu}
+              className="bg-black text-white px-8 py-3 rounded text-sm font-medium hover:bg-white hover:text-black transition-all duration-300 mt-4"
+            >
+              Login
+            </Link>
+          )}
         </div>
       </div>
     </nav>
