@@ -64,8 +64,10 @@ const VerifyOTP = () => {
             });
 
             const data: VerifyOTPResponse = await res.json();
+            console.log('OTP verify response:', { status: res.status, ok: res.ok, data });
             setMessage(data.message);
-            if (data.success) {
+
+            if (res.ok && data.success !== false) {
                 router.push('/signup');
             }
         } catch (error) {
