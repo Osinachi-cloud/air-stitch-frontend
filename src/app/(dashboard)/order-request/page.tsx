@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
@@ -65,7 +65,7 @@ export default function CheckoutPage() {
         isDefault: false
     });
 
-    const { getUserDetails } = useLocalStorage("userDetails", null);
+    const { getUserDetails } = useLocalStorage("customerDetails", null);
     const token = getUserDetails()?.accessToken;
 
     // Fetch addresses
@@ -284,7 +284,14 @@ export default function CheckoutPage() {
     return (
         <div className="min-h-screen bg-[#f4f6f8] px-4 py-6 md:px-10">
             <div className="mx-auto max-w-7xl">
-                <h1 className="mb-8 text-center text-2xl font-semibold">Checkout</h1>
+                <div className="flex items-center gap-3 mb-8">
+                  <button onClick={() => router.back()} className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-500 text-gray-600 hover:border-gray-900 hover:text-gray-900 hover:bg-gray-50 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                  </button>
+                  <h1 className="text-2xl font-semibold">Checkout</h1>
+                </div>
 
                 {isLoadingOverall ? (
                     <div className="flex items-center justify-center h-64">
@@ -700,3 +707,4 @@ export default function CheckoutPage() {
         </div>
     );
 }
+

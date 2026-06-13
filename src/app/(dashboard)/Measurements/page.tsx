@@ -1,7 +1,8 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { baseUrL } from "@/env/URLs";
 import { useFetch } from "@/hooks/useFetch";
 import {
@@ -13,14 +14,24 @@ import {
 } from "lucide-react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 
-const PageHeader = () => (
+const PageHeader = () => {
+  const router = useRouter();
+  return (
   <div className="px-2 pt-2 pb-6">
-    <h1 className="text-3xl font-bold text-gray-900">Measurements</h1>
+    <div className="flex items-center gap-3">
+      <button onClick={() => router.back()} className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-500 text-gray-600 hover:border-gray-900 hover:text-gray-900 hover:bg-gray-50 transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+      </button>
+      <h1 className="text-3xl font-bold text-gray-900">Measurements</h1>
+    </div>
     <p className="mt-2 text-base text-gray-600">
       Manage your default body measurement and saved profiles.
     </p>
   </div>
-);
+  );
+};
 
 const Chip = ({ label, active = false, onClick }: { label: string; active?: boolean; onClick?: () => void }) => (
   <button
@@ -186,6 +197,7 @@ const mapApiToUIMeasurement = (apiItem: ApiMeasurement): Measurement => {
 };
 
 export default function Page() {
+  const router = useRouter();
   const [showNew, setShowNew] = useState(false);
   const [showDefaultModal, setShowDefaultModal] = useState(false);
   const [editingMeasurement, setEditingMeasurement] = useState<Measurement | null>(null);
@@ -194,7 +206,7 @@ export default function Page() {
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const { getUserDetails } = useLocalStorage("userDetails", null);
+  const { getUserDetails } = useLocalStorage("customerDetails", null);
   const token = getUserDetails()?.accessToken;
   const email = getUserDetails()?.emailAddress;
 
@@ -340,8 +352,8 @@ export default function Page() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="py-6">
+      <div className="w-full rounded-2xl border border-gray-200 bg-white p-4 md:p-8 shadow-sm">
         <PageHeader />
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
@@ -503,7 +515,7 @@ export default function Page() {
               <h3 className="text-base font-semibold text-gray-900 mb-4">{section.title}</h3>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {section.fields.map((field) => (
-                  <div key={field.key}>
+                  <div key={field.label}>
                     <label className="text-sm font-medium text-gray-700">{field.label} <span className="text-red-500">*</span></label>
                     <div className="relative mt-2">
                       <input
@@ -607,3 +619,4 @@ export default function Page() {
     </div>
   );
 }
+
