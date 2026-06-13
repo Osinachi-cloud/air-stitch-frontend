@@ -1,5 +1,6 @@
 // config/publicRoutes.ts
 export const publicRoutes = [
+  '/',
   '/login',
   '/signup',
   '/email-verification',
@@ -11,6 +12,10 @@ export const publicRoutes = [
   '/privacy-policy',
   '/terms',
   '/about',
+  '/products',
+  '/product-details',
+  '/categories',
+  '/contact',
   // Add any other public routes here
 ];
 

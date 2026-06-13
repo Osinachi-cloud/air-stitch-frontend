@@ -300,6 +300,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useLocalStorage } from "./useLocalStorage";
 import { usePathname } from "next/navigation";
+import { useAuth } from "./jwtHooks";
 
 
 export const useFetchs = (methodType: string, body: any, url: string) => {
@@ -412,6 +413,7 @@ export const useFetch = (methodType: string, body: any, url: string) => {
     const [data, setData] = useState<any>();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [responseStatus, setResponseStatus] = useState<number | null>(null);
 
     const storageKey = typeof window !== "undefined" && window.location.pathname.startsWith("/tailor")
         ? "tailorDetails"
