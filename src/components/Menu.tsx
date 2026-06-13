@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 // If you use NextAuth on the client, you can uncomment this:
 // import { useSession } from "next-auth/react";
 
@@ -93,12 +94,14 @@ const menuItems: MenuSection[] = [
 ];
 
 export default function Menu({
-  // Pass this from parent if you have it; otherwise we’ll fall back.
+  // Pass this from parent if you have it; otherwise we'll fall back.
   role: roleProp,
 }: {
   role?: Role;
 }) {
-  // If you’re using NextAuth client-side, you can derive role like this:
+  const pathname = usePathname();
+
+  // If you're using NextAuth client-side, you can derive role like this:
   // const { data: session, status } = useSession();
   // const authRole = session?.user?.role as Role | undefined;
 
@@ -130,15 +133,20 @@ export default function Menu({
       <div className="flex flex-col mt-14">
         {mainItems.map((item) => {
           const href = roleHrefOverrides[item.label]?.[role] ?? item.href;
+          const isActive = pathname === href || pathname?.startsWith(href + "/");
           return (
-          <Link
-            href={href}
-            key={item.label}
-            className="group flex items-center justify-center lg:justify-start gap-4 text-[#000] py-4 md:px-2 rounded-md hover:bg-[#000] hover:text-[#fff]"
-          >
-            <Image src={item.icon} alt="" width={20} height={20} className="group-hover:invert" />
-            <span className="hidden lg:block">{item.label}</span>
-          </Link>
+            <Link
+              href={href}
+              key={item.label}
+              className={`group flex items-center justify-center lg:justify-start gap-4 py-4 md:px-2 rounded-md transition-colors duration-200 ${
+                isActive
+                  ? 'bg-[#000] text-[#fff]'
+                  : 'text-[#000] hover:bg-[#000] hover:text-[#fff]'
+              }`}
+            >
+              <Image src={item.icon} alt="" width={20} height={20} className={isActive ? 'invert' : 'group-hover:invert'} />
+              <span className="hidden lg:block">{item.label}</span>
+            </Link>
           );
         })}
       </div>

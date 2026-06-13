@@ -71,33 +71,31 @@ const LoginPage = () => {
       let apiResponseData: any = await apiResponse.json();
       console.log({apiResponseData});
 
+      setStoredValue(apiResponseData);
+
     if (apiResponse.ok) {
-      const role: string = (apiResponseData.role || "").toUpperCase();
-      const storageKey = (role.includes("TAILOR") || role.includes("VENDOR"))
-        ? "tailorDetails"
-        : "customerDetails";
-
-      setStoredValue({ ...apiResponseData, _storageKey: storageKey });
-      localStorage.setItem(storageKey, JSON.stringify(apiResponseData));
-
+      // Normalize user data: handle both wrapped (ILoginResponse) and direct (IUserData) formats
+      const userData = apiResponseData.data || apiResponseData;
+      
       const transformedUserDetails = {
-        access_token: apiResponseData.accessToken,
-        refresh_token: apiResponseData.refreshToken,
-        permissions: [],
-        roles: [apiResponseData.role]
+        access_token: userData.accessToken || userData.access_token, 
+        refresh_token: userData.refreshToken || userData.refresh_token, 
+        permissions: [], 
+        roles: [userData.role] 
       };
-
+      
       console.log("Transformed user details:", transformedUserDetails);
       dispatch(loginSuccess(transformedUserDetails));
-
-      if (role.includes("TAILOR") || role.includes("VENDOR")) {
-        router.push("/tailor");
-      } else {
-        router.push("/customer");
-      }
+      
+      // Store normalized user data in localStorage for navbar/jwtHooks
+      setStoredValue(userData);
+      
+      // Always redirect to home page — use window.location for reliability
+      window.location.href = "/";
+      return;
  
       } else {
-        errorToast(apiResponseData.error || 'Error Login in');
+        errorToast(apiResponseData.error || apiResponseData.message || 'Error Login in');
       }
 
     } catch (e) {
@@ -114,7 +112,7 @@ const LoginPage = () => {
         <form className="sm:w-[28%] w-[90%] mx-auto my-auto" onSubmit={handleSubmit}>
           <div className='mb-[2rem]'>
             <h1 className='text-center text-[#171717] text-[32px] font-[600]'>Login</h1>
-            <p className='text-center text-[#53545C] font-[300]'>Sign in to your account</p>
+            <p className='text-center text-[#53545C] font-[300]'>Login to access Admin Dashboard</p>
           </div>
 
           <div>
