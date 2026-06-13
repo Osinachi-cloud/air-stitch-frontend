@@ -141,7 +141,7 @@ export default function Menu({
               className={`group flex items-center justify-center lg:justify-start gap-4 py-4 md:px-2 rounded-md transition-colors duration-200 ${
                 isActive
                   ? 'bg-[#000] text-[#fff]'
-                  : 'text-[#000] hover:bg-[#000] hover:text-[#fff]'
+                  : 'text-[#000] hover:bg-gray-800 hover:text-[#fff]'
               }`}
             >
               <Image src={item.icon} alt="" width={20} height={20} className={isActive ? 'invert' : 'group-hover:invert'} />
