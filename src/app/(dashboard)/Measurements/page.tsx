@@ -14,7 +14,9 @@ import {
 } from "lucide-react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 
-const PageHeader = () => (
+const PageHeader = () => {
+  const router = useRouter();
+  return (
   <div className="px-2 pt-2 pb-6">
     <div className="flex items-center gap-3">
       <button onClick={() => router.back()} className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-500 text-gray-600 hover:border-gray-900 hover:text-gray-900 hover:bg-gray-50 transition-all">
@@ -28,7 +30,8 @@ const PageHeader = () => (
       Manage your default body measurement and saved profiles.
     </p>
   </div>
-);
+  );
+};
 
 const Chip = ({ label, active = false, onClick }: { label: string; active?: boolean; onClick?: () => void }) => (
   <button
