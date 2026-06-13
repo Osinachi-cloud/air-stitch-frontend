@@ -6,6 +6,7 @@ import Image from "next/image";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,11 +18,16 @@ const Navbar = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
-    
+
     // Cleanup
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
+  }, []);
+
+  useEffect(() => {
+    const userDetails = localStorage.getItem('userDetails');
+    setIsLoggedIn(!!userDetails);
   }, []);
 
   const toggleMenu = () => {
@@ -46,38 +52,38 @@ const Navbar = () => {
 
           {/* Desktop Menu - Centered */}
           <div className="hidden md:flex items-center justify-center flex-1 space-x-8">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               onClick={closeMenu}
-              className="text-gray-700 hover:text-[#090458] transition-colors duration-300 text-xs font-medium whitespace-nowrap"
+              className="text-gray-700 hover:text-[#[PHONE NUMBER_REDACTED]] transition-colors duration-300 text-xs font-medium whitespace-nowrap"
             >
               Home
             </Link>
-            <Link 
-              href="/about" 
+            <Link
+              href="/about"
               onClick={closeMenu}
-              className="text-gray-700 hover:text-[#090458] transition-colors duration-300 text-xs font-medium whitespace-nowrap"
+              className="text-gray-700 hover:text-[#[PHONE NUMBER_REDACTED]] transition-colors duration-300 text-xs font-medium whitespace-nowrap"
             >
               About us
             </Link>
-            <Link 
-              href="/categories" 
+            <Link
+              href="/categories"
               onClick={closeMenu}
-              className="text-gray-700 hover:text-[#090458] transition-colors duration-300 text-xs font-medium whitespace-nowrap"
+              className="text-gray-700 hover:text-[#[PHONE NUMBER_REDACTED]] transition-colors duration-300 text-xs font-medium whitespace-nowrap"
             >
               Categories
             </Link>
-            {/* <Link 
-              href="/faqs" 
+            {/* <Link
+              href="/faqs"
               onClick={closeMenu}
-              className="text-gray-700 hover:text-[#090458] transition-colors duration-300 text-xs font-medium whitespace-nowrap"
+              className="text-gray-700 hover:text-[#[PHONE NUMBER_REDACTED]] transition-colors duration-300 text-xs font-medium whitespace-nowrap"
             >
               FAQs
             </Link> */}
-            <Link 
-              href="/contact" 
+            <Link
+              href="/contact"
               onClick={closeMenu}
-              className="text-gray-700 hover:text-[#090458] transition-colors duration-300 text-xs font-medium whitespace-nowrap"
+              className="text-gray-700 hover:text-[#[PHONE NUMBER_REDACTED]] transition-colors duration-300 text-xs font-medium whitespace-nowrap"
             >
               Contact Us
             </Link>
@@ -86,11 +92,11 @@ const Navbar = () => {
           {/* Get Early Access Button - Right */}
           <div className="hidden md:block flex-shrink-0">
             <Link
-              href="/login"
+              href={isLoggedIn ? "/Account-Overview" : "/login"}
               onClick={closeMenu}
               className="bg-black text-white px-5 py-2 rounded text-xs font-medium hover:bg-white hover:text-black transition-all duration-300 hover:translate-x-0.5 whitespace-nowrap"
             >
-              Login
+              {isLoggedIn ? "Account" : "Login"}
             </Link>
           </div>
 
@@ -180,11 +186,11 @@ const Navbar = () => {
           </Link> */}
           
           <Link
-            href="/login"
+            href={isLoggedIn ? "/Account-Overview" : "/login"}
             onClick={closeMenu}
             className="bg-black text-white px-8 py-3 rounded text-sm font-medium hover:bg-white hover:text-black transition-all duration-300 mt-4"
           >
-            Login
+            {isLoggedIn ? "Account" : "Login"}
           </Link>
         </div>
       </div>
