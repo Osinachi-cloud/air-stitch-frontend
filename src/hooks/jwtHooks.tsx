@@ -1,3 +1,4 @@
+'use client';
 // hooks/useJwt.ts
 import { jwtDecode } from 'jwt-decode';
 import { useLocalStorage } from './useLocalStorage';
