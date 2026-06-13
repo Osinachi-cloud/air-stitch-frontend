@@ -1,33 +1,28 @@
-import Image from "next/image"
 import Link from "next/link"
+import { LandingNavbar } from "./LandingNavbar"
 
 export const Header = () => {
     return (
         <>
-            <div className="bg-cover bg-center min-h-screen"
-            style={{ backgroundImage: "url('/images/stitch-backg.png')" }}>
-                <div>
+            <div
+                className="bg-cover bg-center min-h-screen flex flex-col pt-[64px]"
+                style={{ backgroundImage: "url('/images/stitch-backg.png')" }}
+            >
+                <LandingNavbar />
 
-                    {/* <app-navbar></app-navbar> */}
-                </div>
-                <div className="text-black py-[130px] font-medium font-sans w-[86%] mx-auto grid gap-[2rem]">
-                    <p className="text-[32px] md:text-[70px] leading-tight ">
-                        First made to measure
-                        <br />
-                        online clothing tailor
-                        <br />
-                        market platform
+                <div className="flex flex-col gap-5 w-[88%] mx-auto mt-auto pb-20 pt-10 max-w-[500px] self-start ml-[7%]">
+                    <h1 className="text-[40px] md:text-[56px] font-semibold leading-tight tracking-tight text-black">
+                        First made to measure online clothing tailor market platform
+                    </h1>
+                    <p className="text-[14px] md:text-[16px] leading-relaxed font-normal text-gray-800 max-w-[360px]">
+                        Browse from our different styles that suits your everyday needs, doesn&apos;t leave your pocket empty and saves time spent visiting tailor shops.
                     </p>
-                    <p className="text-[16px] md:text-[25px] leading-normal">
-                        Browse from our different styles that suits your
-                        <br />
-                        everyday needs, does not leave your pocket empty and
-                        <br />
-                        saves time spent visiting tailor shops.
-                    </p>
-                    <Link href="/email-verification" className="bg-[#373636] flex justify-center items-center rounded w-[162px] md:w-[240px] mt-[1rem]">
-                        <button className="text-white text-[13px] md:text-[1.5rem] px-[1rem] py-[1rem] md:py-[2rem] rounded-[8px] ">Get Started</button>
-                        <Image src="/icons/Arrow 1.png" alt="Product Image" className=" h-auto" width={30} height={30} />
+                    <Link
+                        href="/email-verification"
+                        className="flex items-center gap-2 bg-white text-black text-[14px] font-medium px-6 py-2.5 rounded w-fit border border-gray-400 hover:bg-gray-100 transition-colors"
+                    >
+                        Get Started
+                        <span>›</span>
                     </Link>
                 </div>
             </div>

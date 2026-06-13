@@ -11,7 +11,7 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { isTokenExpired } from "@/hooks/jwtHooks";
 
 export const Products: React.FC = () => {
-  const { getUserDetails } = useLocalStorage("userDetails", null);
+  const { getUserDetails } = useLocalStorage("customerDetails", null);
   const token = getUserDetails()?.accessToken;
 
   // Build query parameters for products
@@ -31,7 +31,7 @@ export const Products: React.FC = () => {
       return  authProductsUrl;
      }
   }
-  
+
   const { data: productsData, isLoading: productsLoading, error: productsError } = useFetch("GET", null, actualUrl());
 
   // Fetch user's liked products if user is logged in

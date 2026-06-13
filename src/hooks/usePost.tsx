@@ -1,4 +1,4 @@
-// import { useEffect, useState, useRef } from "react"
+﻿// import { useEffect, useState, useRef } from "react"
 // import { RootState, useAppSelector } from "@/redux/store";
 // import { useLocalStorage } from "./useLocalStorage";
 // import { errorToast, successToast } from "./UseToast";
@@ -164,8 +164,8 @@
 
 
 
-
-import { useState, useRef } from "react"
+import { useEffect, useState, useRef } from "react"
+import { RootState, useAppSelector } from "@/redux/store";
 import { useLocalStorage } from "./useLocalStorage";
 import { errorToast, successToast } from "./UseToast";
 import { useRouter } from 'next/navigation';
@@ -173,8 +173,8 @@ import { useAuth } from "./jwtHooks"; // ADD THIS
 
 export const usePost = (methodType: string, body: any, url: string, route: string | null) => {
     const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
-    const { checkTokenAndRedirect } = useAuth(); // ADD THIS
-    
+    const { checkTokenAndRedirect } = useAuth();
+
     // Add instance tracking
     const instanceId = useRef(Math.random().toString(36).substring(7));
     const hasLoggedCreation = useRef(false);
@@ -264,8 +264,8 @@ export const usePost = (methodType: string, body: any, url: string, route: strin
 
 export const usePostWithoutRouting = (methodType: string, body: any, url: string) => {
     const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
-    const { checkTokenAndRedirect } = useAuth(); // ADD THIS
-    
+    const { checkTokenAndRedirect } = useAuth();
+
     // Add instance tracking
     const instanceId = useRef(Math.random().toString(36).substring(7));
     const hasLoggedCreation = useRef(false);

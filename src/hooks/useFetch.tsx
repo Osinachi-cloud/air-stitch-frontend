@@ -1,4 +1,4 @@
-// import { useEffect, useRef, useState } from "react"
+﻿// import { useEffect, useRef, useState } from "react"
 // import { RootState, useAppSelector } from "@/redux/store";
 // import { useLocalStorage } from "./useLocalStorage";
 
@@ -299,17 +299,126 @@
 
 import { useEffect, useRef, useState } from "react"
 import { useLocalStorage } from "./useLocalStorage";
+import { usePathname } from "next/navigation";
 import { useAuth } from "./jwtHooks";
 
 
-export const useFetch = (methodType: string, body: any, url: string | null) => {
+export const useFetchs = (methodType: string, body: any, url: string) => {
+    const storageKey = usePathname()?.startsWith("/tailor") ? "tailorDetails" : "customerDetails";
+    const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage(storageKey, null);
+
+    console.log(methodType, body, url);
+
+    const [data, setData] = useState<any>();
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const token = getUserDetails()?.accessToken
+
+    console.log("token ====>", token);
+
+    const apiFetchOnRender = async () => {
+        setIsLoading(true);
+        try {
+            const headers: Record<string, string> = {
+                'Content-Type': 'application/json',
+            };
+
+            if (token) {
+                headers.Authorization = `Bearer ${token}`;
+            }
+
+            const fetchOptions: RequestInit = {
+                method: methodType,
+                headers: headers,
+            };
+
+            if (body && methodType !== 'GET') {
+                fetchOptions.body = JSON.stringify(body);
+            }
+
+            const apiResponse = await fetch(url, fetchOptions);
+
+            if (!apiResponse.ok) {
+                const errorText = await apiResponse.text();
+                throw new Error(`HTTP error! status: ${apiResponse.status}, message: ${errorText}`);
+            }
+
+            const dataResponse = await apiResponse.json();
+            setData(dataResponse);
+            setIsLoading(false);
+            console.log(dataResponse);
+
+        } catch (e: any) {
+            console.log(e);
+            setIsLoading(false);
+            setError(e.message || "An error occurred while fetching data")
+        }
+    }
+
+    useEffect(() => {
+        apiFetchOnRender();
+    }, [url, methodType, JSON.stringify(body)]) 
+
+
+    const callApi = async () => {
+        console.log("call Api for me");
+        try {
+            const headers: Record<string, string> = {
+                'Content-Type': 'application/json',
+            };
+
+            // Add Authorization header only if token is provided
+            if (token) {
+                headers.Authorization = `Bearer ${token}`;
+            }
+
+            const fetchOptions: RequestInit = {
+                method: methodType,
+                headers: headers,
+            };
+
+            // Add body for non-GET requests
+            if (body && methodType !== 'GET') {
+                fetchOptions.body = JSON.stringify(body);
+            }
+
+            const apiResponse = await fetch(url, fetchOptions);
+
+            if (!apiResponse.ok) {
+                const errorText = await apiResponse.text();
+                throw new Error(`HTTP error! status: ${apiResponse.status}, message: ${errorText}`);
+            }
+
+            const dataResponse = await apiResponse.json();
+            setData(dataResponse);
+            setIsLoading(false);
+            console.log(dataResponse);
+
+        } catch (e: any) {
+            console.log(e);
+            setIsLoading(false);
+            // Ensure error is a string, not an Error object
+            setError(e.message || "An error occurred while fetching data")
+        }
+    }
+
+    return { data, isLoading, setIsLoading, callApi, error };
+}
+
+
+
+export const useFetch = (methodType: string, body: any, url: string) => {
     const instanceId = useRef(Math.random().toString(36).substring(7));
     const [data, setData] = useState<any>();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [responseStatus, setResponseStatus] = useState<number | null>(null);
-    
-    const { getUserDetails } = useLocalStorage("userDetails", null);
+
+    const storageKey = typeof window !== "undefined" && window.location.pathname.startsWith("/tailor")
+        ? "tailorDetails"
+        : "customerDetails";
+    const { getUserDetails } = useLocalStorage(storageKey, null);
     const token = getUserDetails()?.accessToken
     const { checkTokenAndRedirect } = useAuth(); // ADD THIS
 

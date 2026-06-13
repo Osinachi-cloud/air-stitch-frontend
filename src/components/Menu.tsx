@@ -109,68 +109,55 @@ export default function Menu({
     console.log("[Menu] effective role:", role);
   }
 
+  const roleHrefOverrides: Partial<Record<string, Record<Role, string>>> = {
+    "Account Overview": { customer: "/Account-Overview", tailor: "/tailor" },
+    "Account Settings": { customer: "/list/settings", tailor: "/tailor/account-settings" },
+    "Vendors Orders":   { customer: "/vendors-order",   tailor: "/tailor/vendors-order" },
+    "Inventory":        { customer: "/list/Inventory",  tailor: "/tailor/inventory" },
+    "Analytics":        { customer: "/Analytics",       tailor: "/tailor/analytics" },
+    "Orders":           { customer: "/orders",          tailor: "/tailor/orders" },
+    "Liked Items":      { customer: "/like",            tailor: "/tailor/like" },
+    "Cart":             { customer: "/cart",            tailor: "/tailor/cart" },
+    "Measurements":     { customer: "/Measurements",    tailor: "/tailor/measurements" },
+  };
+
+  const mainItems = (menuItems[0]?.items ?? []).filter(item => item.visible.includes(role));
+  const logoutItem = menuItems[1]?.items[0];
+
   return (
-    <div className="text-sm">
-      {menuItems.map((i) => (
-        <div className="flex flex-col" key={i.title}>
-          <span className="hidden lg:block text-[#000] font-light my-4">
-            {/* {i.title} */}
-          </span>
-          {i.items.map((item) => {
-            if (item.visible.includes(role)) {
-              return (
-                <Link
-                  href={item.href}
-                  key={item.label}
-                  className="flex items-center justify-center lg:justify-start gap-4 text-[#000] border-b border-t-black-50 py-[1.5rem] md:px-2 rounded-md hover:bg-[#000] hover:text-[#fff]"
-                >
-                  <Image src={item.icon} alt="" width={20} height={20} />
-                  {/* <i className= {`${item.icon} `}></i> */}
-                  <i className={`fa fa-user`}></i>
-                  <span className="hidden lg:block">{item.label}</span>
-                </Link>
-              );
-            }
-          })}
+    <div className="text-sm flex flex-col flex-1 overflow-y-auto">
+      {/* Main nav items */}
+      <div className="flex flex-col mt-14">
+        {mainItems.map((item) => {
+          const href = roleHrefOverrides[item.label]?.[role] ?? item.href;
+          return (
+          <Link
+            href={href}
+            key={item.label}
+            className="group flex items-center justify-center lg:justify-start gap-4 text-[#000] py-4 md:px-2 rounded-md hover:bg-[#000] hover:text-[#fff]"
+          >
+            <Image src={item.icon} alt="" width={20} height={20} className="group-hover:invert" />
+            <span className="hidden lg:block">{item.label}</span>
+          </Link>
+          );
+        })}
+      </div>
+
+      {/* Logout pinned to bottom */}
+      {logoutItem && (
+        <div className="mt-auto mb-6 pt-4 border-t border-gray-100">
+          <button
+            onClick={() => {
+              localStorage.clear();
+              window.location.href = "/";
+            }}
+            className="group flex items-center justify-center lg:justify-start gap-4 text-[#000] py-4 md:px-2 rounded-md hover:bg-[#000] hover:text-[#fff] w-full"
+          >
+            <Image src={logoutItem.icon} alt="" width={20} height={20} className="group-hover:invert" />
+            <span className="hidden lg:block">{logoutItem.label}</span>
+          </button>
         </div>
-      ))}
-
-
-
-       {/* {menuItems.map((section) => {
-        const visibleItems = section.items.filter((item) =>
-          item.visible.includes(role)
-        );
-        if (visibleItems.length === 0) return null;
-
-        return (
-          <div className="flex flex-col" key={section.title}>
-            <span className="hidden lg:block text-black font-light my-4" />
-            {visibleItems.map((item) => (
-              <Link
-                href={item.href}
-                key={item.label}
-                className="group flex items-center justify-center lg:justify-start gap-4 rounded-md py-[1.5rem] md:px-2 text-black hover:bg-black hover:text-white transition-colors"
-              >
-                <Image
-                  src={item.icon}
-                  alt={`${item.label} icon`}
-                  width={20}
-                  height={20}
-                  className="transition group-hover:invert"
-                />
-                <span className="hidden lg:block transition-colors group-hover:text-white">
-                  {item.label}
-                </span>
-              </Link>
-            ))}
-          </div>
-        );
-      })} */}
-
-
-
-
+      )}
     </div>
   );
 }

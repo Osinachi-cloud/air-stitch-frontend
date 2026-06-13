@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from 'next/navigation'
 import { baseUrL } from "@/env/URLs";
@@ -29,7 +29,7 @@ export default function CartPage() {
     const router = useRouter();
     // const [pageRequest] = useState<PageRequest>({ page: 0, size: 30 });
 
-    const { value, getUserDetails } = useLocalStorage("userDetails", null);
+    const { value, getUserDetails } = useLocalStorage("customerDetails", null);
     const token = getUserDetails()?.accessToken;
 
     // const {
@@ -194,8 +194,15 @@ export default function CartPage() {
     };
 
     return (
-        <div className="p-3 md:p-6 lg:p-8 h-[100vh]">
-            <h1 className="text-2xl md:text-4xl font-bold mb-6 md:mb-8">Shopping Cart</h1>
+        <div className="py-6 w-full">
+            <div className="flex items-center gap-3 mb-6 md:mb-8">
+              <button onClick={() => router.back()} className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-500 text-gray-600 hover:border-gray-900 hover:text-gray-900 hover:bg-gray-50 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+              </button>
+              <h1 className="text-2xl md:text-4xl font-bold">Shopping Cart</h1>
+            </div>
 
             {isLoading ? (
                 <div className="flex items-center justify-center h-64">
@@ -436,3 +443,4 @@ export default function CartPage() {
         </div>
     );
 }
+
