@@ -114,7 +114,7 @@ const LoginPage = () => {
         <form className="sm:w-[28%] w-[90%] mx-auto my-auto" onSubmit={handleSubmit}>
           <div className='mb-[2rem]'>
             <h1 className='text-center text-[#171717] text-[32px] font-[600]'>Login</h1>
-            <p className='text-center text-[#53545C] font-[300]'>Login to access Admin Dashboard</p>
+            <p className='text-center text-[#53545C] font-[300]'>Sign in to your account</p>
           </div>
 
           <div>
@@ -175,7 +175,7 @@ const LoginPage = () => {
           </div>
           
           <div className='text-center mt-[1rem] text-[14px]'>
-            <a href="/signup">You do not have an account? Create Account</a>
+            <a href="/email-verification">You do not have an account? Create Account</a>
           </div>
         </form>
       </div>
