@@ -164,7 +164,7 @@ const LoginPage = () => {
           </div>
           
           <div className='text-center mt-[1rem] text-[14px]'>
-            <a href="/signup">You do not have an account? Create Account</a>
+            <a href="/email-verification">You do not have an account? Create Account</a>
           </div>
         </form>
       </div>
