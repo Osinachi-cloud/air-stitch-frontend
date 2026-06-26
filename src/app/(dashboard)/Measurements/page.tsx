@@ -97,14 +97,15 @@ const MeasurementTable = ({ measurements }: { measurements?: Measurement["measur
     <div className="space-y-6">
       {sections.map((section) => (
         <div key={section.title} className="border border-gray-200 rounded-xl overflow-hidden">
-          <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+          <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex justify-between items-center">
             <h3 className="text-sm font-semibold text-gray-900">{section.title}</h3>
+            <span className="text-xs font-normal text-gray-500">(in)</span>
           </div>
           <div className="divide-y divide-gray-200">
             {section.measurements.map((item) => (
               <div key={item.label} className="flex justify-between items-center px-4 py-3 hover:bg-gray-50">
                 <span className="text-sm text-gray-700">{item.label}</span>
-                <span className="text-sm font-medium text-gray-900">{item.value} {item.unit}</span>
+                <span className="text-sm font-medium text-gray-900">{item.value}</span>
               </div>
             ))}
           </div>

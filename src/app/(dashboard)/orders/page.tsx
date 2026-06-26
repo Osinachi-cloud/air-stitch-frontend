@@ -144,6 +144,15 @@ const Orders = () => {
     }));
   }, []);
 
+  const getSectionTitle = () => {
+    switch (productOrderRequest.status) {
+      case 'IN_TRANSIT': return 'In Transit Orders';
+      case 'PAYMENT_COMPLETED': return 'Paid Orders';
+      case 'FAILED': return 'Failed Orders';
+      default: return 'Customer Orders';
+    }
+  };
+
   const handlePageChange = useCallback((newPage: number) => {
     if (newPage >= 1 && newPage <= totalNumberOfPages) {
       setProductOrderRequest(prev => ({ ...prev, page: newPage }));
@@ -303,6 +312,13 @@ const Orders = () => {
 
       {/* Mobile Card View - Visible on mobile, hidden on desktop */}
       <div className="md:hidden">
+        {/* Section Title */}
+        <div className="mb-3">
+          <h2 className="text-base font-semibold text-gray-900">{getSectionTitle()}</h2>
+          <p className="text-xs text-gray-500">
+            Showing {customersOrder?.data?.length || 0} of {customersOrder?.total || 0} orders
+          </p>
+        </div>
         {/* Search and Filter */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mb-3">
           <div className="flex gap-2">
@@ -472,7 +488,7 @@ const Orders = () => {
         <div className="p-4 border-b border-gray-200">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">Customer Orders</h2>
+              <h2 className="text-lg font-semibold text-gray-900">{getSectionTitle()}</h2>
               <p className="text-xs text-gray-500 mt-1">
                 Showing {customersOrder?.data?.length || 0} of {customersOrder?.total || 0} orders
               </p>
