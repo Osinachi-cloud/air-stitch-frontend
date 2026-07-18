@@ -187,3 +187,15 @@ LoginPage.getLayout = function getLayout(page: ReactElement) {
 }
 
 export default LoginPage
+
+
+
+
+
+
+
+
+
+
+
+
