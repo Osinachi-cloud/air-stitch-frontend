@@ -2,6 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { baseUrL } from "@/env/URLs";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { User } from "@/types/user";
+import { errorToast, successToast } from "@/hooks/UseToast";
 
 const EyeIcon = ({ open }: { open: boolean }) =>
   open ? (
@@ -67,6 +71,10 @@ function StrengthBar({ strength }: { strength: number }) {
 
 export default function ChangePasswordPage() {
   const router = useRouter();
+  const { getUserDetails } = useLocalStorage<User>("customerDetails");
+  const stored = getUserDetails();
+  const token = stored?.accessToken;
+
   const [formData, setFormData] = useState({
     currentPassword: "",
     newPassword: "",
@@ -82,6 +90,7 @@ export default function ChangePasswordPage() {
   });
   const [errors, setErrors] = useState<string[]>([]);
   const [success, setSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const p = formData.newPassword;
@@ -115,11 +124,47 @@ export default function ChangePasswordPage() {
     return errs.length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    setSuccess(true);
-    setFormData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    if (!token) {
+      setErrors(["Authentication token not found. Please log in again."]);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const res = await fetch(`${baseUrL}/change-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          oldPassword: formData.currentPassword,
+          password: formData.newPassword,
+          confirmPassword: formData.confirmPassword,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setSuccess(true);
+        successToast("Password updated successfully");
+        setFormData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+      } else {
+        const msg = data?.message || data?.error || "Failed to update password.";
+        setErrors([msg]);
+        errorToast(msg);
+      }
+    } catch (err: any) {
+      const msg = err?.message || "An unexpected error occurred. Please try again.";
+      setErrors([msg]);
+      errorToast(msg);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const strength = getStrength(reqs);
@@ -310,9 +355,12 @@ export default function ChangePasswordPage() {
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <button
                 type="submit"
-                className="flex-1 bg-gray-900 text-white text-sm font-medium py-3 rounded-xl hover:bg-black transition-colors"
+                disabled={isLoading}
+                className={`flex-1 text-white text-sm font-medium py-3 rounded-xl transition-colors ${
+                  isLoading ? "bg-gray-500 cursor-not-allowed" : "bg-gray-900 hover:bg-black"
+                }`}
               >
-                Update Password
+                {isLoading ? "Updating..." : "Update Password"}
               </button>
               <button
                 type="button"
