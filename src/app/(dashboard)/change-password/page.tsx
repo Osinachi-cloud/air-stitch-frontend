@@ -114,31 +114,56 @@ export default function ChangePasswordPage() {
     const errs: string[] = [];
     if (!formData.currentPassword) errs.push("Current password is required.");
     if (!formData.newPassword) errs.push("New password is required.");
-    if (formData.newPassword && formData.newPassword === formData.currentPassword)
-      errs.push("New password must differ from your current password.");
+    if (!formData.confirmPassword) errs.push("Confirm password is required.");
     if (formData.newPassword && formData.confirmPassword && formData.newPassword !== formData.confirmPassword)
       errs.push("Passwords do not match.");
-    if (formData.newPassword && !Object.values(reqs).every(Boolean))
-      errs.push("Please meet all password requirements.");
+    // Let the backend validate password strength and old-password correctness
     setErrors(errs);
     return errs.length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
-    if (!token) {
+    console.log("[ChangePassword] handleSubmit fired");
+
+    if (!validate()) {
+      console.log("[ChangePassword] client validation failed", errors);
+      return;
+    }
+
+    // Fallback: try customerDetails first, then userDetails
+    let authToken = token;
+    if (!authToken) {
+      const fallbackRaw = localStorage.getItem("userDetails");
+      if (fallbackRaw) {
+        try {
+          const fallback = JSON.parse(fallbackRaw);
+          authToken = fallback?.accessToken || fallback?.access_token;
+          console.log("[ChangePassword] fallback token found");
+        } catch {
+          console.log("[ChangePassword] fallback parse failed");
+        }
+      }
+    }
+
+    if (!authToken) {
+      console.log("[ChangePassword] no token found");
       setErrors(["Authentication token not found. Please log in again."]);
       return;
     }
 
     setIsLoading(true);
+    console.log("[ChangePassword] calling fetch...");
+
     try {
-      const res = await fetch(`${baseUrL}/change-password`, {
+      const endpoint = `${baseUrL}/change-password`;
+      console.log("[ChangePassword] endpoint:", endpoint);
+
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${authToken}`,
         },
         body: JSON.stringify({
           oldPassword: formData.currentPassword,
@@ -147,7 +172,9 @@ export default function ChangePasswordPage() {
         }),
       });
 
+      console.log("[ChangePassword] response status:", res.status);
       const data = await res.json();
+      console.log("[ChangePassword] response data:", data);
 
       if (res.ok) {
         setSuccess(true);
@@ -159,6 +186,7 @@ export default function ChangePasswordPage() {
         errorToast(msg);
       }
     } catch (err: any) {
+      console.error("[ChangePassword] fetch error:", err);
       const msg = err?.message || "An unexpected error occurred. Please try again.";
       setErrors([msg]);
       errorToast(msg);
