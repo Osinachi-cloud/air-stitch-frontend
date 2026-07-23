@@ -94,6 +94,11 @@ const LoginPage = () => {
       // Store normalized user data in localStorage for navbar/jwtHooks
       setStoredValue(normalizedUserData);
 
+      // Also mirror to customerDetails so dashboard pages and hooks can read it
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('customerDetails', JSON.stringify(normalizedUserData));
+      }
+
       // Notify other components/tabs that user details have been updated
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent("userDetailsUpdated", { detail: normalizedUserData }));

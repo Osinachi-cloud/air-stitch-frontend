@@ -42,6 +42,7 @@ export const useAuth = () => {
       removeValue();
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
+      localStorage.removeItem('customerDetails');
       sessionStorage.clear();
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent("userDetailsUpdated"));
@@ -56,6 +57,7 @@ export const useAuth = () => {
     removeValue();
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('customerDetails');
     sessionStorage.clear();
 
     if (typeof window !== 'undefined') {
