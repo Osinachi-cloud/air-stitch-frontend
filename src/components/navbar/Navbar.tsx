@@ -8,6 +8,7 @@ interface UserData {
   lastName?: string;
   profileImage?: string | null;
   accessToken?: string;
+  access_token?: string;
 }
 
 const getInitials = (firstName?: string, lastName?: string): string => {
@@ -38,7 +39,7 @@ const Navbar = () => {
     };
   }, []);
 
-  useEffect(() => {
+  const loadUser = () => {
     const stored = localStorage.getItem('userDetails');
     if (stored) {
       try {
@@ -47,11 +48,27 @@ const Navbar = () => {
       } catch {
         setUser(null);
       }
+    } else {
+      setUser(null);
     }
+  };
+
+  useEffect(() => {
+    loadUser();
+
+    const handleUpdate = () => loadUser();
+    window.addEventListener('userDetailsUpdated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+
+    return () => {
+      window.removeEventListener('userDetailsUpdated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
   }, []);
 
-  const isLoggedIn = !!user?.accessToken;
+  const isLoggedIn = !!(user?.accessToken || user?.access_token);
   const initials = getInitials(user?.firstName, user?.lastName);
+  const displayName = user?.firstName || 'User';
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -133,6 +150,7 @@ const Navbar = () => {
                     {initials || 'U'}
                   </div>
                 )}
+                <span className="text-sm font-medium text-gray-700">{displayName}</span>
               </Link>
             ) : (
               <Link
@@ -249,7 +267,7 @@ const Navbar = () => {
                   {initials || 'U'}
                 </div>
               )}
-              <span className="text-sm font-medium">My Account</span>
+              <span className="text-sm font-medium">{displayName}</span>
             </Link>
           ) : (
             <Link

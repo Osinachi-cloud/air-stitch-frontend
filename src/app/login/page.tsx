@@ -71,25 +71,34 @@ const LoginPage = () => {
       let apiResponseData: any = await apiResponse.json();
       console.log({apiResponseData});
 
-      setStoredValue(apiResponseData);
-
     if (apiResponse.ok) {
       // Normalize user data: handle both wrapped (ILoginResponse) and direct (IUserData) formats
       const userData = apiResponseData.data || apiResponseData;
-      
-      const transformedUserDetails = {
-        access_token: userData.accessToken || userData.access_token, 
-        refresh_token: userData.refreshToken || userData.refresh_token, 
-        permissions: [], 
-        roles: [userData.role] 
+
+      const normalizedUserData = {
+        ...userData,
+        accessToken: userData.accessToken || userData.access_token,
+        refreshToken: userData.refreshToken || userData.refresh_token,
       };
-      
+
+      const transformedUserDetails = {
+        access_token: normalizedUserData.accessToken,
+        refresh_token: normalizedUserData.refreshToken,
+        permissions: [],
+        roles: [normalizedUserData.role]
+      };
+
       console.log("Transformed user details:", transformedUserDetails);
       dispatch(loginSuccess(transformedUserDetails));
-      
+
       // Store normalized user data in localStorage for navbar/jwtHooks
-      setStoredValue(userData);
-      
+      setStoredValue(normalizedUserData);
+
+      // Notify other components/tabs that user details have been updated
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent("userDetailsUpdated", { detail: normalizedUserData }));
+      }
+
       // Always redirect to home page — use window.location for reliability
       window.location.href = "/";
       return;
@@ -187,3 +196,15 @@ LoginPage.getLayout = function getLayout(page: ReactElement) {
 }
 
 export default LoginPage
+
+
+
+
+
+
+
+
+
+
+
+
