@@ -43,22 +43,29 @@ export const useAuth = () => {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       sessionStorage.clear();
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent("userDetailsUpdated"));
+      }
       return;
     }
 
     if (redirectInProgress.current) return;
-    
+
     redirectInProgress.current = true;
-    
+
     removeValue();
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     sessionStorage.clear();
-    
+
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent("userDetailsUpdated"));
+    }
+
     if (message) {
       console.log('Auth:', message);
     }
-    
+
     setTimeout(() => {
       router.push('/login');
       setTimeout(() => {
