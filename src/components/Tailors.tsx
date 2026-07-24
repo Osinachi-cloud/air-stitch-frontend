@@ -66,7 +66,7 @@ export const Tailors: React.FC = () => {
   useEffect(() => {
     const fetchVendors = async () => {
       try {
-        const res = await fetch(`${baseUrL}/vendors?page=0&size=10`);
+        const res = await fetch(`${baseUrL}/vendors?page=0&size=6`);
         if (!res.ok) throw new Error("Failed to fetch vendors");
         const data = await res.json();
         if (data?.data && Array.isArray(data.data) && data.data.length > 0) {
@@ -81,7 +81,7 @@ export const Tailors: React.FC = () => {
     fetchVendors();
   }, []);
 
-  const displayList = vendors.length > 0 ? vendors : mockCategories;
+  const displayList = vendors.length > 0 ? vendors.slice(0, 6) : mockCategories.slice(0, 6);
 
   return (
     <>
