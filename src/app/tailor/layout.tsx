@@ -48,7 +48,7 @@ export default function TailorDashboardLayout({
       {/* RIGHT CONTENT AREA */}
       <div className="w-full lg:w-[80%] lg:absolute lg:right-0 bg-[#eff2f9] flex flex-col h-screen">
         {/* FIXED NAVBAR */}
-        <div className="fixed top-0 right-0 left-0 z-10 p-4 lg:top-4 lg:right-4 lg:left-[calc(20%+30px)]">
+        <div className="fixed top-0 right-0 left-0 z-10 pt-4 lg:top-4 lg:right-0 lg:left-[20%]">
           <Navbar onMenuClick={() => setSidebarOpen(true)} />
         </div>
 
