@@ -47,13 +47,11 @@ export default function TailorDashboardLayout({
 
       {/* RIGHT CONTENT AREA */}
       <div className="w-full lg:w-[80%] lg:absolute lg:right-0 bg-[#eff2f9] flex flex-col h-screen">
-        {/* FIXED NAVBAR */}
-        <div className="fixed top-0 right-0 left-0 z-10 pt-4 lg:top-4 lg:right-0 lg:left-[20%]">
-          <Navbar onMenuClick={() => setSidebarOpen(true)} />
-        </div>
-
         {/* SCROLLABLE CONTENT */}
-        <div className="flex-1 mt-[136px] overflow-auto min-w-0 px-4 lg:px-[30px] pb-6">
+        <div className="flex-1 overflow-auto min-w-0 px-4 lg:px-[30px] pb-6">
+          <div className="sticky top-0 z-10 pt-4">
+            <Navbar onMenuClick={() => setSidebarOpen(true)} />
+          </div>
           {children}
         </div>
       </div>
