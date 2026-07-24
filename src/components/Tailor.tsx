@@ -1,9 +1,9 @@
 import { Heart } from "lucide-react"
+import Link from "next/link"
 
 export const Tailor = ({ id, image, name, description, url, buttonText }: any) => {
     return (
         <>
-
             <div key={id} className="bg-[#eff2f9] rounded-[4px] overflow-hidden h-[300px] md:h-[500px]">
                 <div className="relative w-full h-[63%] md:h-[70%] bg-cover bg-center bg-no-repeat"
                     style={{ backgroundImage: `url(${image})` }}
@@ -16,12 +16,12 @@ export const Tailor = ({ id, image, name, description, url, buttonText }: any) =
                     <h3 className="text-[12px] md:text-lg font-semibold leading-snug">
                         {name}
                     </h3>
-                    <p className="text-[12px] md:text-lg font-semibold leading-snug">
+                    <p className="text-[12px] md:text-lg font-semibold leading-snug text-center line-clamp-2">
                         {description}
                     </p>
-                    <a href={url} className="bg-[#373636] w-[150px] p-[10px] text-center px-[14px] md:text-sm text-[8px] text-gray-500 mb-2">
+                    <Link href={url} className="bg-[#373636] w-[150px] p-[10px] text-center px-[14px] md:text-sm text-[8px] text-white mb-2 hover:bg-black transition-colors">
                         {buttonText}
-                    </a>
+                    </Link>
                 </div>
             </div>
         </>
