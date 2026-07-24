@@ -130,7 +130,7 @@ export default function Menu({
   return (
     <div className="text-sm flex flex-col flex-1 overflow-y-auto">
       {/* Main nav items */}
-      <div className="flex flex-col mt-14">
+      <div className="flex flex-col mt-10 gap-1.5">
         {mainItems.map((item) => {
           const href = roleHrefOverrides[item.label]?.[role] ?? item.href;
           const isActive = pathname === href || pathname?.startsWith(href + "/");
@@ -138,14 +138,16 @@ export default function Menu({
             <Link
               href={href}
               key={item.label}
-              className={`group flex items-center justify-center lg:justify-start gap-4 py-4 md:px-2 rounded-md transition-colors duration-200 ${
+              className={`group flex items-center justify-center lg:justify-start gap-3 py-2.5 px-2.5 rounded-lg transition-all duration-200 ${
                 isActive
-                  ? 'bg-[#000] text-[#fff]'
-                  : 'text-[#000] hover:bg-gray-800 hover:text-[#fff]'
+                  ? 'bg-gradient-to-r from-gray-900 to-gray-700 text-white shadow-md'
+                  : 'text-gray-800 hover:bg-gray-200 hover:text-black'
               }`}
             >
-              <Image src={item.icon} alt="" width={20} height={20} className={isActive ? 'invert' : 'group-hover:invert'} />
-              <span className="hidden lg:block">{item.label}</span>
+              <div className={`flex items-center justify-center w-8 h-8 rounded-md ${isActive ? 'bg-white/15' : 'bg-transparent group-hover:bg-gray-300'} transition-colors`}>
+                <Image src={item.icon} alt="" width={18} height={18} className={isActive ? 'brightness-0 invert' : ''} />
+              </div>
+              <span className="hidden lg:block text-sm font-medium">{item.label}</span>
             </Link>
           );
         })}
@@ -153,16 +155,18 @@ export default function Menu({
 
       {/* Logout pinned to bottom */}
       {logoutItem && (
-        <div className="mt-auto mb-6 pt-4 border-t border-gray-100">
+        <div className="mt-auto mb-4 pt-3 border-t border-gray-200">
           <button
             onClick={() => {
               localStorage.clear();
               window.location.href = "/";
             }}
-            className="group flex items-center justify-center lg:justify-start gap-4 text-[#000] py-4 md:px-2 rounded-md hover:bg-[#000] hover:text-[#fff] w-full"
+            className="group flex items-center justify-center lg:justify-start gap-3 text-gray-800 py-2.5 px-2.5 rounded-lg hover:bg-red-50 hover:text-red-600 w-full transition-all duration-200"
           >
-            <Image src={logoutItem.icon} alt="" width={20} height={20} className="group-hover:invert" />
-            <span className="hidden lg:block">{logoutItem.label}</span>
+            <div className="flex items-center justify-center w-8 h-8 rounded-md group-hover:bg-red-100 transition-colors">
+              <Image src={logoutItem.icon} alt="" width={18} height={18} />
+            </div>
+            <span className="hidden lg:block text-sm font-medium">{logoutItem.label}</span>
           </button>
         </div>
       )}
