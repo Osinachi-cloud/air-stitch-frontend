@@ -95,7 +95,7 @@ const Navbar = ({ onMenuClick }: { onMenuClick?: () => void }) => {
   }, [pathname]);
 
   return (
-    <div className="bg-white rounded-xl overflow-hidden mx-4 lg:mx-[30px]">
+    <div className="bg-white rounded-xl overflow-hidden">
       {/* Top Navbar */}
       <div className="flex items-center justify-between px-6 py-4">
         {/* LEFT: Hamburger (mobile) + page title */}

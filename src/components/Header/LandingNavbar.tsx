@@ -102,7 +102,7 @@ export const LandingNavbar = () => {
                         {initials || 'U'}
                       </div>
                     )}
-                    <span>{displayName}</span>
+                    <span>My Account</span>
                   </Link>
                 ) : (
                   <Link href="/login" className="text-[14px] font-medium text-gray-800 hover:text-black flex items-center gap-1.5">
