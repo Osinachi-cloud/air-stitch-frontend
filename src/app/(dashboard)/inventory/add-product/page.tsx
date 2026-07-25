@@ -14,8 +14,8 @@ import {
 } from "lucide-react";
 
 interface ProductVariation {
-  color: string;
-  sleeveType: string;
+  color?: string;
+  sleeveType?: string;
 }
 
 interface ProductForm {
@@ -159,7 +159,7 @@ export default function AddProductPage() {
         materialUsed: form.materialUsed,
         readyIn: form.readyIn,
         productVariation: form.productVariation.filter(
-          (v) => v.color.trim() || v.sleeveType.trim()
+          (v) => v.color?.trim() || v.sleeveType?.trim()
         ),
       };
 
