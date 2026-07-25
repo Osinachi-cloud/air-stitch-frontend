@@ -51,14 +51,14 @@ const blogs = [
 export const Blogs = () => {
     return (
         <>
-            <section className="w-[90%] m-auto">
+            <section className="px-4 md:px-6 py-8 w-[95%] mx-auto">
                 <ProductSectionHeader
-                    title={"BLOG"}
+                    title={"Blog"}
                     url={"/blog"}
                 />
 
                 <div
-                    className="product-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-[4rem] mt-8">
+                    className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {blogs.map((blog, index) => (
                         <Blog
                             key={index}

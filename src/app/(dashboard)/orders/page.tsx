@@ -193,22 +193,22 @@ const Orders = () => {
 
   const getStatusBadge = (status: OrderStatus) => {
     const statusConfig: Record<OrderStatus, { bg: string; text: string; label: string }> = {
-      PROCESSING: { bg: 'bg-gray-100', text: 'text-gray-700', label: 'PROCESSING' },
-      ACTIVE: { bg: 'bg-purple-100', text: 'text-purple-700', label: 'ACTIVE' },
+      PROCESSING: { bg: 'bg-surface-100', text: 'text-surface-700', label: 'PROCESSING' },
+      ACTIVE: { bg: 'bg-primary-100', text: 'text-primary-700', label: 'ACTIVE' },
       FAILED: { bg: 'bg-red-100', text: 'text-red-700', label: 'FAILED' },
-      IN_TRANSIT: { bg: 'bg-blue-100', text: 'text-blue-700', label: 'IN TRANSIT' },
-      COMPLETED: { bg: 'bg-green-100', text: 'text-green-700', label: 'COMPLETED' },
+      IN_TRANSIT: { bg: 'bg-indigo-100', text: 'text-indigo-700', label: 'IN TRANSIT' },
+      COMPLETED: { bg: 'bg-emerald-100', text: 'text-emerald-700', label: 'COMPLETED' },
       PAYMENT_COMPLETED: { bg: 'bg-emerald-100', text: 'text-emerald-700', label: 'PAID' },
       VENDOR_PROCESSING_START: { bg: 'bg-teal-100', text: 'text-teal-700', label: 'STARTED' },
       VENDOR_PROCESSING_COMPLETED: { bg: 'bg-indigo-100', text: 'text-indigo-700', label: 'COMPLETED' },
       REJECTED: { bg: 'bg-red-100', text: 'text-red-700', label: 'REJECTED' },
-      ""   :  {bg: 'bg-gray-100', text: 'text-gray-700', label: ''}
+      ""   :  {bg: 'bg-surface-100', text: 'text-surface-700', label: ''}
     };
 
     const config = statusConfig[status] || statusConfig.PROCESSING;
 
     return (
-      <div className={`${config.bg} px-2 py-1 text-xs font-medium rounded-full inline-flex items-center`}>
+      <div className={`${config.bg} px-2 py-0.5 text-[11px] font-semibold rounded-full inline-flex items-center`}>
         <span className={config.text}>{config.label}</span>
       </div>
     );
@@ -254,12 +254,12 @@ const Orders = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-20 gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <button onClick={() => router.back()} className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-500 text-gray-600 hover:border-gray-900 hover:text-gray-900 hover:bg-gray-50 transition-all">
+            <button onClick={() => router.back()} className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-surface-300 text-surface-600 hover:border-primary-600 hover:text-primary-700 hover:bg-primary-50 transition-all">
               <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
               </svg>
             </button>
-            <h2 className="text-[#15192C] font-semibold text-xl md:text-2xl leading-8">Orders Summary</h2>
+            <h2 className="text-lg font-display font-bold text-surface-800">Orders Summary</h2>
           </div>
 
         </div>
@@ -267,14 +267,14 @@ const Orders = () => {
           <button
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white px-3 md:px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors disabled:opacity-50 text-sm"
+            className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white px-3 py-2 rounded-xl border border-surface-200 hover:bg-surface-50 transition-colors disabled:opacity-50 text-xs font-semibold"
           >
-            <RefreshCw className={`w-4 h-4 text-gray-600 ${isRefreshing ? 'animate-spin' : ''}`} />
-            <span className="text-gray-600">Refresh</span>
+            <RefreshCw className={`w-4 h-4 text-surface-600 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span className="text-surface-600">Refresh</span>
           </button>
-          <button className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white px-3 md:px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors text-sm">
-            <Download className="w-4 h-4 text-gray-600" />
-            <span className="text-gray-600">Export</span>
+          <button className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white px-3 py-2 rounded-xl border border-surface-200 hover:bg-surface-50 transition-colors text-xs font-semibold">
+            <Download className="w-4 h-4 text-surface-600" />
+            <span className="text-surface-600">Export</span>
           </button>
         </div>
       </div>
@@ -285,17 +285,17 @@ const Orders = () => {
           <div
             key={card.title}
             onClick={() => filterByStatus(card.status)}
-            className={`cursor-pointer rounded-lg overflow-hidden transition-all duration-200 ${
+            className={`cursor-pointer rounded-2xl overflow-hidden transition-all duration-200 shadow-card ${
               productOrderRequest.status === card.status || (card.status === Status.all && productOrderRequest.status === null)
-                ? 'ring-2 ring-blue-500 shadow-md'
+                ? 'ring-2 ring-primary-500 shadow-card-hover'
                 : 'hover:shadow-md'
             }`}
           >
             <div className={`${card.bgColor} p-3 md:p-4`}>
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <p className="text-gray-500 text-xs font-medium mb-0.5 md:mb-1">{card.title}</p>
-                  <p className="text-lg md:text-xl font-semibold text-gray-800">{card.value}</p>
+                  <p className="text-surface-500 text-[11px] font-semibold mb-0.5 md:mb-1">{card.title}</p>
+                  <p className="text-lg md:text-xl font-display font-bold text-surface-800">{card.value}</p>
                 </div>
                 <div className={`bg-gradient-to-r ${card.color} p-1.5 md:p-2 rounded-lg shadow-sm`}>
                   <card.icon className="w-3 h-3 md:w-4 md:h-4 text-white" />
@@ -309,21 +309,21 @@ const Orders = () => {
       {/* Mobile Card View - Visible on mobile, hidden on desktop */}
       <div className="md:hidden">
         {/* Search and Filter */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mb-3">
+        <div className="bg-white rounded-2xl shadow-card border border-surface-100 p-3 mb-3">
           <div className="flex gap-2">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-surface-400 w-4 h-4" />
               <input
                 value={productOrderRequest.orderId || ''}
                 onChange={handleSearchChange}
                 type="text"
-                className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-400"
                 placeholder="Search by order ID..."
               />
             </div>
-            <button className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-              <Filter className="w-3.5 h-3.5 text-gray-500" />
-              <span className="text-gray-600">Filter</span>
+            <button className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold border border-surface-200 rounded-xl hover:bg-surface-50 transition-colors">
+              <Filter className="w-3.5 h-3.5 text-surface-500" />
+              <span className="text-surface-600">Filter</span>
             </button>
           </div>
         </div>
@@ -332,29 +332,29 @@ const Orders = () => {
         <div className="space-y-3">
           {ordersLoading || isRefreshing ? (
             <div className="bg-white rounded-lg p-8 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-3"></div>
-              <p className="text-gray-500 text-sm">Loading orders...</p>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-3"></div>
+              <p className="text-surface-500 text-sm">Loading orders...</p>
             </div>
           ) : customersOrder?.data?.length === 0 ? (
             <div className="bg-white rounded-lg p-8 text-center">
-              <Package className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500">No orders found</p>
+              <Package className="w-10 h-10 text-surface-300 mx-auto mb-3" />
+              <p className="text-sm text-surface-500">No orders found</p>
             </div>
           ) : (
             customersOrder?.data?.map((order: any) => (
-              <div key={order.orderId} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <div key={order.orderId} className="bg-white rounded-2xl shadow-card border border-surface-100 overflow-hidden">
                 {/* Card Header */}
-                <div className="p-4 border-b border-gray-100">
+                <div className="p-4 border-b border-surface-100">
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-                          <Package className="w-4 h-4 text-gray-500" />
+                        <div className="w-8 h-8 bg-surface-100 rounded-xl flex items-center justify-center">
+                          <Package className="w-4 h-4 text-surface-500" />
                         </div>
-                        <span className="text-sm font-medium text-gray-900">{order.productName || "Product Name"}</span>
+                        <span className="text-sm font-medium text-surface-800">{order.productName || "Product Name"}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-mono text-gray-500">{order.orderId}</span>
+                        <span className="text-xs font-mono text-surface-500">{order.orderId}</span>
                         {getStatusBadge(order.status)}
                       </div>
                     </div>
@@ -362,31 +362,31 @@ const Orders = () => {
                   
                   <div className="grid grid-cols-2 gap-3 mt-3">
                     <div>
-                      <p className="text-xs text-gray-500 mb-1">Amount</p>
-                      <p className="text-sm font-semibold text-gray-900">{formatNaira(order.amount)}</p>
+                      <p className="text-xs text-surface-500 mb-1">Amount</p>
+                      <p className="text-sm font-semibold text-surface-800">{formatNaira(order.amount)}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500 mb-1">Date</p>
+                      <p className="text-xs text-surface-500 mb-1">Date</p>
                       <div className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3 text-gray-400" />
-                        <span className="text-xs text-gray-600">{order.dateCreated}</span>
+                        <Calendar className="w-3 h-3 text-surface-400" />
+                        <span className="text-xs text-surface-600">{order.dateCreated}</span>
                       </div>
                     </div>
                   </div>
                 </div>
                 
                 {/* Card Actions */}
-                <div className="px-4 py-2 bg-gray-50 flex justify-between items-center">
+                <div className="px-4 py-2 bg-surface-50 flex justify-between items-center">
                   <button
                     onClick={(e) => handleViewOrder(order, e)}
-                    className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700"
+                    className="flex items-center gap-2 text-sm text-primary-600 hover:text-primary-700"
                   >
                     <Eye className="w-4 h-4" />
                     <span>View Details</span>
                   </button>
                   <button
                     onClick={() => toggleExpandOrder(order.orderId)}
-                    className="flex items-center gap-1 text-sm text-gray-600"
+                    className="flex items-center gap-1 text-sm text-surface-600"
                   >
                     <span>{expandedOrderId === order.orderId ? 'Less' : 'More'}</span>
                     {expandedOrderId === order.orderId ? (
@@ -399,20 +399,20 @@ const Orders = () => {
                 
                 {/* Expanded Content */}
                 {expandedOrderId === order.orderId && (
-                  <div className="p-4 border-t border-gray-100 bg-gray-50">
+                  <div className="p-4 border-t border-surface-100 bg-surface-50">
                     <div className="space-y-3">
                       <div>
-                        <p className="text-xs text-gray-500 uppercase font-medium mb-1">Customer ID</p>
-                        <p className="text-sm text-gray-700">{order.customerId}</p>
+                        <p className="text-[11px] text-surface-500 uppercase font-medium mb-1">Customer ID</p>
+                        <p className="text-sm text-surface-700">{order.customerId}</p>
                       </div>
                       {order.productVariationDto && (
                         <div>
-                          <p className="text-xs text-gray-500 uppercase font-medium mb-1">Variations</p>
+                          <p className="text-[11px] text-surface-500 uppercase font-medium mb-1">Variations</p>
                           <div className="flex gap-2">
-                            <span className="text-xs bg-white px-2 py-1 rounded border border-gray-200">
+                            <span className="text-xs bg-white px-2 py-1 rounded-lg border border-surface-200">
                               Color: {order.productVariationDto.color}
                             </span>
-                            <span className="text-xs bg-white px-2 py-1 rounded border border-gray-200">
+                            <span className="text-xs bg-white px-2 py-1 rounded-lg border border-surface-200">
                               Sleeve: {order.productVariationDto.sleeveType}
                             </span>
                           </div>
@@ -427,16 +427,16 @@ const Orders = () => {
           
           {/* Mobile Pagination */}
           {!ordersLoading && customersOrder?.data?.length > 0 && (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
+            <div className="bg-white rounded-2xl shadow-card border border-surface-100 p-3">
               <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-600">
+                  <span className="text-xs text-surface-600">
                     Showing {customersOrder?.data?.length} of {customersOrder?.total} orders
                   </span>
                   <select
                     value={productOrderRequest.size}
                     onChange={(e) => handleSizeChange(Number(e.target.value))}
-                    className="px-2 py-1 text-xs border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                    className="px-2 py-1 text-xs border border-surface-200 rounded-lg focus:ring-2 focus:ring-primary-300 focus:border-primary-400"
                   >
                     <option value={10}>10/page</option>
                     <option value={20}>20/page</option>
@@ -445,19 +445,19 @@ const Orders = () => {
                   </select>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-600">
+                  <span className="text-xs text-surface-600">
                     Page {productOrderRequest.page} of {totalNumberOfPages}
                   </span>
                   <div className="flex gap-2">
                     <button
-                      className="px-3 py-1 rounded border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white transition-colors text-sm"
+                      className="px-3 py-1 rounded-lg border border-surface-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white transition-colors text-xs font-semibold"
                       onClick={() => handlePageChange(productOrderRequest.page - 1)}
                       disabled={productOrderRequest.page === 1}
                     >
                       Previous
                     </button>
                     <button
-                      className="px-3 py-1 rounded border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white transition-colors text-sm"
+                      className="px-3 py-1 rounded-lg border border-surface-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white transition-colors text-xs font-semibold"
                       onClick={() => handlePageChange(productOrderRequest.page + 1)}
                       disabled={productOrderRequest.page >= totalNumberOfPages}
                     >
@@ -472,30 +472,30 @@ const Orders = () => {
       </div>
 
       {/* Desktop Table View - Hidden on mobile */}
-      <div className="hidden md:block bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="hidden md:block bg-white rounded-2xl shadow-card border border-surface-100 overflow-hidden">
         {/* Table Header */}
-        <div className="p-4 border-b border-gray-200">
+        <div className="p-4 border-b border-surface-100">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">Customer Orders</h2>
-              <p className="text-xs text-gray-500 mt-1">
+              <h2 className="text-sm font-display font-bold text-surface-800">Customer Orders</h2>
+              <p className="text-xs text-surface-500 mt-0.5">
                 Showing {customersOrder?.data?.length || 0} of {customersOrder?.total || 0} orders
               </p>
             </div>
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <div className="relative flex-1 sm:w-64">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-surface-400 w-4 h-4" />
                 <input
                   value={productOrderRequest.orderId || ''}
                   onChange={handleSearchChange}
                   type="text"
-                  className="w-full pl-9 pr-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full pl-9 pr-3 py-1.5 text-sm bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-400"
                   placeholder="Search by order ID..."
                 />
               </div>
-              <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                <Filter className="w-3.5 h-3.5 text-gray-500" />
-                <span className="text-gray-600">Filter</span>
+              <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold border border-surface-200 rounded-xl hover:bg-surface-50 transition-colors">
+                <Filter className="w-3.5 h-3.5 text-surface-500" />
+                <span className="text-surface-600">Filter</span>
               </button>
             </div>
           </div>
@@ -506,59 +506,59 @@ const Orders = () => {
           {ordersLoading || isRefreshing ? (
             <div className="flex justify-center items-center py-12">
               <div className="text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-3"></div>
-                <p className="text-gray-500 text-sm">Loading orders...</p>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-3"></div>
+                <p className="text-surface-500 text-sm">Loading orders...</p>
               </div>
             </div>
           ) : customersOrder?.data?.length === 0 ? (
             <div className="text-center py-12">
-              <Package className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500">No orders found</p>
+              <Package className="w-10 h-10 text-surface-300 mx-auto mb-3" />
+              <p className="text-sm text-surface-500">No orders found</p>
             </div>
           ) : (
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-surface-100">
+              <thead className="bg-surface-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                  <th className="px-4 py-2.5 text-left text-[11px] font-semibold text-surface-500 uppercase tracking-wider">Product</th>
+                  <th className="px-4 py-2.5 text-left text-[11px] font-semibold text-surface-500 uppercase tracking-wider">Date</th>
+                  <th className="px-4 py-2.5 text-left text-[11px] font-semibold text-surface-500 uppercase tracking-wider">Amount</th>
+                  <th className="px-4 py-2.5 text-left text-[11px] font-semibold text-surface-500 uppercase tracking-wider">Order ID</th>
+                  <th className="px-4 py-2.5 text-left text-[11px] font-semibold text-surface-500 uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-2.5 text-left text-[11px] font-semibold text-surface-500 uppercase tracking-wider">Action</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-surface-100">
                 {customersOrder?.data?.map((order: any) => (
-                  <tr key={order.orderId} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3">
+                  <tr key={order.orderId} className="hover:bg-primary-50/50 transition-colors">
+                    <td className="px-4 py-2.5">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-                          <Package className="w-4 h-4 text-gray-500" />
+                        <div className="w-8 h-8 bg-surface-100 rounded-xl flex items-center justify-center">
+                          <Package className="w-4 h-4 text-surface-500" />
                         </div>
-                        <span className="text-sm text-gray-900">{order.productName || "Product Name"}</span>
+                        <span className="text-sm text-surface-800">{order.productName || "Product Name"}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                        <span className="text-sm text-gray-600">{order.dateCreated}</span>
+                        <Calendar className="w-3.5 h-3.5 text-surface-400" />
+                        <span className="text-sm text-surface-600">{order.dateCreated}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
-                      <span className="text-sm font-medium text-gray-900">
+                      <span className="text-sm font-semibold text-surface-800">
                         {formatNaira(order.amount)}
                       </span>
                     </td>
-                    <td className="px-4 py-3">
-                      <span className="text-sm font-mono text-gray-600">{order.orderId}</span>
+                    <td className="px-4 py-2.5">
+                      <span className="text-sm font-mono text-surface-600">{order.orderId}</span>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-2.5">
                       {getStatusBadge(order.status)}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-2.5">
                       <button
                         onClick={(e) => handleViewOrder(order, e)}
-                        className="text-gray-500 hover:text-blue-600 transition-colors"
+                        className="text-surface-500 hover:text-primary-600 transition-colors"
                       >
                         <Eye className="w-4 h-4" />
                       </button>
@@ -571,14 +571,14 @@ const Orders = () => {
         </div>
 
         {/* Pagination */}
-        <div className="px-4 py-3 border-t border-gray-200 bg-gray-50">
+        <div className="px-4 py-2.5 border-t border-surface-100 bg-surface-50">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">Rows per page:</span>
+              <span className="text-xs text-surface-600">Rows per page:</span>
               <select
                 value={productOrderRequest.size}
                 onChange={(e) => handleSizeChange(Number(e.target.value))}
-                className="px-2 py-1 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                className="px-2 py-1 text-xs border border-surface-200 rounded-lg focus:ring-2 focus:ring-primary-300 focus:border-primary-400"
               >
                 <option value={10}>10</option>
                 <option value={20}>20</option>
@@ -588,23 +588,23 @@ const Orders = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-surface-600">
                 Page {productOrderRequest.page} of {totalNumberOfPages}
               </span>
               <div className="flex gap-1">
                 <button
-                  className="p-1.5 rounded border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white transition-colors"
+                  className="p-1.5 rounded-lg border border-surface-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white transition-colors"
                   onClick={() => handlePageChange(productOrderRequest.page - 1)}
                   disabled={productOrderRequest.page === 1}
                 >
-                  <ChevronLeft className="w-4 h-4 text-gray-600" />
+                  <ChevronLeft className="w-4 h-4 text-surface-600" />
                 </button>
                 <button
-                  className="p-1.5 rounded border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white transition-colors"
+                  className="p-1.5 rounded-lg border border-surface-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white transition-colors"
                   onClick={() => handlePageChange(productOrderRequest.page + 1)}
                   disabled={productOrderRequest.page >= totalNumberOfPages}
                 >
-                  <ChevronRight className="w-4 h-4 text-gray-600" />
+                  <ChevronRight className="w-4 h-4 text-surface-600" />
                 </button>
               </div>
             </div>
@@ -615,22 +615,22 @@ const Orders = () => {
       {/* Order Details Modal - Compact Mobile First Design */}
       {showModal && selectedOrder && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end md:items-center justify-center"
+          className="fixed inset-0 bg-black/50 z-50 flex items-end md:items-center justify-center"
           onClick={() => setShowModal(false)}
         >
           <div
-            className="bg-white rounded-t-xl md:rounded-xl shadow-xl w-full md:max-w-md max-h-[90vh] overflow-y-auto animate-slide-up"
+            className="bg-white rounded-t-2xl md:rounded-2xl shadow-elegant w-full md:max-w-md max-h-[90vh] overflow-y-auto animate-slide-up"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="sticky top-0 bg-white border-b border-gray-100 px-4 py-3 flex justify-between items-center">
+            <div className="sticky top-0 bg-white border-b border-surface-100 px-4 py-3 flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <Package className="w-5 h-5 text-gray-600" />
-                <h3 className="text-lg font-semibold text-gray-900">Order Details</h3>
+                <Package className="w-5 h-5 text-surface-600" />
+                <h3 className="text-sm font-display font-bold text-surface-800">Order Details</h3>
               </div>
               <button
                 onClick={() => setShowModal(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors p-1"
+                className="text-surface-400 hover:text-surface-600 transition-colors p-1"
               >
                 <XCircle className="w-5 h-5" />
               </button>
@@ -641,36 +641,36 @@ const Orders = () => {
               {/* Order ID and Status Row */}
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="text-xs text-gray-500 uppercase font-medium mb-1">Order ID</p>
-                  <p className="text-sm font-mono text-gray-900 bg-gray-50 px-2 py-1 rounded">{selectedOrder.orderId}</p>
+                  <p className="text-[11px] text-surface-500 uppercase font-medium mb-1">Order ID</p>
+                  <p className="text-sm font-mono text-surface-800 bg-surface-50 px-2 py-1 rounded-lg">{selectedOrder.orderId}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-gray-500 uppercase font-medium mb-1">Status</p>
+                  <p className="text-[11px] text-surface-500 uppercase font-medium mb-1">Status</p>
                   {getStatusBadge(selectedOrder.status)}
                 </div>
               </div>
 
               {/* Divider */}
-              <div className="border-t border-gray-100"></div>
+              <div className="border-t border-surface-100"></div>
 
               {/* Product Info */}
               <div>
-                <p className="text-xs text-gray-500 uppercase font-medium mb-2">Product Information</p>
-                <div className="bg-gray-50 rounded-lg p-3 space-y-2">
+                <p className="text-[11px] text-surface-500 uppercase font-medium mb-2">Product Information</p>
+                <div className="bg-surface-50 rounded-xl p-3 space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Product Name</span>
-                    <span className="text-sm font-medium text-gray-900">{selectedOrder.productName}</span>
+                    <span className="text-sm text-surface-600">Product Name</span>
+                    <span className="text-sm font-semibold text-surface-800">{selectedOrder.productName}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Amount</span>
-                    <span className="text-sm font-bold text-gray-900">{formatNaira(selectedOrder.amount)}</span>
+                    <span className="text-sm text-surface-600">Amount</span>
+                    <span className="text-sm font-bold text-surface-800">{formatNaira(selectedOrder.amount)}</span>
                   </div>
                   {selectedOrder.productVariationDto && (
                     <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">Variations</span>
+                      <span className="text-sm text-surface-600">Variations</span>
                       <div className="text-right">
-                        <span className="text-xs text-gray-700 block">Color: {selectedOrder.productVariationDto.color}</span>
-                        <span className="text-xs text-gray-700">Sleeve: {selectedOrder.productVariationDto.sleeveType}</span>
+                        <span className="text-xs text-surface-700 block">Color: {selectedOrder.productVariationDto.color}</span>
+                        <span className="text-xs text-surface-700">Sleeve: {selectedOrder.productVariationDto.sleeveType}</span>
                       </div>
                     </div>
                   )}
@@ -679,21 +679,21 @@ const Orders = () => {
 
               {/* Order Info */}
               <div>
-                <p className="text-xs text-gray-500 uppercase font-medium mb-2">Order Information</p>
-                <div className="bg-gray-50 rounded-lg p-3 space-y-2">
+                <p className="text-[11px] text-surface-500 uppercase font-medium mb-2">Order Information</p>
+                <div className="bg-surface-50 rounded-xl p-3 space-y-2">
                   <div className="flex justify-between">
                     <div className="flex items-center gap-2">
-                      <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                      <span className="text-sm text-gray-600">Order Date</span>
+                      <Calendar className="w-3.5 h-3.5 text-surface-400" />
+                      <span className="text-sm text-surface-600">Order Date</span>
                     </div>
-                    <span className="text-sm text-gray-900">{selectedOrder.dateCreated}</span>
+                    <span className="text-sm text-surface-900">{selectedOrder.dateCreated}</span>
                   </div>
                   <div className="flex justify-between">
                     <div className="flex items-center gap-2">
-                      <User className="w-3.5 h-3.5 text-gray-400" />
-                      <span className="text-sm text-gray-600">Customer ID</span>
+                      <User className="w-3.5 h-3.5 text-surface-400" />
+                      <span className="text-sm text-surface-600">Customer ID</span>
                     </div>
-                    <span className="text-sm font-mono text-gray-900">{selectedOrder.customerId}</span>
+                    <span className="text-sm font-mono text-surface-900">{selectedOrder.customerId}</span>
                   </div>
                 </div>
               </div>
@@ -701,11 +701,11 @@ const Orders = () => {
               {/* Additional Info if available */}
               {selectedOrder.trackingNumber && (
                 <div>
-                  <p className="text-xs text-gray-500 uppercase font-medium mb-2">Tracking</p>
-                  <div className="bg-gray-50 rounded-lg p-3">
+                  <p className="text-xs text-surface-500 uppercase font-medium mb-2">Tracking</p>
+                  <div className="bg-surface-50 rounded-lg p-3">
                     <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">Tracking Number</span>
-                      <span className="text-sm font-mono text-gray-900">{selectedOrder.trackingNumber}</span>
+                      <span className="text-sm text-surface-600">Tracking Number</span>
+                      <span className="text-sm font-mono text-surface-900">{selectedOrder.trackingNumber}</span>
                     </div>
                   </div>
                 </div>
@@ -713,10 +713,10 @@ const Orders = () => {
             </div>
             
             {/* Modal Footer */}
-            <div className="sticky bottom-0 bg-white border-t border-gray-100 px-4 py-3">
+            <div className="sticky bottom-0 bg-white border-t border-surface-100 px-4 py-3">
               <button
                 onClick={() => setShowModal(false)}
-                className="w-full px-4 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
+                className="w-full px-4 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl transition-colors text-xs font-semibold"
               >
                 Close
               </button>

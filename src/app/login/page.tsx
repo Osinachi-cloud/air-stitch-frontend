@@ -108,9 +108,8 @@ const LoginPage = () => {
         window.dispatchEvent(new CustomEvent("userDetailsUpdated", { detail: normalizedUserData }));
       }
 
-      // Redirect based on role
-      const isVendor = normalizedUserData.role?.toUpperCase() === 'VENDOR' || normalizedUserData.role?.toUpperCase() === 'ROLE_VENDOR';
-      window.location.href = isVendor ? "/tailor" : "/";
+      // Redirect all users to home page
+      window.location.href = "/";
       return;
  
       } else {
@@ -127,76 +126,85 @@ const LoginPage = () => {
 
   return (
     <>
-      <div className="grid h-[100vh] w-full">
-        <form className="sm:w-[28%] w-[90%] mx-auto my-auto" onSubmit={handleSubmit}>
-          <div className='mb-[2rem]'>
-            <h1 className='text-center text-[#171717] text-[32px] font-[600]'>Login</h1>
-            <p className='text-center text-[#53545C] font-[300]'>Login to access Admin Dashboard</p>
+      <div className="flex h-screen w-full">
+        {/* Left side - brand */}
+        <div className="hidden lg:flex lg:w-1/2 bg-brand-gradient items-center justify-center p-12">
+          <div className="text-white text-center">
+            <h2 className="text-4xl font-display font-bold mb-4 gradient-text-light">Stitch</h2>
+            <p className="text-white/80 text-sm">Fashion tailored for you.</p>
           </div>
+        </div>
 
-          <div>
-            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-            <div className="my-[1.5rem] flex w-[100%] items-center border border-gray-300 rounded-lg">
-              <input
-                className=" text-gray-900 bg-[#fff] text-sm rounded-lg block w-full p-2.5 py-3.5"
-                type="email"
-                id="email"
-                name="email"
-                value={authDetails.email}
-                onChange={handleChange}
-                placeholder="Email Address" 
-                required
-              />
+        {/* Right side - form */}
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-surface-50">
+          <div className="w-full max-w-md bg-white rounded-3xl shadow-elegant p-6">
+            <div className="mb-6 text-center">
+              <h1 className="text-xl font-display font-bold text-surface-900">Login</h1>
+              <p className="text-xs text-surface-500 mt-1">Login to access your account</p>
             </div>
-          </div>
 
-          <div>
-            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
-            <div className="flex w-[100%] items-center border border-gray-300 rounded-lg px-[1rem]">
-              <input
-                className=" text-gray-900 bg-[#fff] text-sm rounded-lg outline-none block py-3.5 w-[95%]"
-                type={isPasswordVisible ? 'text' : 'password'}
-                id="password"
-                name="password"
-                value={authDetails.password}
-                onChange={handleChange}
-                placeholder="Password"
-                required
-              />
-              <div
-                onClick={handleTogglePasswordVisibility}
-                className=" h-[50px] flex items-center pr-3 w-[5%] cursor-pointer"
-              >
-                {isPasswordVisible ? (
-                  <span role="img" aria-label="Hide password">👁️</span>
-                ) : (
-                  <span role="img" aria-label="Show password">🙈</span>
-                )}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label htmlFor="email" className="block text-xs font-medium text-surface-600 mb-1">Your email</label>
+                <input
+                  className="w-full px-4 py-2.5 border border-surface-200 rounded-xl text-sm bg-white text-surface-900 placeholder-surface-400 focus:ring-2 focus:ring-primary-300 focus:border-primary-400 outline-none"
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={authDetails.email}
+                  onChange={handleChange}
+                  placeholder="Email Address" 
+                  required
+                />
               </div>
-            </div>
-          </div>
 
-          <div className="flex justify-end m-2">
-            <a href="forgotpassword" className="ms-2 text-sm font-medium text-[grey]">Forgot Password?</a>
-          </div>
+              <div>
+                <label htmlFor="password" className="block text-xs font-medium text-surface-600 mb-1">Your password</label>
+                <div className="relative">
+                  <input
+                    className="w-full px-4 py-2.5 border border-surface-200 rounded-xl text-sm bg-white text-surface-900 placeholder-surface-400 focus:ring-2 focus:ring-primary-300 focus:border-primary-400 outline-none pr-10"
+                    type={isPasswordVisible ? 'text' : 'password'}
+                    id="password"
+                    name="password"
+                    value={authDetails.password}
+                    onChange={handleChange}
+                    placeholder="Password"
+                    required
+                  />
+                  <div
+                    onClick={handleTogglePasswordVisibility}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-surface-500 hover:text-surface-700 cursor-pointer"
+                  >
+                    {isPasswordVisible ? (
+                      <span role="img" aria-label="Hide password">👁️</span>
+                    ) : (
+                      <span role="img" aria-label="Show password">🙈</span>
+                    )}
+                  </div>
+                </div>
+              </div>
 
-          <div className='mt-[3rem]'>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full flex justify-center gap-6 text-white bg-[#37393f] focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-3.5 text-center disabled:bg-gray-400"
-            >
-              <span>Sign In</span>
-              {isLoading && <span className="spinner"></span>}
-            </button>
+              <div className="flex justify-end">
+                <a href="forgotpassword" className="text-primary-600 text-xs font-medium hover:text-primary-700">Forgot Password?</a>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-brand-gradient text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-gradient-hover transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-3 shadow-lg shadow-primary-500/25"
+              >
+                <span>Sign In</span>
+                {isLoading && <span className="spinner"></span>}
+              </button>
+
+              <div className="text-center">
+                <span className="text-xs text-surface-500">You do not have an account? </span>
+                <a href="/email-verification" className="text-primary-600 text-xs font-medium hover:text-primary-700">Create Account</a>
+              </div>
+            </form>
           </div>
-          
-          <div className='text-center mt-[1rem] text-[14px]'>
-            <a href="/email-verification">You do not have an account? Create Account</a>
-          </div>
-        </form>
+        </div>
       </div>
-
     </>
   )
 }
@@ -206,15 +214,3 @@ LoginPage.getLayout = function getLayout(page: ReactElement) {
 }
 
 export default LoginPage
-
-
-
-
-
-
-
-
-
-
-
-

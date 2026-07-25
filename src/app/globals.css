@@ -3,42 +3,113 @@
 @tailwind utilities;
 
 :root {
-  /* --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255; */
+  /* === CONFIGURABLE THEME COLORS === */
+  /* Change these to adjust the entire app theme */
+  --color-primary-50: #f5f3ff;
+  --color-primary-100: #ede9fe;
+  --color-primary-200: #ddd6fe;
+  --color-primary-300: #c4b5fd;
+  --color-primary-400: #a78bfa;
+  --color-primary-500: #8b5cf6;
+  --color-primary-600: #7c3aed;
+  --color-primary-700: #6d28d9;
+  --color-primary-800: #5b21b6;
+  --color-primary-900: #4c1d95;
+  --color-primary-950: #2e1065;
+
+  --color-surface-50: #fafafa;
+  --color-surface-100: #f4f4f5;
+  --color-surface-200: #e4e4e7;
+  --color-surface-300: #d4d4d8;
+  --color-surface-400: #a1a1aa;
+  --color-surface-500: #71717a;
+  --color-surface-600: #52525b;
+  --color-surface-700: #3f3f46;
+  --color-surface-800: #27272a;
+  --color-surface-900: #18181b;
+  --color-surface-950: #09090b;
+
+  --color-accent-rose: #f43f5e;
+  --color-accent-emerald: #10b981;
+  --color-accent-amber: #f59e0b;
+  --color-accent-sky: #0ea5e9;
+
+  --font-clash: "Clash Display", system-ui, sans-serif;
+  --font-inter: "Inter", system-ui, sans-serif;
+
+  --shadow-elegant: 0 1px 3px rgba(0,0,0,0.05), 0 10px 30px -5px rgba(0,0,0,0.08);
+  --shadow-card: 0 2px 8px rgba(109, 40, 217, 0.06), 0 8px 24px -4px rgba(109, 40, 217, 0.1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0; */
-  }
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  /* color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb)); */
+  font-family: var(--font-inter);
+  color: var(--color-surface-800);
+  background-color: var(--color-surface-50);
+  line-height: 1.5;
+  font-size: 0.875rem;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary-300);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-400);
+}
+
+/* Selection color */
+::selection {
+  background-color: var(--color-primary-200);
+  color: var(--color-primary-900);
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+  .glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .glass-dark {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .gradient-text {
+    background: linear-gradient(90deg, #6366f1, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .gradient-text-light {
+    background: linear-gradient(90deg, #818cf8, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }
 
-
-
-
+/* Override react-calendar */
 .react-calendar {
   width: 100% !important;
   border: none !important;
-  font-family: "Inter", sans-serif !important;
+  font-family: var(--font-inter), sans-serif !important;
 }
 
 .react-calendar__navigation__label__labelText {
@@ -46,8 +117,9 @@ body {
 }
 
 .react-calendar__tile--active {
-  background-color: #c3ebfa !important;
-  color: black !important;
+  background-color: var(--color-primary-400) !important;
+  color: white !important;
+  border-radius: 0.5rem;
 }
 
 .rbc-btn-group:first-child {
@@ -65,77 +137,15 @@ body {
 
 .rbc-btn-group:last-child button {
   border: none !important;
-  background-color: #f1f0ff !important;
+  background-color: var(--color-primary-50) !important;
   margin-left: 2px !important;
 }
 
 .rbc-toolbar button.rbc-active {
-  background-color: #dbdafe !important;
+  background-color: var(--color-primary-200) !important;
   box-shadow: none !important;
 }
 
 .rbc-time-view {
   border-color: #eee !important;
-}
-
-.rbc-time-header {
-  display: none !important;
-}
-
-.rbc-time-content {
-  border: none !important;
-}
-
-.rbc-time-gutter.rbc-time-column {
-  font-size: 12px !important;
-}
-
-.rbc-time-gutter.rbc-time-column .rbc-timeslot-group {
-  padding: 0px 20px !important;
-}
-
-.rbc-timeslot-group {
-  background-color: #f7fdff !important;
-}
-
-.rbc-day-slot {
-  font-size: 14px !important;
-}
-
-.rbc-event {
-  border: none !important;
-  color: black !important;
-  padding: 10px !important;
-  margin: 10px !important;
-  width: 99% !important;
-}
-
-.rbc-event:nth-child(1) {
-  background-color: #e2f8ff !important;
-}
-.rbc-event:nth-child(2) {
-  background-color: #fefce8 !important;
-}
-.rbc-event:nth-child(3) {
-  background-color: #f2f1ff !important;
-}
-.rbc-event:nth-child(4) {
-  background-color: #fdf2fb !important;
-}
-.rbc-event:nth-child(5) {
-  background-color: #e2f8ff !important;
-}
-.rbc-event:nth-child(6) {
-  background-color: #fefce8 !important;
-}
-.rbc-event:nth-child(7) {
-  background-color: #f2f1ff !important;
-}
-.rbc-event:nth-child(8) {
-  background-color: #fdf2fb !important;
-}
-
-.rbc-event-label{
-  color: gray !important;
-  margin-bottom: 5px;
 }

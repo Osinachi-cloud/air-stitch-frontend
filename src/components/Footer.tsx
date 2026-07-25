@@ -48,7 +48,7 @@ export const Footer: React.FC = () => {
                 </a>
                 <a href="#" aria-label="Twitter" className="text-white hover:text-gray-400 transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
+                    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-.2 4 .8V4z"/>
                   </svg>
                 </a>
                 <a href="#" aria-label="Instagram" className="text-white hover:text-gray-400 transition-colors">
@@ -170,8 +170,8 @@ export const Footer: React.FC = () => {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-sm">
           <p className="font-bold text-white">
             Contact us{' '}
-            <span className="font-light text-gray-400 ml-2">help@stitch.com</span>
-            <span className="font-light text-gray-400 ml-6">+2348010101010</span>
+            <span className="font-light text-gray-400 ml-2">sales@stitch.com</span>
+            <span className="font-light text-gray-400 ml-6">+234 810 123 4567</span>
           </p>
         </div>
 

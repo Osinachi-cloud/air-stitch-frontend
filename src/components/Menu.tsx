@@ -162,7 +162,7 @@ export default function Menu({
   return (
     <div className="text-sm flex flex-col flex-1 overflow-y-auto">
       {/* Main nav items */}
-      <div className="flex flex-col mt-10 gap-1.5">
+      <div className="flex flex-col mt-6 gap-1">
         {mainItems.map((item) => {
           const href = roleHrefOverrides[item.label]?.[role] ?? item.href;
           const isActive = pathname === href || pathname?.startsWith(href + "/");
@@ -172,11 +172,11 @@ export default function Menu({
               key={item.label}
               className={`group flex items-center justify-center lg:justify-start gap-3 py-2.5 px-2.5 rounded-lg transition-all duration-200 ${
                 isActive
-                  ? 'bg-gradient-to-r from-gray-900 to-gray-700 text-white shadow-md'
-                  : 'text-gray-800 hover:bg-gray-200 hover:text-black'
+                  ? 'bg-primary-600 text-white shadow-sm'
+                  : 'text-surface-700 hover:bg-primary-50 hover:text-primary-700'
               }`}
             >
-              <div className={`flex items-center justify-center w-8 h-8 rounded-md ${isActive ? 'bg-white/15' : 'bg-transparent group-hover:bg-gray-300'} transition-colors`}>
+              <div className={`flex items-center justify-center w-8 h-8 rounded-md ${isActive ? 'bg-white/20' : 'bg-transparent group-hover:bg-primary-100'} transition-colors`}>
                 <Image src={item.icon} alt="" width={18} height={18} className={isActive ? 'brightness-0 invert' : ''} />
               </div>
               <span className="hidden lg:block text-sm font-medium">{item.label}</span>
@@ -187,13 +187,13 @@ export default function Menu({
 
       {/* Logout pinned to bottom */}
       {logoutItem && (
-        <div className="mt-auto mb-4 pt-3 border-t border-gray-200">
+        <div className="mt-auto mb-4 pt-3 border-t border-surface-200">
           <button
             onClick={() => {
               localStorage.clear();
               window.location.href = "/";
             }}
-            className="group flex items-center justify-center lg:justify-start gap-3 text-gray-800 py-2.5 px-2.5 rounded-lg hover:bg-red-50 hover:text-red-600 w-full transition-all duration-200"
+            className="group flex items-center justify-center lg:justify-start gap-3 text-surface-700 py-2.5 px-2.5 rounded-lg hover:bg-red-50 hover:text-red-600 w-full transition-all duration-200"
           >
             <div className="flex items-center justify-center w-8 h-8 rounded-md group-hover:bg-red-100 transition-colors">
               <Image src={logoutItem.icon} alt="" width={18} height={18} />

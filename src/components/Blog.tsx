@@ -8,22 +8,19 @@ export const Blog = ({ id, image, header, body, price, buttonText}: any) => {
     return (
         <>
             <div
-                className="bg-[#fff] rounded-lg shadow-md relative cursor-pointer md:pb-[2rem]">
-                <Image src={image} alt="Product Image" width={100} height={100} 
-                    className="w-full md:h-[400px] h-[250px] object-cover rounded-t-lg rounded-r-lg" />
-                <div className="mt-4 md:px-[4rem] px-[1rem] py-[2rem]">
-                    <p className="md:text-[35px] text-[20px] md:w-[70%] text-[#000] font-bold md:mb-4 mb-[1rem] animated md:leading-[3rem]">How to style your
-                        dress to fit your taste!</p>
-                    <p className="md:text-[17px] text-[14px] md:py-[2rem] md:mb-4 font animated leading-[2rem]">How to style your dress to fit
-                        your taste! How to style your dress to fit your taste! How to style your dress to fit your
-                        taste!</p>
-                    <div className="flex justify-between items-center mt-[1rem]">
-                        <p className="">07/09/2023</p>
+                className="bg-white rounded-lg shadow-card hover:shadow-card-hover transition-all duration-300 hover:scale-[1.02] overflow-hidden cursor-pointer">
+                <Image src={image} alt="Blog Image" width={400} height={220} 
+                    className="w-full h-[180px] md:h-[220px] object-cover" />
+                <div className="p-4">
+                    <p className="font-display text-sm md:text-base font-semibold text-surface-800 mb-2 line-clamp-2">How to style your dress to fit your taste!</p>
+                    <p className="text-xs text-surface-500 line-clamp-3 leading-relaxed mb-3">How to style your dress to fit your taste! How to style your dress to fit your taste! How to style your dress to fit your taste!</p>
+                    <div className="flex justify-between items-center">
+                        <p className="text-[10px] text-surface-400">07/09/2023</p>
                         <div onClick={()=> showBlogDetails(id)}
-                            className="text-[#f5f8ff] md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] my-[0.5rem] rounded-[4px] bg-[#373636] text-center text-[14px] md:w-[200px] w-[150px] flex justify-center items-center gap-[1rem]">
+                            className="bg-brand-gradient text-white px-4 py-2 rounded-md text-xs font-semibold flex justify-center items-center gap-2 hover:opacity-90 transition-opacity">
                         <span>Read more</span>
                         <div>
-                            <Image src="/icons/Arrow-right.png" alt="" width={30} height={20} />
+                            <Image src="/icons/Arrow-right.png" alt="" width={16} height={16} className="w-4 h-4 invert" />
                         </div>
                     </div>
 

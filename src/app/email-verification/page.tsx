@@ -85,42 +85,51 @@ const EmailVerificationPage = () => {
 
   return (
     <>
-      <div className="grid h-[100vh] w-full">
-        <form className="sm:w-[28%] w-[90%] mx-auto my-auto" onSubmit={handleSubmit}>
-          <div className='mb-[2rem]'>
-            <h1 className='text-center text-[#171717] text-[32px] font-[600]'>Email Verification</h1>
-            <p className='text-center text-[#53545C] font-[300]'>Verify your Email</p>
+      <div className="flex h-screen w-full">
+        {/* Left side - brand */}
+        <div className="hidden lg:flex lg:w-1/2 bg-brand-gradient items-center justify-center p-12">
+          <div className="text-white text-center">
+            <h2 className="text-4xl font-display font-bold mb-4 gradient-text-light">Stitch</h2>
+            <p className="text-white/80 text-sm">Verify your email address.</p>
           </div>
+        </div>
 
-          <div>
-            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-            <div className="my-[1.5rem] flex w-[100%] items-center border border-gray-300 rounded-lg">
-              <input
-                className=" text-gray-900 bg-[#fff] text-sm rounded-lg block w-full p-2.5 py-3.5"
-                type="email"
-                id="email"
-                name="email"
-                value={authDetails.email}
-                onChange={handleChange}
-                placeholder="Email Address" 
-                required
-              />
+        {/* Right side - form */}
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-surface-50">
+          <div className="w-full max-w-md bg-white rounded-3xl shadow-elegant p-6">
+            <div className="mb-6 text-center">
+              <h1 className="text-xl font-display font-bold text-surface-900">Email Verification</h1>
+              <p className="text-xs text-surface-500 mt-1">Verify your Email</p>
             </div>
-          </div>
 
-          <div className='mt-[3rem]'>
-            <button
-              type="submit"
-              disabled={isLoading || !authDetails.email}
-              className="w-full flex justify-center gap-6 text-white bg-[#37393f] focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-3.5 text-center disabled:bg-gray-400 disabled:cursor-not-allowed"
-            >
-              <span>Verify Email</span>
-              {
-                isLoading && <span className="spinner"></span>
-              }
-            </button>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label htmlFor="email" className="block text-xs font-medium text-surface-600 mb-1">Your email</label>
+                <input
+                  className="w-full px-4 py-2.5 border border-surface-200 rounded-xl text-sm bg-white text-surface-900 placeholder-surface-400 focus:ring-2 focus:ring-primary-300 focus:border-primary-400 outline-none"
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={authDetails.email}
+                  onChange={handleChange}
+                  placeholder="Email Address" 
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading || !authDetails.email}
+                className="w-full bg-brand-gradient text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-gradient-hover transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-3 shadow-lg shadow-primary-500/25"
+              >
+                <span>Verify Email</span>
+                {
+                  isLoading && <span className="spinner"></span>
+                }
+              </button>
+            </form>
           </div>
-        </form>
+        </div>
       </div>
     </>
   )

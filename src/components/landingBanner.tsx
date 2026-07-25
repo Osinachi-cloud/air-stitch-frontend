@@ -3,21 +3,17 @@ import Link from "next/link";
 export const LandingBanner = () => {
     return (
         <>
-            <div className="bg-cover bg-center"
-            style={{ backgroundImage: "url('/images/landing-bg.png')" }}>
-                <div>
-
-                    {/* <app-navbar></app-navbar> */}
-                </div>
-                <div className="text-[#fff] py-[130px] font-medium font-sans w-[86%] mx-auto grid gap-[2rem]">
-                    <p className="text-[32px] md:text-[48px] leading-tight ">
-                        First made to measure
-                        <br />
-                        online clothing tailor
-                        <br />
-                        market platform
+            <div 
+                className="relative rounded-lg shadow-elegant w-[95%] mx-auto overflow-hidden min-h-[200px] md:min-h-[260px]"
+                style={{ backgroundImage: "url('/images/landing-bg.png')", backgroundSize: 'cover', backgroundPosition: 'center' }}
+            >
+                {/* Subtle purple overlay for elegance */}
+                <div className="absolute inset-0 bg-gradient-to-r from-primary-900/40 to-transparent" />
+                <div className="relative text-white py-12 md:py-16 font-medium font-body w-[90%] mx-auto grid gap-4">
+                    <p className="font-display text-xl md:text-2xl leading-tight max-w-md drop-shadow-lg">
+                        First made to measure online clothing tailor market platform
                     </p>
-                    <Link href="/email-verification" className="bg-[#fff] p-[1rem] text-[#000] flex justify-center items-center rounded w-[162px] md:w-[200px] mt-[1rem]">
+                    <Link href="/email-verification" className="bg-brand-gradient text-white text-xs font-semibold px-5 py-2.5 rounded-md flex justify-center items-center w-fit hover:shadow-lg transition-all duration-300 hover:scale-105">
                         Get Started
                     </Link>
                 </div>

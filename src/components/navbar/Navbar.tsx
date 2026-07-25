@@ -80,50 +80,43 @@ const Navbar = () => {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
-      scrolled ? 'bg-gray-100/95 backdrop-blur-sm shadow-md' : 'bg-transparent'
+      scrolled ? 'glass shadow-elegant' : 'bg-transparent'
     }`}>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-16">
         <div className="flex items-center justify-between h-full">
           {/* Logo - Left */}
           <Link href="/" onClick={closeMenu} className="flex-shrink-0">
-            <Image src="/images/aistitchLogo-black.png" alt="Stitch Logo" width={100} height={100}  className="h-10 mb-4" />
+            <Image src="/images/aistitchLogo-black.png" alt="Stitch Logo" width={90} height={30}  className="h-7 w-auto" />
 
           </Link>
 
           {/* Desktop Menu - Centered */}
-          <div className="hidden md:flex items-center justify-center flex-1 space-x-8">
+          <div className="hidden md:flex items-center justify-center flex-1 space-x-6">
             <Link
               href="/"
               onClick={closeMenu}
-              className="text-gray-700 hover:text-[#[PHONE NUMBER_REDACTED]] transition-colors duration-300 text-xs font-medium whitespace-nowrap"
+              className="text-surface-700 hover:text-primary-600 transition-colors duration-300 text-xs font-medium whitespace-nowrap"
             >
               Home
             </Link>
             <Link
               href="/about"
               onClick={closeMenu}
-              className="text-gray-700 hover:text-[#[PHONE NUMBER_REDACTED]] transition-colors duration-300 text-xs font-medium whitespace-nowrap"
+              className="text-surface-700 hover:text-primary-600 transition-colors duration-300 text-xs font-medium whitespace-nowrap"
             >
               About us
             </Link>
             <Link
               href="/categories"
               onClick={closeMenu}
-              className="text-gray-700 hover:text-[#[PHONE NUMBER_REDACTED]] transition-colors duration-300 text-xs font-medium whitespace-nowrap"
+              className="text-surface-700 hover:text-primary-600 transition-colors duration-300 text-xs font-medium whitespace-nowrap"
             >
               Categories
             </Link>
-            {/* <Link
-              href="/faqs"
-              onClick={closeMenu}
-              className="text-gray-700 hover:text-[#[PHONE NUMBER_REDACTED]] transition-colors duration-300 text-xs font-medium whitespace-nowrap"
-            >
-              FAQs
-            </Link> */}
             <Link
               href="/contact"
               onClick={closeMenu}
-              className="text-gray-700 hover:text-[#[PHONE NUMBER_REDACTED]] transition-colors duration-300 text-xs font-medium whitespace-nowrap"
+              className="text-surface-700 hover:text-primary-600 transition-colors duration-300 text-xs font-medium whitespace-nowrap"
             >
               Contact Us
             </Link>
@@ -141,22 +134,22 @@ const Navbar = () => {
                   <Image
                     src={user.profileImage}
                     alt="Profile"
-                    width={36}
-                    height={36}
-                    className="rounded-full object-cover border border-gray-200"
+                    width={28}
+                    height={28}
+                    className="rounded-full object-cover border border-primary-200"
                   />
                 ) : (
-                  <div className="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center text-sm font-semibold border border-gray-200">
+                  <div className="w-7 h-7 rounded-full bg-brand-gradient text-white flex items-center justify-center text-[10px] font-semibold">
                     {initials || 'U'}
                   </div>
                 )}
-                <span className="text-sm font-medium text-gray-700">{displayName}</span>
+                <span className="text-xs font-medium text-surface-700">{displayName}</span>
               </Link>
             ) : (
               <Link
                 href="/login"
                 onClick={closeMenu}
-                className="bg-black text-white px-5 py-2 rounded text-xs font-medium hover:bg-white hover:text-black transition-all duration-300 hover:translate-x-0.5 whitespace-nowrap"
+                className="bg-brand-gradient text-white px-4 py-1.5 rounded-xl text-xs font-semibold hover:opacity-90 transition-all duration-300 whitespace-nowrap shadow-card"
               >
                 Login
               </Link>
@@ -166,12 +159,12 @@ const Navbar = () => {
           {/* Mobile menu button */}
           <button
             onClick={toggleMenu}
-            className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 focus:outline-none"
+            className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-surface-700 hover:text-primary-600 focus:outline-none"
           >
             <span className="sr-only">Open main menu</span>
             {isOpen ? (
               <svg
-                className="h-8 w-8"
+                className="h-6 w-6"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -186,7 +179,7 @@ const Navbar = () => {
               </svg>
             ) : (
               <svg
-                className="h-8 w-8"
+                className="h-6 w-6"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -209,44 +202,37 @@ const Navbar = () => {
         className={`md:hidden fixed inset-0 bg-white/95 backdrop-blur-sm z-40 transition-transform duration-500 ease-in-out transform ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
-        style={{ top: '80px' }}
+        style={{ top: '64px' }}
       >
-        <div className="flex flex-col items-center justify-start h-full pt-8 space-y-6 px-4">
+        <div className="flex flex-col items-center justify-start h-full pt-8 space-y-4 px-4">
           <Link 
             href="/" 
             onClick={closeMenu}
-            className="text-gray-700 hover:text-[#090458] text-base py-2 w-full text-center"
+            className="text-surface-700 hover:text-primary-600 text-sm py-2 w-full text-center"
           >
             Home
           </Link>
           <Link 
             href="/about" 
             onClick={closeMenu}
-            className="text-gray-700 hover:text-[#090458] text-base py-2 w-full text-center"
+            className="text-surface-700 hover:text-primary-600 text-sm py-2 w-full text-center"
           >
             About
           </Link>
           <Link 
             href="/categories" 
             onClick={closeMenu}
-            className="text-gray-700 hover:text-[#090458] text-base py-2 w-full text-center"
+            className="text-surface-700 hover:text-primary-600 text-sm py-2 w-full text-center"
           >
             Categories
           </Link>
           <Link 
             href="/contact" 
             onClick={closeMenu}
-            className="text-gray-700 hover:text-[#090458] text-base py-2 w-full text-center"
+            className="text-surface-700 hover:text-primary-600 text-sm py-2 w-full text-center"
           >
             Contact Us
           </Link>
-          {/* <Link 
-            href="/about" 
-            onClick={closeMenu}
-            className="text-gray-700 hover:text-[#090458] text-xl py-2 w-full text-center"
-          >
-            Login
-          </Link> */}
           
           {isLoggedIn ? (
             <Link
@@ -258,22 +244,22 @@ const Navbar = () => {
                 <Image
                   src={user.profileImage}
                   alt="Profile"
-                  width={40}
-                  height={40}
-                  className="rounded-full object-cover border border-gray-200"
+                  width={36}
+                  height={36}
+                  className="rounded-full object-cover border border-primary-200"
                 />
               ) : (
-                <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center text-sm font-semibold border border-gray-200">
+                <div className="w-9 h-9 rounded-full bg-brand-gradient text-white flex items-center justify-center text-xs font-semibold">
                   {initials || 'U'}
                 </div>
               )}
-              <span className="text-sm font-medium">{displayName}</span>
+              <span className="text-sm font-medium text-surface-700">{displayName}</span>
             </Link>
           ) : (
             <Link
               href="/login"
               onClick={closeMenu}
-              className="bg-black text-white px-8 py-3 rounded text-sm font-medium hover:bg-white hover:text-black transition-all duration-300 mt-4"
+              className="bg-brand-gradient text-white px-6 py-2.5 rounded-xl text-xs font-semibold hover:opacity-90 transition-all duration-300 mt-4 shadow-card"
             >
               Login
             </Link>

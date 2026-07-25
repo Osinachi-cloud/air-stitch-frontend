@@ -91,22 +91,27 @@ const SignUp = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
-            <div className="w-full max-w-4xl bg-white rounded-xl overflow-hidden border border-gray-200">
-                {/* Header with decorative element */}
-                <div className="bg-gradient-to-r from-gray-800 to-gray-900 h-1.5"></div>
-                
-                <div className="p-6 md:p-8">
-                    {/* Header Text */}
-                    <div className="text-center mb-6">
-                        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-1">Create Account</h1>
-                        <p className="text-sm text-gray-500">Join us today! Fill in your details to get started.</p>
+        <div className="flex min-h-screen w-full">
+            {/* Left side - brand */}
+            <div className="hidden lg:flex lg:w-1/2 bg-brand-gradient items-center justify-center p-12">
+              <div className="text-white text-center">
+                <h2 className="text-4xl font-display font-bold mb-4 gradient-text-light">Stitch</h2>
+                <p className="text-white/80 text-sm">Create your account to get started.</p>
+              </div>
+            </div>
+
+            {/* Right side - form */}
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-surface-50 overflow-y-auto">
+                <div className="w-full max-w-md bg-white rounded-3xl shadow-elegant p-6">
+                    <div className="mb-6 text-center">
+                        <h1 className="text-xl font-display font-bold text-surface-900">Create Account</h1>
+                        <p className="text-xs text-surface-500 mt-1">Join us today! Fill in your details to get started.</p>
                     </div>
 
                     {/* Vendor/Customer Toggle */}
                     <div className="flex justify-center mb-6">
-                        <div className="bg-gray-100 p-1 rounded-full inline-flex items-center border border-gray-200">
-                            <span className={`px-5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ${!userInfo.isVendor ? 'bg-white text-gray-800' : 'text-gray-500'}`}>
+                        <div className="bg-surface-100 p-1 rounded-full inline-flex items-center border border-surface-200">
+                            <span className={`px-5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ${!userInfo.isVendor ? 'bg-white text-primary-700 shadow-sm' : 'text-surface-500'}`}>
                                 Customer
                             </span>
                             <label className="relative inline-flex items-center cursor-pointer mx-2">
@@ -117,9 +122,9 @@ const SignUp = () => {
                                     onChange={handleChange}
                                     className="sr-only peer"
                                 />
-                                <div className="w-12 h-6 bg-gray-300 rounded-full peer peer-checked:bg-gray-800 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                <div className="w-12 h-6 bg-surface-300 rounded-full peer peer-checked:bg-primary-600 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
                             </label>
-                            <span className={`px-5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ${userInfo.isVendor ? 'bg-white text-gray-800' : 'text-gray-500'}`}>
+                            <span className={`px-5 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ${userInfo.isVendor ? 'bg-white text-primary-700 shadow-sm' : 'text-surface-500'}`}>
                                 Vendor
                             </span>
                         </div>
@@ -129,7 +134,7 @@ const SignUp = () => {
                         {/* First Row - Name Fields */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-xs font-medium text-gray-700 mb-1">First Name</label>
+                                <label className="block text-xs font-medium text-surface-600 mb-1">First Name</label>
                                 <input
                                     type="text"
                                     name="firstName"
@@ -137,11 +142,11 @@ const SignUp = () => {
                                     value={userInfo.firstName}
                                     onChange={handleChange}
                                     required
-                                    className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all duration-300 outline-none"
+                                    className="w-full px-4 py-2.5 border border-surface-200 rounded-xl text-sm bg-white text-surface-900 placeholder-surface-400 focus:ring-2 focus:ring-primary-300 focus:border-primary-400 outline-none"
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-gray-700 mb-1">Last Name</label>
+                                <label className="block text-xs font-medium text-surface-600 mb-1">Last Name</label>
                                 <input
                                     type="text"
                                     name="lastName"
@@ -149,7 +154,7 @@ const SignUp = () => {
                                     value={userInfo.lastName}
                                     onChange={handleChange}
                                     required
-                                    className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all duration-300 outline-none"
+                                    className="w-full px-4 py-2.5 border border-surface-200 rounded-xl text-sm bg-white text-surface-900 placeholder-surface-400 focus:ring-2 focus:ring-primary-300 focus:border-primary-400 outline-none"
                                 />
                             </div>
                         </div>
@@ -157,7 +162,7 @@ const SignUp = () => {
                         {/* Second Row - Username & Email */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-xs font-medium text-gray-700 mb-1">Username</label>
+                                <label className="block text-xs font-medium text-surface-600 mb-1">Username</label>
                                 <input
                                     type="text"
                                     name="username"
@@ -165,19 +170,19 @@ const SignUp = () => {
                                     value={userInfo.username}
                                     onChange={handleChange}
                                     required
-                                    className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all duration-300 outline-none"
+                                    className="w-full px-4 py-2.5 border border-surface-200 rounded-xl text-sm bg-white text-surface-900 placeholder-surface-400 focus:ring-2 focus:ring-primary-300 focus:border-primary-400 outline-none"
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-gray-700 mb-1">Email Address</label>
+                                <label className="block text-xs font-medium text-surface-600 mb-1">Email Address</label>
                                 <input
                                     type="email"
                                     name="email"
-                                    placeholder="john@example.com"
+                                    placeholder="[EMAIL_REDACTED]"
                                     value={userInfo.email}
                                     onChange={handleChange}
                                     required
-                                    className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all duration-300 outline-none"
+                                    className="w-full px-4 py-2.5 border border-surface-200 rounded-xl text-sm bg-white text-surface-900 placeholder-surface-400 focus:ring-2 focus:ring-primary-300 focus:border-primary-400 outline-none"
                                 />
                             </div>
                         </div>
@@ -185,7 +190,7 @@ const SignUp = () => {
                         {/* Third Row - Password & Phone */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-xs font-medium text-gray-700 mb-1">Password</label>
+                                <label className="block text-xs font-medium text-surface-600 mb-1">Password</label>
                                 <div className="relative">
                                     <input
                                         type={isPasswordVisible ? 'text' : 'password'}
@@ -194,30 +199,34 @@ const SignUp = () => {
                                         value={userInfo.password}
                                         onChange={handleChange}
                                         required
-                                        className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all duration-300 outline-none"
+                                        className="w-full px-4 py-2.5 border border-surface-200 rounded-xl text-sm bg-white text-surface-900 placeholder-surface-400 focus:ring-2 focus:ring-primary-300 focus:border-primary-400 outline-none pr-10"
                                     />
                                     <button
                                         type="button"
                                         onClick={togglePasswordVisibility}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-300 text-xs"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-surface-500 hover:text-surface-700 transition-colors duration-300 text-xs"
                                     >
-                                        {isPasswordVisible ? '🔓' : '🔒'}
+                                        {isPasswordVisible ? (
+                                            <span role="img" aria-label="Hide password">👁️</span>
+                                        ) : (
+                                            <span role="img" aria-label="Show password">🙈</span>
+                                        )}
                                     </button>
                                 </div>
-                                <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">
-                                    Min. 8 chars with <span className="font-medium text-gray-700">uppercase</span>, <span className="font-medium text-gray-700">number</span> & <span className="font-medium text-gray-700">special char</span>
+                                <p className="text-xs text-surface-500 mt-1.5 leading-relaxed">
+                                    Min. 8 chars with <span className="font-medium text-surface-700">uppercase</span>, <span className="font-medium text-surface-700">number</span> & <span className="font-medium text-surface-700">special char</span>
                                 </p>
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-gray-700 mb-1">Phone Number</label>
+                                <label className="block text-xs font-medium text-surface-600 mb-1">Phone Number</label>
                                 <input
                                     type="tel"
                                     name="phoneNumber"
-                                    placeholder="+1 234 567 8900"
+                                    placeholder="[PHONE NUMBER_REDACTED]"
                                     value={userInfo.phoneNumber}
                                     onChange={handleChange}
                                     required
-                                    className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all duration-300 outline-none"
+                                    className="w-full px-4 py-2.5 border border-surface-200 rounded-xl text-sm bg-white text-surface-900 placeholder-surface-400 focus:ring-2 focus:ring-primary-300 focus:border-primary-400 outline-none"
                                 />
                             </div>
                         </div>
@@ -226,7 +235,7 @@ const SignUp = () => {
                         <button 
                             type="submit" 
                             disabled={isLoading}
-                            className="w-full bg-gradient-to-r from-gray-800 to-gray-900 text-white py-3 rounded-lg text-sm font-medium hover:from-gray-900 hover:to-black transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed mt-4 border border-gray-700"
+                            className="w-full bg-brand-gradient text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-gradient-hover transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-primary-500/25"
                         >
                             {isLoading ? (
                                 <div className="flex items-center justify-center gap-2">
@@ -240,9 +249,9 @@ const SignUp = () => {
                     </form>
 
                     {/* Sign In Link */}
-                    <p className="text-center text-gray-500 mt-4 text-sm">
+                    <p className="text-center text-surface-500 mt-4 text-xs">
                         Already have an account?{' '}
-                        <Link href="/login" className="text-gray-800 font-semibold hover:text-gray-600 underline-offset-2 hover:underline transition-all duration-300">
+                        <Link href="/login" className="text-primary-600 font-medium hover:text-primary-700">
                             Sign in
                         </Link>
                     </p>

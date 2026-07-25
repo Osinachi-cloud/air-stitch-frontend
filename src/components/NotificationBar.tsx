@@ -30,14 +30,14 @@ const NotificationBar = ({ outline = false, children, ...props }: Props) => {
 
   return (
     <div
-      className={`px-3 py-6 md:py-3 mb-6 last:mb-0 border rounded-lg transition-colors duration-150 ${componentColorClass}`}
+      className={`px-3 py-4 md:py-3 mb-4 last:mb-0 border rounded-xl transition-colors duration-150 shadow-card ${componentColorClass}`}
     >
       <div className="flex flex-col md:flex-row items-center justify-between">
-        <div className="flex flex-col md:flex-row items-center mb-6 md:mb-0">
+        <div className="flex flex-col md:flex-row items-center mb-4 md:mb-0">
           {props.icon && (
-            <Icon path={props.icon} w="w-10 md:w-5" h="h-10 md:h-5" size="24" className="md:mr-2" />
+            <Icon path={props.icon} w="w-8 md:w-5" h="h-8 md:h-5" size="20" className="md:mr-2" />
           )}
-          <span className="text-center md:text-left md:py-2">{children}</span>
+          <span className="text-center md:text-left md:py-1 text-xs">{children}</span>
         </div>
         {props.button}
         {!props.button && (
