@@ -301,22 +301,22 @@ export default function TailorSettingsPage() {
     <div className="py-6">
       <div className="mx-auto">
         <div className="flex items-center gap-3 mb-4">
-          <button onClick={() => router.back()} className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-500 text-gray-600 hover:border-gray-900 hover:text-gray-900 hover:bg-gray-50 transition-all">
+          <button onClick={() => router.back()} className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-surface-300 text-surface-600 hover:border-primary-600 hover:text-primary-700 hover:bg-primary-50 transition-all">
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
             </svg>
           </button>
-          <h1 className="text-xl font-semibold text-gray-900">Account Settings</h1>
+          <h1 className="text-lg font-display font-bold text-surface-800">Account Settings</h1>
         </div>
         <TabNav tab={tab} setTab={setTab} />
 
         {message && (
-          <div className={`mb-4 px-4 py-2 rounded-md text-sm ${message.type === "success" ? "bg-green-50 text-green-700 border border-green-200" : "bg-red-50 text-red-700 border border-red-200"}`}>
+          <div className={`mb-4 px-4 py-2 rounded-xl text-xs font-medium ${message.type === "success" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-red-50 text-red-700 border border-red-200"}`}>
             {message.text}
           </div>
         )}
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 md:p-8 shadow-sm">
+        <div className="rounded-2xl border border-surface-100 bg-white p-4 md:p-6 shadow-card">
           <div className={tab === "personal" ? "" : "hidden"}>
             <PersonalForm
               firstNameRef={firstNameRef}
@@ -362,14 +362,14 @@ function TabNav({ tab, setTab }: { tab: TabKey; setTab: (k: TabKey) => void }) {
 
   return (
     <div className="mb-4">
-      <div className="inline-flex rounded-full bg-white shadow-sm border border-gray-200 p-1">
+      <div className="inline-flex rounded-full bg-white shadow-card border border-surface-100 p-1">
         {tabs.map((t) => {
           const active = tab === t.key;
           return (
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
-              className={`group relative inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2 ${active ? "bg-gray-900 text-white shadow-sm" : "text-gray-600 hover:bg-gray-100"}`}
+              className={`group relative inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition ${active ? "bg-primary-600 text-white shadow-sm" : "text-surface-600 hover:bg-primary-50 hover:text-primary-700"}`}
             >
               <span className={`${active ? "opacity-100" : "opacity-70"} transition`}>{t.icon}</span>
               <span>{t.label}</span>
@@ -423,9 +423,9 @@ function PersonalForm({
 }) {
   return (
     <form className="space-y-8" onSubmit={(e) => { e.preventDefault(); handleUpdate(); }}>
-      <div className="border-b border-gray-100 pb-4">
-        <h2 className="text-xl font-semibold text-gray-900 tracking-tight">Personal Information</h2>
-        <p className="mt-1 text-sm text-gray-500">Update your personal details and password</p>
+      <div className="border-b border-surface-100 pb-3">
+        <h2 className="text-sm font-display font-bold text-surface-800">Personal Information</h2>
+        <p className="mt-0.5 text-sm text-surface-500">Update your personal details and password</p>
       </div>
 
       {/* Profile image */}
@@ -436,26 +436,26 @@ function PersonalForm({
             alt="Profile"
             width={80}
             height={80}
-            className="w-full h-full rounded-full object-cover border-4 border-gray-200"
+            className="w-full h-full rounded-full object-cover border-4 border-surface-100"
             unoptimized={!!selectedImage?.startsWith("data:image")}
           />
-          <label htmlFor="profile-upload-tailor" className={`absolute -bottom-1 -right-1 w-7 h-7 cursor-pointer bg-white rounded-full shadow-lg flex items-center justify-center border border-gray-200 hover:bg-gray-50 transition-colors ${imageUploading ? "opacity-50 cursor-not-allowed" : ""}`}>
+          <label htmlFor="profile-upload-tailor" className={`absolute -bottom-1 -right-1 w-6 h-6 cursor-pointer bg-white rounded-full shadow-sm flex items-center justify-center border border-surface-200 hover:bg-surface-50 transition-colors ${imageUploading ? "opacity-50 cursor-not-allowed" : ""}`}>
             {imageUploading
-              ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
-              : <svg className="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
+              ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-surface-600"></div>
+              : <svg className="w-3 h-3 text-surface-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
             }
             <input id="profile-upload-tailor" type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={imageUploading} />
           </label>
         </div>
-        <p className="text-sm text-gray-500">Click the icon to upload a new profile photo</p>
+        <p className="text-xs text-surface-500">Click the icon to upload a new profile photo</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormInput label="First Name" inputRef={firstNameRef} placeholder="Enter first name" />
         <FormInput label="Last Name" inputRef={lastNameRef} placeholder="Enter last name" />
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-          <div className="flex items-center border border-gray-300 rounded-lg bg-white overflow-hidden">
+          <label className="block text-xs font-medium text-surface-600 mb-1.5">Phone Number</label>
+          <div className="flex items-center border border-surface-200 rounded-xl bg-white overflow-hidden">
             <PhoneInput
               country={"ng"}
               value={phoneNumber ? `+234${phoneNumber}` : ""}
@@ -475,7 +475,7 @@ function PersonalForm({
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ""))}
               placeholder="Enter phone number"
-              className="flex-1 px-3 py-2.5 bg-transparent focus:outline-none text-gray-900 text-sm"
+              className="flex-1 px-3 py-2 bg-transparent text-surface-800 text-sm"
             />
           </div>
         </div>
@@ -486,9 +486,9 @@ function PersonalForm({
         <FormInput label="Country" inputRef={countryRef} placeholder="Enter country" />
       </div>
 
-      <div className="border-t border-gray-100 pt-6">
-        <h3 className="text-base font-medium text-gray-900 mb-4">Change Password</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="border-t border-surface-100 pt-4">
+        <h3 className="text-xs font-semibold text-surface-800 mb-3">Change Password</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <PlainInput placeholder="Old Password" type="password" />
           <PlainInput placeholder="New Password" type="password" />
           <PlainInput placeholder="Confirm Password" type="password" />
@@ -496,10 +496,10 @@ function PersonalForm({
       </div>
 
       <div className="flex justify-end gap-3 pt-4">
-        <button type="button" className="px-6 py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-200">
+        <button type="button" className="px-4 py-2 rounded-xl border border-surface-200 text-surface-700 text-xs font-semibold hover:bg-surface-50 transition-colors duration-200 focus:ring-2 focus:ring-primary-200">
           Cancel
         </button>
-        <button type="submit" disabled={loading} className="px-6 py-2.5 rounded-lg bg-gray-900 text-white font-medium hover:bg-gray-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50">
+        <button type="submit" disabled={loading} className="px-4 py-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-semibold transition-colors duration-200 focus:ring-2 focus:ring-primary-300 disabled:opacity-50">
           {loading ? "Saving..." : "Save Changes"}
         </button>
       </div>
@@ -521,17 +521,17 @@ function BusinessForm({
 }) {
   return (
     <form className="space-y-8" onSubmit={(e) => { e.preventDefault(); handleBusinessUpdate(); }}>
-      <div className="border-b border-gray-100 pb-4">
-        <h2 className="text-xl font-semibold text-gray-900 tracking-tight">Business Information</h2>
-        <p className="mt-1 text-sm text-gray-500">Manage your business details and documents</p>
+      <div className="border-b border-surface-100 pb-3">
+        <h2 className="text-sm font-display font-bold text-surface-800">Business Information</h2>
+        <p className="mt-0.5 text-sm text-surface-500">Manage your business details and documents</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <UploadCard label="Business registration certificate" />
         <UploadCard label="Business premises photo" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormInput label="Business Name *" inputRef={bizNameRef} placeholder="Enter business name" />
         <PlainInput label="CAC Registration Number *" placeholder="Enter CAC number" />
         <PlainInput label="Business Phone Number" placeholder="+234..." />
@@ -543,9 +543,9 @@ function BusinessForm({
         <FormInput label="Country *" inputRef={bizCountryRef} placeholder="Enter country" />
       </div>
 
-      <div className="border-t border-gray-100 pt-6">
-        <h3 className="text-base font-medium text-gray-900 mb-4">Account Details</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="border-t border-surface-100 pt-4">
+        <h3 className="text-xs font-semibold text-surface-800 mb-3">Account Details</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <PlainInput label="Name on Account" placeholder="Name on Account" />
           <PlainInput label="Account Number" placeholder="Account Number" />
           <PlainInput label="Bank Name" placeholder="Bank Name" />
@@ -553,10 +553,10 @@ function BusinessForm({
       </div>
 
       <div className="flex justify-end gap-3 pt-4">
-        <button type="button" className="px-6 py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-200">
+        <button type="button" className="px-4 py-2 rounded-xl border border-surface-200 text-surface-700 text-xs font-semibold hover:bg-surface-50 transition-colors duration-200 focus:ring-2 focus:ring-primary-200">
           Cancel
         </button>
-        <button type="submit" disabled={loading} className="px-6 py-2.5 rounded-lg bg-gray-900 text-white font-medium hover:bg-gray-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50">
+        <button type="submit" disabled={loading} className="px-4 py-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-semibold transition-colors duration-200 focus:ring-2 focus:ring-primary-300 disabled:opacity-50">
           {loading ? "Saving..." : "Save Changes"}
         </button>
       </div>
@@ -576,12 +576,12 @@ function FormInput({
 }) {
   return (
     <div className={className}>
-      {label && <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>}
+      {label && <label className="block text-xs font-medium text-surface-600 mb-1.5">{label}</label>}
       <input
         ref={inputRef}
         type={type}
         placeholder={placeholder}
-        className="w-full px-3 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/20 focus:border-gray-400 transition-colors duration-200"
+        className="w-full px-3 py-2 rounded-xl border border-surface-200 bg-white text-surface-800 placeholder-surface-400 focus:ring-2 focus:ring-primary-300 focus:border-primary-400 transition-all duration-200"
       />
     </div>
   );
@@ -598,12 +598,12 @@ function PlainInput({
 }) {
   return (
     <div className={className}>
-      {label && <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>}
+      {label && <label className="block text-xs font-medium text-surface-600 mb-1.5">{label}</label>}
       <input
         type={type}
         placeholder={placeholder}
         defaultValue={defaultValue}
-        className="w-full px-3 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/20 focus:border-gray-400 transition-colors duration-200"
+        className="w-full px-3 py-2 rounded-xl border border-surface-200 bg-white text-surface-800 placeholder-surface-400 focus:ring-2 focus:ring-primary-300 focus:border-primary-400 transition-all duration-200"
       />
     </div>
   );
@@ -611,17 +611,17 @@ function PlainInput({
 
 function UploadCard({ label }: { label: string }) {
   return (
-    <div className="bg-[#F4F5FA] rounded-xl border-2 border-dashed border-gray-200 p-6 text-center hover:border-gray-300 transition-colors duration-200">
+    <div className="bg-surface-50 rounded-xl border-2 border-dashed border-surface-200 p-4 text-center hover:border-primary-300 transition-colors duration-200">
       <div className="mb-3">
-        <div className="mx-auto h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mb-2">
-          <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="mx-auto h-8 w-8 rounded-full bg-surface-100 flex items-center justify-center mb-2">
+          <svg className="h-4 w-4 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
           </svg>
         </div>
-        <p className="text-sm font-medium text-gray-700 mb-1">Upload {label.toLowerCase()}</p>
-        <p className="text-xs text-gray-500">PNG, JPG up to 5MB</p>
+        <p className="text-xs font-semibold text-surface-700 mb-1">Upload {label.toLowerCase()}</p>
+        <p className="text-[11px] text-surface-500">PNG, JPG up to 5MB</p>
       </div>
-      <button type="button" className="px-4 py-2 text-sm rounded-lg border border-gray-300 bg-white text-gray-700 font-medium hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-200">
+      <button type="button" className="px-3 py-2 text-xs rounded-xl border border-surface-200 bg-white text-surface-700 font-semibold hover:bg-surface-50 transition-colors duration-200 focus:ring-2 focus:ring-primary-200">
         Choose File
       </button>
     </div>

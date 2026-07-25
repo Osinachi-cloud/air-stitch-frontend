@@ -57,33 +57,33 @@ export const Product = ({
     }, []);
 
     return (
-        <div className="bg-[#eff2f9] rounded-[4px] overflow-hidden h-[300px] md:h-[500px]">
-            <div className="relative w-full h-[70%] md:h-[78%] bg-cover bg-center bg-no-repeat"
+        <div className="bg-white rounded-lg overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 hover:scale-[1.02] h-[260px] md:h-[360px]">
+            <div className="relative w-full h-[65%] md:h-[72%] bg-cover bg-center bg-no-repeat"
                 style={{ backgroundImage: `url(${image})` }}
             >
                 <div 
                     ref={buttonRef}
                     onClick={handleLikeClick} 
-                    className={`absolute right-2 top-2 md:right-5 md:top-5 z-10 ${isProcessing ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                    className={`absolute right-2 top-2 z-10 ${isProcessing ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                 >
                     <Heart 
                         className="transition-colors duration-200" 
-                        color={liked ? "#ff0000" : "orange"} 
-                        fill={liked ? "#ff0000" : "none"}
-                        size={18}
+                        color={liked ? "#f43f5e" : "#f59e0b"} 
+                        fill={liked ? "#f43f5e" : "none"}
+                        size={16}
                     />
                 </div>
             </div>
-            <div className="px-[0.5rem] pt-[1rem] pb-[0rem] md:pb-[1rem]">
-                <h3 className="text-[12px] md:text-lg font-semibold leading-snug">
+            <div className="px-3 pt-3 pb-2">
+                <h3 className="text-xs md:text-sm font-semibold leading-snug text-surface-800 line-clamp-1">
                     {title}
                 </h3>
-                <p className="md:text-sm text-[8px] text-gray-500 mb-2">{description}</p>
+                <p className="text-[10px] md:text-xs text-surface-500 mb-1 line-clamp-1">{description}</p>
                 <div className="flex justify-between items-center">
-                    <span className="text-[12px] md:text-lg font-bold">{price}</span>
+                    <span className="text-xs md:text-sm font-bold text-primary-700">{price}</span>
                     <Link 
                         href={`/product-details/${productId}`} 
-                        className="text-[12px] md:text-sm text-gray-600">
+                        className="text-[10px] md:text-xs text-primary-600 hover:text-primary-700 font-medium">
                         View Details
                     </Link>
                 </div>

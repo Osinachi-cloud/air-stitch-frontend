@@ -447,10 +447,10 @@ export default function VendorAnalytics() {
     return (
       <div className="py-6 w-full flex items-center justify-center h-[60vh]">
         <div className="text-center">
-          <p className="text-gray-600 mb-2">Session not found. Please log in.</p>
+          <p className="text-surface-600 mb-2">Session not found. Please log in.</p>
           <button
             onClick={() => router.push("/login")}
-            className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 text-sm"
+            className="px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-semibold"
           >
             Go to Login
           </button>
@@ -464,38 +464,38 @@ export default function VendorAnalytics() {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div>
-          <h2 className="text-[#15192C] font-bold text-2xl md:text-3xl leading-9">
+          <h2 className="text-lg font-display font-bold text-surface-800">
             Analytics Dashboard
           </h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-surface-500 mt-0.5">
             Comprehensive insights into your sales performance and orders
           </p>
         </div>
         <div className="flex gap-2">
           <button
             onClick={fetchAll}
-            className="flex items-center justify-center gap-2 bg-gray-900 px-4 py-2.5 rounded-xl hover:bg-gray-800 transition-colors text-sm font-medium shadow-sm"
+            className="flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 px-3 py-2 rounded-xl transition-colors text-xs font-semibold shadow-sm"
           >
             <RefreshCw className={`w-4 h-4 text-white ${loading ? "animate-spin" : ""}`} />
-            <span className="text-white">Refresh</span>
+            <span className="text-white text-xs font-semibold">Refresh</span>
           </button>
         </div>
       </div>
 
       {/* Date Filter */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-2 mb-6 flex flex-wrap gap-1 shadow-sm">
+      <div className="bg-white rounded-2xl shadow-card border border-surface-100 p-2 mb-4 flex flex-wrap gap-1">
         <div className="flex items-center gap-1 px-2 mr-1">
-          <Filter className="w-4 h-4 text-gray-400" />
-          <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Filter</span>
+          <Filter className="w-4 h-4 text-surface-400" />
+          <span className="text-[11px] font-semibold text-surface-500 uppercase tracking-wider">Filter</span>
         </div>
         {filterButtons.map((btn) => (
           <button
             key={btn.value}
             onClick={() => setDateFilter(btn.value)}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 ${
               dateFilter === btn.value
-                ? "bg-gray-900 text-white shadow-md scale-[1.02]"
-                : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                ? "bg-primary-600 text-white shadow-sm scale-[1.02]"
+                : "text-surface-600 hover:bg-primary-50 hover:text-primary-700"
             }`}
           >
             {btn.icon}
@@ -507,40 +507,40 @@ export default function VendorAnalytics() {
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <div className="flex flex-col items-center gap-3">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-            <p className="text-sm text-gray-500">Loading your analytics...</p>
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600"></div>
+            <p className="text-sm text-surface-500">Loading your analytics...</p>
           </div>
         </div>
       ) : error ? (
-        <div className="text-center p-8 text-red-500 bg-white rounded-2xl border border-gray-200 shadow-sm">
-          <p className="font-medium">{error}</p>
+        <div className="text-center p-6 text-red-500 bg-white rounded-2xl border border-surface-100 shadow-card">
+          <p className="font-medium text-surface-800">{error}</p>
           <button
             onClick={fetchAll}
-            className="mt-4 px-4 py-2 bg-gray-900 text-white rounded-xl hover:bg-gray-800 text-sm font-medium"
+            className="mt-4 px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-semibold"
           >
             Retry
           </button>
         </div>
       ) : orders.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-gray-200 p-10 text-center shadow-sm">
-          <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-            <BarChart3 className="w-8 h-8 text-gray-400" />
+        <div className="bg-white rounded-2xl border border-surface-100 p-8 text-center shadow-card">
+          <div className="w-14 h-14 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-3">
+            <BarChart3 className="w-7 h-7 text-primary-400" />
           </div>
-          <h3 className="text-lg font-bold text-gray-900 mb-1">No Sales Data Yet</h3>
-          <p className="text-sm text-gray-500 max-w-md mx-auto mb-6">
+          <h3 className="text-sm font-display font-bold text-surface-800 mb-1">No Sales Data Yet</h3>
+          <p className="text-sm text-surface-500 max-w-md mx-auto mb-5">
             You don&apos;t have any orders on record. Once customers start placing orders, your analytics dashboard will light up with colorful charts and insights.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <button
               onClick={fetchAll}
-              className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-800 transition-colors"
+              className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-3 py-2 rounded-xl text-xs font-semibold transition-colors"
             >
               <RefreshCw className="w-4 h-4" />
               Refresh Data
             </button>
             <button
               onClick={() => router.push("/inventory")}
-              className="flex items-center gap-2 bg-white text-gray-900 border border-gray-200 px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-2 bg-white text-surface-800 border border-surface-200 px-3 py-2 rounded-xl text-xs font-semibold hover:bg-surface-50 transition-colors"
             >
               <Package className="w-4 h-4" />
               Manage Inventory
@@ -550,21 +550,21 @@ export default function VendorAnalytics() {
       ) : (
           <>
           {/* Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-4">
             {statCards.map((stat, idx) => (
               <div
                 key={stat.label}
-                className={`relative overflow-hidden rounded-2xl p-4 bg-gradient-to-br ${stat.gradient} text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5`}
+                className={`relative overflow-hidden rounded-2xl p-3 bg-gradient-to-br ${stat.gradient} text-white shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5`}
               >
-                <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-6 -mt-6 blur-xl"></div>
+                <div className="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -mr-4 -mt-4 blur-xl"></div>
                 <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className={`w-9 h-9 rounded-lg ${stat.iconBg} flex items-center justify-center backdrop-blur-sm`}>
-                      <stat.icon className="w-5 h-5 text-white" />
+                  <div className="flex items-center justify-between mb-2">
+                    <div className={`w-7 h-7 rounded-lg ${stat.iconBg} flex items-center justify-center backdrop-blur-sm`}>
+                      <stat.icon className="w-4 h-4 text-white" />
                     </div>
                     {stat.change !== null && (
                       <span
-                        className={`flex items-center text-xs font-bold px-2 py-0.5 rounded-full ${
+                        className={`flex items-center text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
                           stat.change >= 0 ? "bg-white/25" : "bg-white/25"
                         }`}
                       >
@@ -577,8 +577,8 @@ export default function VendorAnalytics() {
                       </span>
                     )}
                   </div>
-                  <p className={`text-xs font-medium opacity-80 ${stat.textColor}`}>{stat.label}</p>
-                  <p className="text-lg md:text-xl font-bold mt-0.5">
+                  <p className={`text-[11px] font-medium opacity-80 ${stat.textColor}`}>{stat.label}</p>
+                  <p className="text-base md:text-lg font-display font-bold mt-0.5">
                     {stat.formatted}
                   </p>
                 </div>
@@ -588,7 +588,7 @@ export default function VendorAnalytics() {
 
           {/* Order Status Overview Pills */}
           {stats && (
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3 mb-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2 mb-4">
               {[
                 { label: "All Orders", value: stats.allOrdersCount, color: "bg-slate-800", icon: Layers },
                 { label: "Paid", value: stats.paymentCompletedCount, color: "bg-emerald-500", icon: CreditCard },
@@ -596,31 +596,31 @@ export default function VendorAnalytics() {
                 { label: "Completed", value: stats.completedOrdersCount, color: "bg-blue-500", icon: CheckCircle2 },
                 { label: "In Transit", value: stats.InTransitOrdersCount || stats.inTransitOrdersCount, color: "bg-indigo-500", icon: Truck },
                 { label: "Cancelled", value: stats.cancelledOrdersCount, color: "bg-red-500", icon: XCircle },
-                { label: "Failed", value: stats.failedOrdersCount, color: "bg-gray-500", icon: AlertIcon },
+                { label: "Failed", value: stats.failedOrdersCount, color: "bg-surface-500", icon: AlertIcon },
               ].map((s) => (
                 <div
                   key={s.label}
-                  className={`${s.color} rounded-2xl p-3 text-center text-white shadow-md hover:shadow-lg transition-shadow relative overflow-hidden`}
+                  className={`${s.color} rounded-2xl p-2 text-center text-white shadow-sm hover:shadow-md transition-shadow relative overflow-hidden`}
                 >
                   <div className="absolute top-0 left-0 w-full h-full bg-white/5 opacity-0 hover:opacity-100 transition-opacity"></div>
-                  <s.icon className="w-4 h-4 mx-auto mb-1 opacity-80" />
-                  <p className="text-xl font-bold">{s.value}</p>
-                  <p className="text-[11px] opacity-90 font-medium mt-0.5">{s.label}</p>
+                  <s.icon className="w-3.5 h-3.5 mx-auto mb-0.5 opacity-80" />
+                  <p className="text-lg font-display font-bold">{s.value}</p>
+                  <p className="text-[10px] opacity-90 font-semibold mt-0.5">{s.label}</p>
                 </div>
               ))}
             </div>
           )}
 
           {/* Charts Row 1: Revenue + Orders */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
             {/* Revenue & Orders Combo Chart */}
-            <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
-              <div className="flex items-center justify-between mb-4">
+            <div className="lg:col-span-2 bg-white rounded-2xl shadow-card border border-surface-100 p-4">
+              <div className="flex items-center justify-between mb-3">
                 <div>
-                  <h3 className="text-base font-bold text-gray-900">Revenue & Orders Overview</h3>
-                  <p className="text-xs text-gray-500 mt-0.5">Track your sales alongside order volume</p>
+                  <h3 className="text-sm font-display font-bold text-surface-800">Revenue & Orders Overview</h3>
+                  <p className="text-xs text-surface-500 mt-0.5">Track your sales alongside order volume</p>
                 </div>
-                <span className="text-xs text-gray-500 flex items-center gap-1 bg-gray-100 px-2.5 py-1 rounded-lg font-medium">
+                <span className="text-[11px] text-surface-500 flex items-center gap-1 bg-surface-50 px-2 py-1 rounded-lg font-semibold">
                   <Calendar className="w-3 h-3" />
                   {filterButtons.find((f) => f.value === dateFilter)?.label}
                 </span>
@@ -659,7 +659,7 @@ export default function VendorAnalytics() {
                   />
                   <Legend
                     formatter={(value) => (
-                      <span className="text-xs text-gray-600 font-medium">{value}</span>
+                      <span className="text-xs text-surface-600 font-medium">{value}</span>
                     )}
                   />
                   <Area
@@ -684,9 +684,9 @@ export default function VendorAnalytics() {
             </div>
 
             {/* Order Status Donut */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
-              <h3 className="text-base font-bold text-gray-900 mb-1">Order Status</h3>
-              <p className="text-xs text-gray-500 mb-4">Distribution of order statuses</p>
+            <div className="bg-white rounded-2xl shadow-card border border-surface-100 p-4">
+              <h3 className="text-base font-bold text-surface-900 mb-1">Order Status</h3>
+              <p className="text-xs text-surface-500 mb-3">Distribution of order statuses</p>
               <ResponsiveContainer width="100%" height={260}>
                 <PieChart>
                   <Pie
@@ -715,7 +715,7 @@ export default function VendorAnalytics() {
                     height={40}
                     iconType="circle"
                     formatter={(value) => (
-                      <span className="text-xs text-gray-600 font-medium">{value}</span>
+                      <span className="text-xs text-surface-600 font-medium">{value}</span>
                     )}
                   />
                 </PieChart>
@@ -724,11 +724,11 @@ export default function VendorAnalytics() {
           </div>
 
           {/* Charts Row 2: Day of Week + Hourly + Top Products */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
             {/* Sales by Day of Week - Radar */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
-              <h3 className="text-base font-bold text-gray-900 mb-1">Sales by Day</h3>
-              <p className="text-xs text-gray-500 mb-4">Revenue distribution across weekdays</p>
+            <div className="bg-white rounded-2xl shadow-card border border-surface-100 p-4">
+              <h3 className="text-base font-bold text-surface-900 mb-1">Sales by Day</h3>
+              <p className="text-xs text-surface-500 mb-3">Revenue distribution across weekdays</p>
               <ResponsiveContainer width="100%" height={250}>
                 <RadarChart data={dayOfWeekData}>
                   <PolarGrid stroke="#e5e7eb" />
@@ -748,9 +748,9 @@ export default function VendorAnalytics() {
             </div>
 
             {/* Hourly Sales */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
-              <h3 className="text-base font-bold text-gray-900 mb-1">Sales by Hour</h3>
-              <p className="text-xs text-gray-500 mb-4">Revenue across time of day</p>
+            <div className="bg-white rounded-2xl shadow-card border border-surface-100 p-4">
+              <h3 className="text-base font-bold text-surface-900 mb-1">Sales by Hour</h3>
+              <p className="text-xs text-surface-500 mb-3">Revenue across time of day</p>
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={hourlyData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
@@ -769,9 +769,9 @@ export default function VendorAnalytics() {
             </div>
 
             {/* Top Products */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
-              <h3 className="text-base font-bold text-gray-900 mb-1">Top Products</h3>
-              <p className="text-xs text-gray-500 mb-4">Best performing products by revenue</p>
+            <div className="bg-white rounded-2xl shadow-card border border-surface-100 p-4">
+              <h3 className="text-base font-bold text-surface-900 mb-1">Top Products</h3>
+              <p className="text-xs text-surface-500 mb-3">Best performing products by revenue</p>
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={productData} layout="vertical">
                   <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" horizontal={false} />
@@ -806,29 +806,29 @@ export default function VendorAnalytics() {
           </div>
 
           {/* Top Products with Progress Bars */}
-          <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm mb-6">
-            <div className="flex items-center justify-between mb-4">
+          <div className="bg-white rounded-2xl shadow-card border border-surface-100 p-4 mb-4">
+            <div className="flex items-center justify-between mb-3">
               <div>
-                <h3 className="text-base font-bold text-gray-900">Top Products Breakdown</h3>
-                <p className="text-xs text-gray-500 mt-0.5">Revenue share of your best selling products</p>
+                <h3 className="text-sm font-display font-bold text-surface-800">Top Products Breakdown</h3>
+                <p className="text-xs text-surface-500 mt-0.5">Revenue share of your best selling products</p>
               </div>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-2">
               {productData.map((product, idx) => {
                 const maxRevenue = productData[0]?.revenue || 1;
                 const pct = (product.revenue / maxRevenue) * 100;
                 return (
                   <div key={product.name} className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-bold text-white flex-shrink-0"
                       style={{ backgroundColor: CHART_COLORS[idx % CHART_COLORS.length] }}>
                       {idx + 1}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm font-medium text-gray-900 truncate">{product.name}</span>
-                        <span className="text-sm font-bold text-gray-700">{formatNaira(product.revenue)}</span>
+                      <div className="flex items-center justify-between mb-0.5">
+                        <span className="text-sm font-medium text-surface-800 truncate">{product.name}</span>
+                        <span className="text-sm font-bold text-surface-700">{formatNaira(product.revenue)}</span>
                       </div>
-                      <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                      <div className="w-full bg-surface-100 rounded-full h-1.5 overflow-hidden">
                         <div
                           className="h-full rounded-full transition-all duration-1000"
                           style={{
@@ -838,7 +838,7 @@ export default function VendorAnalytics() {
                         />
                       </div>
                     </div>
-                    <div className="text-xs text-gray-500 w-14 text-right flex-shrink-0">
+                    <div className="text-[11px] text-surface-500 w-14 text-right flex-shrink-0">
                       {product.orders} order{product.orders !== 1 ? "s" : ""}
                     </div>
                   </div>
@@ -848,56 +848,56 @@ export default function VendorAnalytics() {
           </div>
 
           {/* Recent Orders Table */}
-          <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
-            <div className="p-5 border-b border-gray-100 flex items-center justify-between">
+          <div className="bg-white rounded-2xl shadow-card border border-surface-100 overflow-hidden">
+            <div className="p-4 border-b border-surface-100 flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-gray-900">Recent Orders</h3>
-                <p className="text-xs text-gray-500 mt-0.5">Latest transactions in the selected period</p>
+                <h3 className="text-sm font-display font-bold text-surface-800">Recent Orders</h3>
+                <p className="text-xs text-surface-500 mt-0.5">Latest transactions in the selected period</p>
               </div>
-              <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2.5 py-1 rounded-lg">
+              <span className="text-[11px] font-semibold text-surface-500 bg-surface-50 px-2 py-1 rounded-lg">
                 {filteredOrders.length} orders
               </span>
             </div>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full divide-y divide-surface-100">
+                <thead className="bg-surface-50">
                   <tr>
                     {["Order ID", "Product", "Date", "Qty", "Amount", "Status"].map((h) => (
                       <th
                         key={h}
-                        className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
+                        className="px-4 py-2.5 text-left text-[11px] font-semibold text-surface-500 uppercase tracking-wider"
                       >
                         {h}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white divide-y divide-surface-100">
                   {filteredOrders.slice(0, 15).map((order) => (
                     <tr
                       key={order.orderId}
-                      className="hover:bg-gray-50/70 transition-colors"
+                      className="hover:bg-primary-50/50 transition-colors"
                     >
-                      <td className="px-5 py-3.5 whitespace-nowrap text-sm font-mono text-gray-600">
+                      <td className="px-4 py-3 whitespace-nowrap text-xs font-mono text-surface-600">
                         #{order.orderId.slice(-6)}
                       </td>
-                      <td className="px-5 py-3.5 whitespace-nowrap text-sm font-medium text-gray-900 max-w-[200px] truncate">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-surface-800 max-w-[200px] truncate">
                         {order.productName || "—"}
                       </td>
-                      <td className="px-5 py-3.5 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-4 py-3 whitespace-nowrap text-xs text-surface-600">
                         {new Date(order.dateCreated).toLocaleDateString("en-NG", {
                           day: "numeric",
                           month: "short",
                           year: "numeric",
                         })}
                       </td>
-                      <td className="px-5 py-3.5 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-4 py-3 whitespace-nowrap text-xs text-surface-600">
                         {order.quantity || 1}
                       </td>
-                      <td className="px-5 py-3.5 whitespace-nowrap text-sm font-bold text-gray-900">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm font-bold text-surface-800">
                         {formatNaira(order.amount || 0)}
                       </td>
-                      <td className="px-5 py-3.5 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         <StatusBadge status={order.status} />
                       </td>
                     </tr>
@@ -905,9 +905,9 @@ export default function VendorAnalytics() {
                 </tbody>
               </table>
               {filteredOrders.length === 0 && (
-                <div className="text-center p-10 text-gray-500">
-                  <ShoppingBag className="w-10 h-10 mx-auto mb-2 text-gray-300" />
-                  <p className="font-medium">No orders for the selected period</p>
+                <div className="text-center p-8 text-surface-500">
+                  <ShoppingBag className="w-8 h-8 mx-auto mb-2 text-surface-300" />
+                  <p className="font-medium text-surface-800">No orders for the selected period</p>
                   <p className="text-sm mt-0.5">Try changing your date filter</p>
                 </div>
               )}
@@ -938,7 +938,7 @@ function StatusBadge({ status }: { status: string }) {
     IN_TRANSIT: { bg: "bg-blue-100", text: "text-blue-700", icon: <Truck className="w-3 h-3" /> },
     PROCESSING: { bg: "bg-amber-100", text: "text-amber-700", icon: <Clock className="w-3 h-3" /> },
   };
-  const cfg = configs[status] || { bg: "bg-gray-100", text: "text-gray-700", icon: <Eye className="w-3 h-3" /> };
+  const cfg = configs[status] || { bg: "bg-surface-100", text: "text-surface-700", icon: <Eye className="w-3 h-3" /> };
   return (
     <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${cfg.bg} ${cfg.text}`}>
       {cfg.icon}

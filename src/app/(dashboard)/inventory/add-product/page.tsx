@@ -190,10 +190,10 @@ export default function AddProductPage() {
     return (
       <div className="py-6 w-full flex items-center justify-center h-[60vh]">
         <div className="text-center">
-          <p className="text-gray-600 mb-2">Session not found. Please log in.</p>
+          <p className="text-surface-600 mb-2">Session not found. Please log in.</p>
           <button
             onClick={() => router.push("/login")}
-            className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 text-sm"
+            className="px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-semibold"
           >
             Go to Login
           </button>
@@ -208,42 +208,42 @@ export default function AddProductPage() {
       <div className="flex items-center gap-3 mb-6">
         <button
           onClick={() => router.back()}
-          className="flex items-center justify-center w-9 h-9 rounded-full border-2 border-gray-400 text-gray-600 hover:border-gray-900 hover:text-gray-900 hover:bg-gray-50 transition-all"
+          className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-surface-300 text-surface-600 hover:border-primary-600 hover:text-primary-700 hover:bg-primary-50 transition-all"
         >
           <ArrowLeft className="w-4 h-4" />
         </button>
         <div>
-          <h2 className="text-[#15192C] font-bold text-xl md:text-2xl">
+          <h2 className="text-lg font-display font-bold text-surface-800">
             Add New Product
           </h2>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-surface-500">
             Fill in the details to add a new product to your inventory
           </p>
         </div>
       </div>
 
       {success && (
-        <div className="mb-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl p-4 flex items-center gap-2">
+        <div className="mb-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl p-3 flex items-center gap-2 text-sm">
           <Package className="w-5 h-5" />
           <span className="font-medium">Product created successfully! Redirecting to inventory...</span>
         </div>
       )}
 
       {error && (
-        <div className="mb-4 bg-red-50 border border-red-200 text-red-700 rounded-xl p-4">
+        <div className="mb-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl p-3 text-sm">
           <p className="font-medium">{error}</p>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Info */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
-          <h3 className="text-base font-bold text-gray-900 mb-4">
+        <div className="bg-white rounded-2xl shadow-card border border-surface-100 p-4">
+          <h3 className="text-sm font-display font-bold text-surface-800 mb-3">
             Basic Information
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-surface-600 mb-1.5">
                 Product Name <span className="text-red-500">*</span>
               </label>
               <input
@@ -251,12 +251,12 @@ export default function AddProductPage() {
                 type="text"
                 value={form.name}
                 onChange={(e) => updateField("name", e.target.value)}
-                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-gray-900 outline-none transition-all"
+                className="w-full px-3 py-2 text-sm bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-400 transition-all"
                 placeholder="e.g. Premium Black Kaftan"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-surface-600 mb-1.5">
                 Product Code (SKU) <span className="text-red-500">*</span>
               </label>
               <input
@@ -264,12 +264,12 @@ export default function AddProductPage() {
                 type="text"
                 value={form.code}
                 onChange={(e) => updateField("code", e.target.value)}
-                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-gray-900 outline-none transition-all"
+                className="w-full px-3 py-2 text-sm bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-400 transition-all"
                 placeholder="e.g. KFT-001"
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-surface-600 mb-1.5">
                 Product Image URL
               </label>
               <div className="flex gap-2">
@@ -277,12 +277,12 @@ export default function AddProductPage() {
                   type="text"
                   value={form.productImage}
                   onChange={(e) => updateField("productImage", e.target.value)}
-                  className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-gray-900 outline-none transition-all"
+                  className="w-full px-3 py-2 text-sm bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-400 transition-all"
                   placeholder="https://example.com/image.jpg"
                 />
               </div>
               {form.productImage && (
-                <div className="relative mt-2 w-20 h-20 rounded-lg border border-gray-200 overflow-hidden bg-gray-50 flex items-center justify-center">
+                <div className="relative mt-2 w-20 h-20 rounded-xl border border-surface-200 overflow-hidden bg-surface-50 flex items-center justify-center">
                   <img
                     src={form.productImage}
                     alt="Preview"
@@ -291,7 +291,7 @@ export default function AddProductPage() {
                       (e.target as HTMLImageElement).style.display = "none";
                     }}
                   />
-                  <ImageIcon className="w-6 h-6 text-gray-400 absolute" />
+                  <ImageIcon className="w-6 h-6 text-surface-400 absolute" />
                 </div>
               )}
             </div>
@@ -299,13 +299,13 @@ export default function AddProductPage() {
         </div>
 
         {/* Pricing & Stock */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
-          <h3 className="text-base font-bold text-gray-900 mb-4">
+        <div className="bg-white rounded-2xl shadow-card border border-surface-100 p-4">
+          <h3 className="text-sm font-display font-bold text-surface-800 mb-3">
             Pricing & Stock
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-surface-600 mb-1.5">
                 Price (₦) <span className="text-red-500">*</span>
               </label>
               <input
@@ -315,12 +315,12 @@ export default function AddProductPage() {
                 step="0.01"
                 value={form.price}
                 onChange={(e) => updateField("price", e.target.value)}
-                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-gray-900 outline-none transition-all"
+                className="w-full px-3 py-2 text-sm bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-400 transition-all"
                 placeholder="0.00"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-surface-600 mb-1.5">
                 Quantity <span className="text-red-500">*</span>
               </label>
               <input
@@ -329,12 +329,12 @@ export default function AddProductPage() {
                 min="0"
                 value={form.quantity}
                 onChange={(e) => updateField("quantity", e.target.value)}
-                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-gray-900 outline-none transition-all"
+                className="w-full px-3 py-2 text-sm bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-400 transition-all"
                 placeholder="0"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-surface-600 mb-1.5">
                 Discount (₦)
               </label>
               <input
@@ -343,18 +343,18 @@ export default function AddProductPage() {
                 step="0.01"
                 value={form.discount}
                 onChange={(e) => updateField("discount", e.target.value)}
-                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-gray-900 outline-none transition-all"
+                className="w-full px-3 py-2 text-sm bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-400 transition-all"
                 placeholder="0.00"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-surface-600 mb-1.5">
                 Category <span className="text-red-500">*</span>
               </label>
               <select
                 value={form.category}
                 onChange={(e) => updateField("category", e.target.value)}
-                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-gray-900 outline-none transition-all bg-white"
+                className="w-full px-3 py-2 text-sm bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-400 transition-all"
               >
                 {CATEGORIES.map((c) => (
                   <option key={c.value} value={c.value}>
@@ -364,7 +364,7 @@ export default function AddProductPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-surface-600 mb-1.5">
                 Fixed Price
               </label>
               <div className="flex items-center gap-3 mt-2">
@@ -372,7 +372,7 @@ export default function AddProductPage() {
                   type="button"
                   onClick={() => updateField("fixedPrice", !form.fixedPrice)}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    form.fixedPrice ? "bg-gray-900" : "bg-gray-200"
+                    form.fixedPrice ? "bg-primary-600" : "bg-surface-200"
                   }`}
                 >
                   <span
@@ -381,19 +381,19 @@ export default function AddProductPage() {
                     }`}
                   />
                 </button>
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-surface-600">
                   {form.fixedPrice ? "Yes" : "No"}
                 </span>
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-surface-600 mb-1.5">
                 Publish Status
               </label>
               <select
                 value={form.publishStatus}
                 onChange={(e) => updateField("publishStatus", e.target.value)}
-                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-gray-900 outline-none transition-all bg-white"
+                className="w-full px-3 py-2 text-sm bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-400 transition-all"
               >
                 {PUBLISH_STATUSES.map((s) => (
                   <option key={s.value} value={s.value}>
@@ -406,66 +406,66 @@ export default function AddProductPage() {
         </div>
 
         {/* Details */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
-          <h3 className="text-base font-bold text-gray-900 mb-4">Details</h3>
+        <div className="bg-white rounded-2xl shadow-card border border-surface-100 p-4">
+          <h3 className="text-sm font-display font-bold text-surface-800 mb-3">Details</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-surface-600 mb-1.5">
                 Country
               </label>
               <input
                 type="text"
                 value={form.country}
                 onChange={(e) => updateField("country", e.target.value)}
-                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-gray-900 outline-none transition-all"
+                className="w-full px-3 py-2 text-sm bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-400 transition-all"
                 placeholder="e.g. Nigeria"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-surface-600 mb-1.5">
                 Material Used
               </label>
               <input
                 type="text"
                 value={form.materialUsed}
                 onChange={(e) => updateField("materialUsed", e.target.value)}
-                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-gray-900 outline-none transition-all"
+                className="w-full px-3 py-2 text-sm bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-400 transition-all"
                 placeholder="e.g. Cotton, Silk"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-surface-600 mb-1.5">
                 Ready In
               </label>
               <input
                 type="text"
                 value={form.readyIn}
                 onChange={(e) => updateField("readyIn", e.target.value)}
-                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-gray-900 outline-none transition-all"
+                className="w-full px-3 py-2 text-sm bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-400 transition-all"
                 placeholder="e.g. 3 days, 1 week"
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-surface-600 mb-1.5">
                 Short Description
               </label>
               <input
                 type="text"
                 value={form.shortDescription}
                 onChange={(e) => updateField("shortDescription", e.target.value)}
-                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-gray-900 outline-none transition-all"
+                className="w-full px-3 py-2 text-sm bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-400 transition-all"
                 placeholder="Brief description for listings..."
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-surface-600 mb-1.5">
                 Long Description
               </label>
               <textarea
                 rows={4}
                 value={form.longDescription}
                 onChange={(e) => updateField("longDescription", e.target.value)}
-                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-900 focus:border-gray-900 outline-none transition-all resize-none"
+                className="w-full px-3 py-2.5 text-sm border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-400 transition-all resize-none"
                 placeholder="Detailed product description..."
               />
             </div>
@@ -473,15 +473,15 @@ export default function AddProductPage() {
         </div>
 
         {/* Variations */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+        <div className="bg-white rounded-2xl shadow-card border border-surface-100 p-4">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-bold text-gray-900">
+            <h3 className="text-base font-bold text-surface-900">
               Product Variations
             </h3>
             <button
               type="button"
               onClick={addVariation}
-              className="flex items-center gap-1.5 text-sm font-medium text-gray-900 border border-gray-200 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-1.5 text-xs font-semibold text-surface-800 border border-surface-200 px-3 py-1.5 rounded-xl hover:bg-surface-50 transition-colors"
             >
               <Plus className="w-4 h-4" />
               Add Variation
@@ -489,7 +489,7 @@ export default function AddProductPage() {
           </div>
 
           {form.productVariation.length === 0 ? (
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-surface-500">
               No variations added. Click "Add Variation" to include color and sleeve type options.
             </p>
           ) : (
@@ -497,10 +497,10 @@ export default function AddProductPage() {
               {form.productVariation.map((v, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-3 bg-gray-50 rounded-xl p-3 border border-gray-100"
+                  className="flex items-center gap-3 bg-surface-50 rounded-xl p-3 border border-surface-100"
                 >
                   <div className="flex-1">
-                    <label className="block text-xs font-medium text-gray-500 mb-0.5">
+                    <label className="block text-[11px] font-medium text-surface-500 mb-0.5">
                       Color
                     </label>
                     <input
@@ -509,12 +509,12 @@ export default function AddProductPage() {
                       onChange={(e) =>
                         updateVariation(index, "color", e.target.value)
                       }
-                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 outline-none"
+                      className="w-full px-3 py-2 text-sm bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-400"
                       placeholder="e.g. Red"
                     />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-xs font-medium text-gray-500 mb-0.5">
+                    <label className="block text-[11px] font-medium text-surface-500 mb-0.5">
                       Sleeve Type
                     </label>
                     <input
@@ -523,7 +523,7 @@ export default function AddProductPage() {
                       onChange={(e) =>
                         updateVariation(index, "sleeveType", e.target.value)
                       }
-                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 outline-none"
+                      className="w-full px-3 py-2 text-sm bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-400"
                       placeholder="e.g. Long Sleeve"
                     />
                   </div>
@@ -542,18 +542,18 @@ export default function AddProductPage() {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-3 pb-8">
+        <div className="flex items-center justify-end gap-3 pb-6">
           <button
             type="button"
             onClick={() => router.push("/inventory")}
-            className="px-5 py-2.5 text-sm font-medium text-gray-700 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
+            className="px-4 py-2 text-xs font-semibold text-surface-700 border border-surface-200 rounded-xl hover:bg-surface-50 transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-gray-900 rounded-xl hover:bg-gray-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-xl transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {loading ? (
               <Loader2 className="w-4 h-4 animate-spin" />

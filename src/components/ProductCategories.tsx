@@ -80,12 +80,12 @@ export const ProductCategories: React.FC = () => {
     return (
         <>
 
-            <section className="px-2 md:px-6 py-10 w-[90%] m-auto">
+            <section className="px-4 md:px-6 py-8 w-[95%] mx-auto">
                 <ProductSectionHeader
                     title={"Styles"}
                     url={"/styles"}
                 />
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-[3rem] ">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
                     {styles.map((category, index) => (
                         <ProductCategory
                             key={index}
@@ -101,12 +101,12 @@ export const ProductCategories: React.FC = () => {
 
             </section>
 
-            <section className="px-2 md:px-6 py-10 w-[90%] m-auto">
+            <section className="px-4 md:px-6 py-8 w-[95%] mx-auto">
                 <ProductSectionHeader
                     title={"Categories"}
                     url={"/categories"}
                 />
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-[3rem]">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
                     {categories.map((category, index) => (
                         <ProductCategory
                             key={index}

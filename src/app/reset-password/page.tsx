@@ -110,99 +110,109 @@ const LoginPage = () => {
 
   return (
     <>
-      <div className="grid h-[100vh] w-full">
-        <form className="sm:w-[28%] w-[90%] mx-auto my-auto" onSubmit={handleSubmit}>
-          <div className='mb-[2rem]'>
-            <h1 className='text-center text-[#171717] text-[32px] font-[600]'>Reset Password</h1>
-            <p className='text-center text-[#53545C] text-[14px] font-[300] mx-[1rem]'>Enter your old password to create new password.</p>
+      <div className="flex h-screen w-full">
+        {/* Left side - brand */}
+        <div className="hidden lg:flex lg:w-1/2 bg-brand-gradient items-center justify-center p-12">
+          <div className="text-white text-center">
+            <h2 className="text-4xl font-display font-bold mb-4 gradient-text-light">Stitch</h2>
+            <p className="text-white/80 text-sm">Secure your account.</p>
           </div>
-          <div className="my-[1rem]">
-            <label htmlFor="oldPassword" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Old password</label>
-            <div className="flex w-[100%] items-center border rounded-lg">
-              <input
-                className=" text-gray-900 bg-[#fff] text-sm rounded-lg outline-none block p-2.5 py-3.5 w-[95%]"
-                type={isOldPasswordVisible ? 'text' : 'password'}
-                id="oldPassword"
-                name="oldPassword"
-                onChange={handleChange}
-                placeholder="Old Password"
-              />
-              <div
-                // type="button"
-                onClick={handleToggleOldPasswordVisibility}
-                className=" h-[50px] flex items-center pr-3 w-[5%] cursor-pointer"
-              >
-                {isOldPasswordVisible ? (
-                  <span role="img" aria-label="Hide password">👁️</span> // Replace with your icon
-                ) : (
-                  <span role="img" aria-label="Show password">🙈</span> // Replace with your icon
-                )}
-              </div>
+        </div>
+
+        {/* Right side - form */}
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-surface-50">
+          <div className="w-full max-w-md bg-white rounded-3xl shadow-elegant p-6">
+            <div className="mb-6 text-center">
+              <h1 className="text-xl font-display font-bold text-surface-900">Reset Password</h1>
+              <p className="text-xs text-surface-500 mt-1">Enter your old password to create new password.</p>
             </div>
 
-          </div>
-          <div className="my-[1rem]">
-            <label htmlFor="newPassword" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">New password</label>
-            <div className="flex w-[100%] items-center border rounded-lg">
-              <input
-                className=" text-gray-900 bg-[#fff] text-sm rounded-lg outline-none block p-2.5 py-3.5 w-[95%]"
-                type={isNewPasswordVisible ? 'text' : 'password'}
-                id="newPassword"
-                name="newPassword"
-                onChange={handleChange}
-                placeholder="New Password"
-              />
-              <div
-                // type="button"
-                onClick={handleToggleNewPasswordVisibility}
-                className=" h-[50px] flex items-center pr-3 w-[5%] cursor-pointer"
-              >
-                {isOldPasswordVisible ? (
-                  <span role="img" aria-label="Hide password">👁️</span> // Replace with your icon
-                ) : (
-                  <span role="img" aria-label="Show password">🙈</span> // Replace with your icon
-                )}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label htmlFor="oldPassword" className="block text-xs font-medium text-surface-600 mb-1">Old password</label>
+                <div className="relative">
+                  <input
+                    className="w-full px-4 py-2.5 border border-surface-200 rounded-xl text-sm bg-white text-surface-900 placeholder-surface-400 focus:ring-2 focus:ring-primary-300 focus:border-primary-400 outline-none pr-10"
+                    type={isOldPasswordVisible ? 'text' : 'password'}
+                    id="oldPassword"
+                    name="oldPassword"
+                    onChange={handleChange}
+                    placeholder="Old Password"
+                  />
+                  <div
+                    onClick={handleToggleOldPasswordVisibility}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-surface-500 hover:text-surface-700 cursor-pointer"
+                  >
+                    {isOldPasswordVisible ? (
+                      <span role="img" aria-label="Hide password">👁️</span> // Replace with your icon
+                    ) : (
+                      <span role="img" aria-label="Show password">🙈</span> // Replace with your icon
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="mb-[1rem]">
-            <label htmlFor="confirmPassword" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password</label>
-            <div className="flex w-[100%] items-center border rounded-lg ">
-              <input
-                className=" text-gray-900 bg-[#fff] text-sm rounded-lg outline-none block p-2.5 py-3.5 w-[95%]"
-                type={isConfirmPasswordVisible ? 'text' : 'password'}
-                id="confirmPassword"
-                name="confirmPassword"
-                onChange={handleChange}
-                placeholder="Confirm Password"
-              />
-              <div
-                // type="button"
-                onClick={handleToggleConfirmPasswordVisibility}
-                className=" h-[50px] flex items-center pr-3 w-[5%] cursor-pointer"
-              >
-                {isConfirmPasswordVisible ? (
-                  <span role="img" aria-label="Hide password">👁️</span> // Replace with your icon
-                ) : (
-                  <span role="img" aria-label="Show password">🙈</span> // Replace with your icon
-                )}
-              </div>
-            </div>
-          </div>
-          <div className='mt-[3rem]'>
-            <button
-              type="submit"
-              disabled={isLoading}
-              // onClick={(e) => { handleSubmit(e);  console.log("test")}}
 
-              className="w-full flex justify-center gap-6 text-white bg-[#37393f] focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-3.5 text-center">
-              <span>Reset Password</span>
-              {
-                isLoading && <span className="spinner"></span>
-              }
-            </button>
+              <div>
+                <label htmlFor="newPassword" className="block text-xs font-medium text-surface-600 mb-1">New password</label>
+                <div className="relative">
+                  <input
+                    className="w-full px-4 py-2.5 border border-surface-200 rounded-xl text-sm bg-white text-surface-900 placeholder-surface-400 focus:ring-2 focus:ring-primary-300 focus:border-primary-400 outline-none pr-10"
+                    type={isNewPasswordVisible ? 'text' : 'password'}
+                    id="newPassword"
+                    name="newPassword"
+                    onChange={handleChange}
+                    placeholder="New Password"
+                  />
+                  <div
+                    onClick={handleToggleNewPasswordVisibility}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-surface-500 hover:text-surface-700 cursor-pointer"
+                  >
+                    {isNewPasswordVisible ? (
+                      <span role="img" aria-label="Hide password">👁️</span> // Replace with your icon
+                    ) : (
+                      <span role="img" aria-label="Show password">🙈</span> // Replace with your icon
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="confirmPassword" className="block text-xs font-medium text-surface-600 mb-1">Confirm password</label>
+                <div className="relative">
+                  <input
+                    className="w-full px-4 py-2.5 border border-surface-200 rounded-xl text-sm bg-white text-surface-900 placeholder-surface-400 focus:ring-2 focus:ring-primary-300 focus:border-primary-400 outline-none pr-10"
+                    type={isConfirmPasswordVisible ? 'text' : 'password'}
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    onChange={handleChange}
+                    placeholder="Confirm Password"
+                  />
+                  <div
+                    onClick={handleToggleConfirmPasswordVisibility}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-surface-500 hover:text-surface-700 cursor-pointer"
+                  >
+                    {isConfirmPasswordVisible ? (
+                      <span role="img" aria-label="Hide password">👁️</span> // Replace with your icon
+                    ) : (
+                      <span role="img" aria-label="Show password">🙈</span> // Replace with your icon
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-brand-gradient text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-gradient-hover transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-3 shadow-lg shadow-primary-500/25"
+              >
+                <span>Reset Password</span>
+                {
+                  isLoading && <span className="spinner"></span>
+                }
+              </button>
+            </form>
           </div>
-        </form>
+        </div>
       </div>
     </>
   )

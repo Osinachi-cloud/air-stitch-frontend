@@ -85,16 +85,16 @@ export const Tailors: React.FC = () => {
 
   return (
     <>
-      <section className="px-2 md:px-6 py-10 w-[90%] m-auto">
+      <section className="px-4 md:px-6 py-8 w-[95%] mx-auto">
         <ProductSectionHeader title={"Tailors"} url={"/tailors"} />
         {loading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-[3rem]">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="bg-gray-200 rounded-[4px] h-[300px] md:h-[500px] animate-pulse" />
+              <div key={i} className="bg-surface-200 rounded-lg h-[260px] md:h-[360px] animate-pulse" />
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-[3rem]">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
             {displayList.map((item, index) => {
               const isVendor = "emailAddress" in item;
               const vendor = isVendor ? (item as Vendor) : null;
