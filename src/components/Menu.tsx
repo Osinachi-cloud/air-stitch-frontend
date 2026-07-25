@@ -3,10 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 // If you use NextAuth on the client, you can uncomment this:
 // import { useSession } from "next-auth/react";
 
-type Role = "customer" | "tailor";
+type Role = "customer" | "tailor" | "vendor";
 
 type MenuItem = {
   icon: string;
@@ -28,7 +29,7 @@ const menuItems: MenuSection[] = [
         icon: "/Vector.png",
         label: "Account Overview",
         href: "/Account-Overview",
-        visible: ["customer", "tailor"],
+        visible: ["customer", "tailor", "vendor"],
       },
       {
         icon: "/Bag.png",
@@ -40,7 +41,7 @@ const menuItems: MenuSection[] = [
         icon: "/Bag.png",
         label: "Vendors Orders",
         href: "/vendors-order",
-        visible: ["tailor"],
+        visible: ["tailor", "vendor"],
       },
       {
         icon: "/Heart.png",
@@ -63,8 +64,8 @@ const menuItems: MenuSection[] = [
       {
         icon: "/Activity 2.png",
         label: "Analytics",
-        href: "/Analytics",
-        visible: ["tailor"],
+        href: "/analytics",
+        visible: ["tailor", "vendor"],
       },
       {
         icon: "/Activity 2.png",
@@ -93,35 +94,66 @@ const menuItems: MenuSection[] = [
   },
 ];
 
+function getRoleFromStorage(): Role {
+  if (typeof window === "undefined") return "customer";
+
+  const keys = ["tailorDetails", "customerDetails", "userDetails"];
+  for (const key of keys) {
+    const raw = window.localStorage.getItem(key);
+    if (!raw) continue;
+    try {
+      const data = JSON.parse(raw);
+      const roleVal =
+        data?.role ||
+        data?.roleDto?.name ||
+        data?.data?.role ||
+        data?.data?.roleDto?.name;
+      if (typeof roleVal === "string") {
+        const normalized = roleVal.toUpperCase().replace("ROLE_", "");
+        if (normalized === "VENDOR" || normalized === "TAILOR") return "tailor";
+        if (normalized === "CUSTOMER") return "customer";
+      }
+    } catch {
+      /* ignore parse errors */
+    }
+  }
+  return "customer";
+}
+
 export default function Menu({
-  // Pass this from parent if you have it; otherwise we'll fall back.
+  // Pass this from parent if you have it; otherwise we'll read from localStorage.
   role: roleProp,
 }: {
   role?: Role;
 }) {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // If you're using NextAuth client-side, you can derive role like this:
   // const { data: session, status } = useSession();
   // const authRole = session?.user?.role as Role | undefined;
 
-  // FINAL effective role with a safe fallback so the menu always renders:
-  const role: Role = roleProp /* ?? authRole */ ?? "customer";
+  // Use prop if provided, otherwise read from localStorage after mount
+  const role: Role = roleProp ?? (mounted ? getRoleFromStorage() : "customer");
 
   if (process.env.NODE_ENV !== "production") {
     console.log("[Menu] effective role:", role);
   }
 
   const roleHrefOverrides: Partial<Record<string, Record<Role, string>>> = {
-    "Account Overview": { customer: "/Account-Overview", tailor: "/tailor" },
-    "Account Settings": { customer: "/list/settings", tailor: "/tailor/account-settings" },
-    "Vendors Orders":   { customer: "/vendors-order",   tailor: "/tailor/vendors-order" },
-    "Inventory":        { customer: "/list/Inventory",  tailor: "/tailor/inventory" },
-    "Analytics":        { customer: "/Analytics",       tailor: "/tailor/analytics" },
-    "Orders":           { customer: "/orders",          tailor: "/tailor/orders" },
-    "Liked Items":      { customer: "/like",            tailor: "/tailor/like" },
-    "Cart":             { customer: "/cart",            tailor: "/tailor/cart" },
-    "Measurements":     { customer: "/Measurements",    tailor: "/tailor/measurements" },
+    "Account Overview": { customer: "/Account-Overview", tailor: "/Account-Overview",  vendor: "/tailor" },
+    "Account Settings": { customer: "/list/settings", tailor: "/list/settings", vendor: "/tailor/account-settings" },
+    "Vendors Orders":   { customer: "/vendors-order",   tailor: "/vendors-order", vendor: "/tailor/vendors-order" },
+    "Inventory":        { customer: "/inventory",  tailor: "/inventory", vendor: "/inventory" },
+    "Analytics":        { customer: "/analytics",       tailor: "/analytics", vendor: "/analytics" },
+    "Orders":           { customer: "/orders",          tailor: "/orders", vendor: "/tailor/orders" },
+    "Liked Items":      { customer: "/like",            tailor: "/like", vendor: "/tailor/like" },
+    "Cart":             { customer: "/cart",            tailor: "/cart", vendor: "/tailor/cart" },
+    "Measurements":     { customer: "/Measurements",    tailor: "/measurements", vendor: "/tailor/measurements" },
   };
 
   const mainItems = (menuItems[0]?.items ?? []).filter(item => item.visible.includes(role));

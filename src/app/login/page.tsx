@@ -94,9 +94,13 @@ const LoginPage = () => {
       // Store normalized user data in localStorage for navbar/jwtHooks
       setStoredValue(normalizedUserData);
 
-      // Also mirror to customerDetails so dashboard pages and hooks can read it
+      // Store in role-specific key for dashboard hooks
       if (typeof window !== 'undefined') {
-        localStorage.setItem('customerDetails', JSON.stringify(normalizedUserData));
+        const isVendor = normalizedUserData.role?.toUpperCase() === 'VENDOR' || normalizedUserData.role?.toUpperCase() === 'ROLE_VENDOR';
+        const storageKey = isVendor ? 'tailorDetails' : 'customerDetails';
+        localStorage.setItem(storageKey, JSON.stringify(normalizedUserData));
+        // Also keep userDetails for compatibility
+        localStorage.setItem('userDetails', JSON.stringify(normalizedUserData));
       }
 
       // Notify other components/tabs that user details have been updated
@@ -104,8 +108,9 @@ const LoginPage = () => {
         window.dispatchEvent(new CustomEvent("userDetailsUpdated", { detail: normalizedUserData }));
       }
 
-      // Always redirect to home page — use window.location for reliability
-      window.location.href = "/";
+      // Redirect based on role
+      const isVendor = normalizedUserData.role?.toUpperCase() === 'VENDOR' || normalizedUserData.role?.toUpperCase() === 'ROLE_VENDOR';
+      window.location.href = isVendor ? "/tailor" : "/";
       return;
  
       } else {

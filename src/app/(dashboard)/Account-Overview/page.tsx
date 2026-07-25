@@ -34,6 +34,11 @@ export default function AccountOverviewPage() {
   const stored = getUserDetails();
   console.log("Stored user details:", stored);
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const email = stored?.emailAddress;
   const token = stored?.accessToken;
 
@@ -143,6 +148,8 @@ export default function AccountOverviewPage() {
     `${customer?.firstName || ""} ${customer?.lastName || ""}`.trim() || "—";
   const emailAddress = customer?.emailAddress || "—";
   const phone = customer?.phoneNumber ? `+234 ${customer?.phoneNumber}` : "—";
+  // Role may come as flat string from login or nested in roleDto from details endpoint
+  const role = (stored as any)?.role || (customer as any)?.role || stored?.roleDto?.name || (customer as any)?.roleDto?.name || "—";
   const address = addressData
     ? [
         addressData.fullAddress,
@@ -189,6 +196,13 @@ export default function AccountOverviewPage() {
               <div className="font-medium">{fullName}</div>
               <div className="text-gray-600">{emailAddress}</div>
               <div className="text-gray-600">{phone}</div>
+              {mounted && (
+                <div className="mt-1">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-black text-white">
+                    {role}
+                  </span>
+                </div>
+              )}
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
               <button
