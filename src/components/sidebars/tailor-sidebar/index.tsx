@@ -41,7 +41,7 @@ const menuItems: MenuSection[] = [
       {
         icon: "/Activity 2.png",
         label: "Analytics",
-        href: "/Analytics",
+        href: "/analytics",
       },
       {
         icon: "/Setting 2.png",

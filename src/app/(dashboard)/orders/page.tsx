@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Order, ProductOrderStatistics, ProductOrderRequest, Status, OrderStatus } from '@/types/order';
 import { baseUrL } from '@/env/URLs';
 import { useFetch } from '@/hooks/useFetch';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { 
   ShoppingBag, 
   Truck, 
@@ -29,6 +30,10 @@ import {
 
 const Orders = () => {
   const router = useRouter();
+  const { getUserDetails } = useLocalStorage("customerDetails", null);
+  const stored = getUserDetails();
+  const customerId = stored?.customerId || (stored?.emailAddress as string) || "";
+
   const [orderTotal, setOrderTotal] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
@@ -42,7 +47,7 @@ const Orders = () => {
 
   const [productOrderRequest, setProductOrderRequest] = useState<ProductOrderRequest>({
     productId: null,
-    customerId: "user123",
+    customerId: customerId || null,
     status: null,
     orderId: null,
     productCategory: null,

@@ -1,4 +1,4 @@
-﻿// import { useEffect, useRef, useState } from "react"
+// import { useEffect, useRef, useState } from "react"
 // import { RootState, useAppSelector } from "@/redux/store";
 // import { useLocalStorage } from "./useLocalStorage";
 
@@ -123,7 +123,7 @@
 //     const apiFetchOnRender = async () => {
 //         // Prevent double fetch in development
 //         if (hasFetched.current && process.env.NODE_ENV === 'development') {
-//             console.log(`⏭️ Instance ${instanceId.current} - Skipping duplicate fetch`);
+//             console.log(`?? Instance ${instanceId.current} - Skipping duplicate fetch`);
 //             return;
 //         }
         
@@ -154,10 +154,10 @@
 
 //             const dataResponse = await apiResponse.json();
 //             setData(dataResponse);
-//             console.log(`✅ Instance ${instanceId.current} - Success:`, dataResponse);
+//             console.log(`? Instance ${instanceId.current} - Success:`, dataResponse);
 
 //         } catch (e: any) {
-//             console.log(`❌ Instance ${instanceId.current} - Error:`, e);
+//             console.log(`? Instance ${instanceId.current} - Error:`, e);
 //             setError(e.message || "An error occurred while fetching data");
 //         } finally {
 //             setIsLoading(false);
@@ -171,7 +171,7 @@
         
 //         // Cleanup function
 //         return () => {
-//             console.log(`🧹 Instance ${instanceId.current} - Cleanup`);
+//             console.log(`?? Instance ${instanceId.current} - Cleanup`);
 //         };
 //     }, [url, methodType, JSON.stringify(body)]);
 
@@ -307,6 +307,7 @@ import { useAuth } from "./jwtHooks";
 export const useFetchs = (methodType: string, body: any, url: string) => {
     const storageKey = usePathname()?.startsWith("/tailor") ? "tailorDetails" : "customerDetails";
     const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage(storageKey, null);
+    const { getUserDetails: getFallbackUserDetails } = useLocalStorage("userDetails", null);
 
     console.log(methodType, body, url);
 
@@ -314,7 +315,7 @@ export const useFetchs = (methodType: string, body: any, url: string) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const token = getUserDetails()?.accessToken
+    const token = getUserDetails()?.accessToken || getFallbackUserDetails()?.accessToken
 
     console.log("token ====>", token);
 
@@ -416,11 +417,6 @@ export const useFetch = (methodType: string, body: any, url: string) => {
     const [error, setError] = useState<string | null>(null);
     const [responseStatus, setResponseStatus] = useState<number | null>(null);
 
-    const storageKey = typeof window !== "undefined" && window.location.pathname.startsWith("/tailor")
-        ? "tailorDetails"
-        : "customerDetails";
-    const { getUserDetails } = useLocalStorage(storageKey, null);
-    const token = getUserDetails()?.accessToken
     const { checkTokenAndRedirect } = useAuth(); // ADD THIS
 
     // Use refs to track fetch state
@@ -433,9 +429,21 @@ export const useFetch = (methodType: string, body: any, url: string) => {
     const apiFetchOnRender = async () => {
         // Don't fetch if no URL
         if (!url) {
-            console.log(`⏭️ Instance ${instanceId.current} - No URL provided`);
+            console.log(`?? Instance ${instanceId.current} - No URL provided`);
             return;
         }
+
+        // Read token fresh from localStorage every time
+        const storageKey = typeof window !== "undefined" && window.location.pathname.startsWith("/tailor")
+            ? "tailorDetails"
+            : "customerDetails";
+        const rawPrimary = typeof window !== "undefined" ? window.localStorage.getItem(storageKey) : null;
+        const rawFallback = typeof window !== "undefined" ? window.localStorage.getItem("userDetails") : null;
+        const primary = rawPrimary ? JSON.parse(rawPrimary) : null;
+        const fallback = rawFallback ? JSON.parse(rawFallback) : null;
+        const token = primary?.accessToken || fallback?.accessToken || primary?.data?.accessToken || fallback?.data?.accessToken;
+
+        console.log(`?? Instance ${instanceId.current} - Token found:`, !!token, "from key:", rawPrimary ? storageKey : (rawFallback ? "userDetails" : "none"));
 
         // ADD THIS - Check token before fetching
         if (token && !checkTokenAndRedirect()) return;
@@ -450,7 +458,7 @@ export const useFetch = (methodType: string, body: any, url: string) => {
 
         // Prevent double fetch in development with Strict Mode
         if (hasFetched.current && process.env.NODE_ENV === 'development') {
-            console.log(`⏭️ Instance ${instanceId.current} - Skipping duplicate fetch`);
+            console.log(`?? Instance ${instanceId.current} - Skipping duplicate fetch`);
             return;
         }
         
@@ -461,8 +469,9 @@ export const useFetch = (methodType: string, body: any, url: string) => {
         try {
             const headers: Record<string, string> = {
                 'Content-Type': 'application/json',
-                ...(token && { 'Authorization': `Bearer ${token}` })
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
             };
+            console.log(`?? Instance ${instanceId.current} - Headers:`, headers);
 
             const fetchOptions: RequestInit = {
                 method: methodType,
@@ -474,7 +483,7 @@ export const useFetch = (methodType: string, body: any, url: string) => {
                 fetchOptions.body = JSON.stringify(body);
             }
 
-            console.log(`🌐 Instance ${instanceId.current} - Fetching:`, url);
+            console.log(`?? Instance ${instanceId.current} - Fetching:`, url);
             const apiResponse = await fetch(url, fetchOptions);
             
             setResponseStatus(apiResponse.status);
@@ -485,31 +494,36 @@ export const useFetch = (methodType: string, body: any, url: string) => {
                 return;
             }
 
-            // Check if response is JSON
-            const contentType = apiResponse.headers.get('content-type');
-            if (!contentType || !contentType.includes('application/json')) {
-                const textResponse = await apiResponse.text();
-                console.error('Non-JSON response:', textResponse);
-                throw new Error(`Expected JSON but got ${contentType || 'no content-type'}`);
+            // Try to parse JSON regardless of content-type (some APIs return JSON without proper headers)
+            let dataResponse: any;
+            const responseText = await apiResponse.text();
+            try {
+                dataResponse = JSON.parse(responseText);
+            } catch {
+                // Not valid JSON
+                if (!apiResponse.ok) {
+                    console.error('Non-JSON error response:', responseText.substring(0, 500));
+                    throw new Error(`HTTP ${apiResponse.status}: ${responseText.substring(0, 200) || 'Server error'}`);
+                }
+                console.error('Non-JSON response:', responseText.substring(0, 500));
+                throw new Error(`Expected JSON but got: ${responseText.substring(0, 200) || 'empty response'}`);
             }
 
-            const dataResponse = await apiResponse.json();
-            
             if (!apiResponse.ok) {
-                throw new Error(dataResponse.message || `HTTP error! status: ${apiResponse.status}`);
+                throw new Error(dataResponse.message || dataResponse.error || `HTTP error! status: ${apiResponse.status}`);
             }
 
             setData(dataResponse);
-            console.log(`✅ Instance ${instanceId.current} - Success:`, dataResponse);
+            console.log(`? Instance ${instanceId.current} - Success:`, dataResponse);
 
         } catch (e: any) {
             // Don't set error if it's an abort error
             if (e.name === 'AbortError') {
-                console.log(`🛑 Instance ${instanceId.current} - Request aborted`);
+                console.log(`?? Instance ${instanceId.current} - Request aborted`);
                 return;
             }
             
-            console.log(`❌ Instance ${instanceId.current} - Error:`, e);
+            console.log(`? Instance ${instanceId.current} - Error:`, e);
             setError(e.message || "An error occurred while fetching data");
         } finally {
             setIsLoading(false);
@@ -527,7 +541,7 @@ export const useFetch = (methodType: string, body: any, url: string) => {
                 abortControllerRef.current.abort();
             }
         };
-    }, [url, methodType, bodyString, token]);
+    }, [url, methodType, bodyString]);
 
     const callApi = async () => {
         // For manual calls, always allow
@@ -573,7 +587,7 @@ export const useCallFetch = (methodType: string, body: any, url: string | null, 
     const apiFetchOnRender = async () => {
         // Don't fetch if no URL
         if (!url) {
-            console.log(`⏭️ Instance ${instanceId.current} - No URL provided`);
+            console.log(`?? Instance ${instanceId.current} - No URL provided`);
             return;
         }
 
@@ -590,7 +604,7 @@ export const useCallFetch = (methodType: string, body: any, url: string | null, 
 
         // Prevent double fetch in development with Strict Mode
         if (hasFetched.current && process.env.NODE_ENV === 'development') {
-            console.log(`⏭️ Instance ${instanceId.current} - Skipping duplicate fetch`);
+            console.log(`?? Instance ${instanceId.current} - Skipping duplicate fetch`);
             return;
         }
         
@@ -614,7 +628,7 @@ export const useCallFetch = (methodType: string, body: any, url: string | null, 
                 fetchOptions.body = JSON.stringify(body);
             }
 
-            console.log(`🌐 Instance ${instanceId.current} - Fetching:`, url);
+            console.log(`?? Instance ${instanceId.current} - Fetching:`, url);
             const apiResponse = await fetch(url, fetchOptions);
             
             setResponseStatus(apiResponse.status);
@@ -625,31 +639,36 @@ export const useCallFetch = (methodType: string, body: any, url: string | null, 
                 return;
             }
 
-            // Check if response is JSON
-            const contentType = apiResponse.headers.get('content-type');
-            if (!contentType || !contentType.includes('application/json')) {
-                const textResponse = await apiResponse.text();
-                console.error('Non-JSON response:', textResponse);
-                throw new Error(`Expected JSON but got ${contentType || 'no content-type'}`);
+            // Try to parse JSON regardless of content-type (some APIs return JSON without proper headers)
+            let dataResponse: any;
+            const responseText = await apiResponse.text();
+            try {
+                dataResponse = JSON.parse(responseText);
+            } catch {
+                // Not valid JSON
+                if (!apiResponse.ok) {
+                    console.error('Non-JSON error response:', responseText.substring(0, 500));
+                    throw new Error(`HTTP ${apiResponse.status}: ${responseText.substring(0, 200) || 'Server error'}`);
+                }
+                console.error('Non-JSON response:', responseText.substring(0, 500));
+                throw new Error(`Expected JSON but got: ${responseText.substring(0, 200) || 'empty response'}`);
             }
 
-            const dataResponse = await apiResponse.json();
-            
             if (!apiResponse.ok) {
-                throw new Error(dataResponse.message || `HTTP error! status: ${apiResponse.status}`);
+                throw new Error(dataResponse.message || dataResponse.error || `HTTP error! status: ${apiResponse.status}`);
             }
 
             setData(dataResponse);
-            console.log(`✅ Instance ${instanceId.current} - Success:`, dataResponse);
+            console.log(`? Instance ${instanceId.current} - Success:`, dataResponse);
 
         } catch (e: any) {
             // Don't set error if it's an abort error
             if (e.name === 'AbortError') {
-                console.log(`🛑 Instance ${instanceId.current} - Request aborted`);
+                console.log(`?? Instance ${instanceId.current} - Request aborted`);
                 return;
             }
             
-            console.log(`❌ Instance ${instanceId.current} - Error:`, e);
+            console.log(`? Instance ${instanceId.current} - Error:`, e);
             setError(e.message || "An error occurred while fetching data");
         } finally {
             setIsLoading(false);
@@ -667,7 +686,7 @@ export const useCallFetch = (methodType: string, body: any, url: string | null, 
                 abortControllerRef.current.abort();
             }
         };
-    }, [url, methodType, bodyString, token]);
+    }, [url, methodType, bodyString]);
 
     const callApi = async () => {
         // For manual calls, always allow

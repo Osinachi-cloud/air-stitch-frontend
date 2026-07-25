@@ -102,12 +102,12 @@ export const Tailors: React.FC = () => {
 
               const name = vendor
                 ? `${vendor.firstName || ""} ${vendor.lastName || ""}`.trim()
-                : mock!.name;
-              const description = vendor?.shortBio || vendor?.phoneNumber || mock!.description;
-              const image = vendor?.profileImage || mock!.image;
+                : mock?.name || "Tailor";
+              const description = vendor?.shortBio || vendor?.phoneNumber || mock?.description || "";
+              const image = vendor?.profileImage || mock?.image || "/images/single-product-big.png";
               const url = vendor
                 ? `/tailors/${encodeURIComponent(vendor.emailAddress)}`
-                : mock!.url;
+                : mock?.url || "";
 
               return (
                 <Tailor

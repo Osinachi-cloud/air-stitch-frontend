@@ -31,18 +31,19 @@ const statusOptions = {
 
 const VendorOrders: React.FC = () => {
     const router = useRouter();
-    const { value, getUserDetails } = useLocalStorage("customerDetails", null);
-  const token = getUserDetails()?.accessToken;
-  const vendorId = getUserDetails()?.vendorId;
+    const { value, getUserDetails } = useLocalStorage("tailorDetails", null);
+    const userDetails = getUserDetails();
+    const token = userDetails?.accessToken;
+    // vendorId may be stored as vendorId or emailAddress depending on backend response
+    const vendorId = userDetails?.vendorId || (userDetails?.emailAddress as string) || "";
 
-
-  const [productOrderRequest, setProductOrderRequest] = useState<ProductOrderRequest>({
-    page: 0,
-    size: 10,
-    status: null,
-    orderId: null,
-    vendorId: vendorId || null,
-  });
+    const [productOrderRequest, setProductOrderRequest] = useState<ProductOrderRequest>({
+      page: 0,
+      size: 10,
+      status: null,
+      orderId: null,
+      vendorId: vendorId || null,
+    });
 
   const [orderTotal, setOrderTotal] = useState<number>(0);
   const [numOfPages, setNumOfPages] = useState<number>(0);
