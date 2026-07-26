@@ -401,7 +401,7 @@ export default function CartPage() {
                                     className="flex-1 p-2 w-[70%] sm:p-3 border border-surface-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-300 focus:border-primary-400"
                                     placeholder="Enter discount code"
                                 />
-                                <button className="px-3 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-semibold transition-colors">
+                                <button className="px-3 py-2.5 bg-brand-gradient hover:bg-brand-gradient-hover text-white rounded-xl text-xs font-semibold transition-all">
                                     Apply
                                 </button>
                             </div>
@@ -432,7 +432,7 @@ export default function CartPage() {
                                 type="button"
                                 disabled={cartItems.length === 0}
                                 onClick={handleProceedToCheckout}
-                                className="w-full mt-4 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl flex items-center justify-center gap-3 disabled:bg-surface-300 disabled:cursor-not-allowed transition-colors text-xs font-semibold"
+                                className="w-full mt-4 py-3 bg-brand-gradient hover:bg-brand-gradient-hover text-white rounded-xl flex items-center justify-center gap-3 disabled:bg-surface-300 disabled:cursor-not-allowed transition-all text-xs font-semibold"
                             >
                                 <span>Proceed to checkout</span>
                             </button>

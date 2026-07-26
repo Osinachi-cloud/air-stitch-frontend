@@ -28,12 +28,16 @@ export const Product = ({
     e.stopPropagation();
     
     if (isProcessing || isLiking) return;
+    if (typeof onLike !== 'function') {
+      console.warn('onLike is not a function');
+      return;
+    }
     
     scrollPositionRef.current = window.scrollY;
     setIsProcessing(true);
     
     try {
-      await onLike(productId); // Call the parent's like function
+      await onLike(productId);
       setLiked(!liked);
       
       requestAnimationFrame(() => {
@@ -58,7 +62,7 @@ export const Product = ({
 
     return (
         <div className="bg-white rounded-lg overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 hover:scale-[1.02] h-[260px] md:h-[360px]">
-            <div className="relative w-full h-[65%] md:h-[72%] bg-cover bg-center bg-no-repeat"
+            <div className="relative w-full h-[65%] md:h-[72%] bg-cover bg-top bg-no-repeat"
                 style={{ backgroundImage: `url(${image})` }}
             >
                 <div 

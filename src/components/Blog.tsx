@@ -19,9 +19,7 @@ export const Blog = ({ id, image, header, body, price, buttonText}: any) => {
                         <div onClick={()=> showBlogDetails(id)}
                             className="bg-brand-gradient text-white px-4 py-2 rounded-md text-xs font-semibold flex justify-center items-center gap-2 hover:opacity-90 transition-opacity">
                         <span>Read more</span>
-                        <div>
-                            <Image src="/icons/Arrow-right.png" alt="" width={16} height={16} className="w-4 h-4 invert" />
-                        </div>
+                        <Image src="/icons/Arrow 1.png" alt="" width={16} height={16} className="h-auto w-4" />
                     </div>
 
 

@@ -193,7 +193,7 @@ export default function AddProductPage() {
           <p className="text-surface-600 mb-2">Session not found. Please log in.</p>
           <button
             onClick={() => router.push("/login")}
-            className="px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-semibold"
+            className="px-3 py-2 bg-brand-gradient hover:bg-brand-gradient-hover text-white rounded-xl text-xs font-semibold transition-all"
           >
             Go to Login
           </button>
@@ -372,7 +372,7 @@ export default function AddProductPage() {
                   type="button"
                   onClick={() => updateField("fixedPrice", !form.fixedPrice)}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    form.fixedPrice ? "bg-primary-600" : "bg-surface-200"
+                    form.fixedPrice ? "bg-brand-gradient" : "bg-surface-200"
                   }`}
                 >
                   <span
@@ -553,7 +553,7 @@ export default function AddProductPage() {
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-xl transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-brand-gradient hover:bg-brand-gradient-hover rounded-xl transition-all disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {loading ? (
               <Loader2 className="w-4 h-4 animate-spin" />

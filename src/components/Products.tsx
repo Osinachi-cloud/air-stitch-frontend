@@ -47,9 +47,16 @@ export const Products: React.FC = () => {
     return new Set(likedProductsData.data.map((item: any) => item.productId));
   }, [likedProductsData]);
 
-  // Function to get like URL - now it's a function that returns the URL string
-  const getLikeUrl = (productId: string) => {
-    return `${baseUrL}/add-product-likes/${productId}`;
+  const handleLike = async (productId: string) => {
+    const url = `${baseUrL}/add-product-likes/${productId}`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
+    if (!res.ok) throw new Error('Failed to like product');
   };
 
   // Show loading state
@@ -94,8 +101,8 @@ export const Products: React.FC = () => {
     <section className="px-4 md:px-6 py-8 w-[95%] mx-auto">
       <div className="flex justify-between items-center mb-4">
         <h2 className="font-display text-xl md:text-2xl font-semibold text-surface-800">See what is trending</h2>
-        <a href="#" className="flex justify-center gap-2 items-center text-xs text-primary-600 font-semibold hover:text-primary-700 transition-colors">
-          <span>Browse all categories</span>
+        <a href="/products" className="flex justify-center gap-2 items-center text-xs text-primary-600 font-semibold hover:text-primary-700 transition-colors">
+          <span>Browse all</span>
           <Image 
             src="/icons/Arrow-dark-right.png" 
             alt="Browse categories" 
@@ -120,7 +127,7 @@ export const Products: React.FC = () => {
               description={product.description}
               price={product.price}
               productId={product.productId}
-              getLikeUrl={getLikeUrl} // Pass the function instead of handleClick
+              onLike={handleLike}
               isLiked={product.isLiked}
             />
           ))}

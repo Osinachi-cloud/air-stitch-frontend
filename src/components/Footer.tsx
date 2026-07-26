@@ -21,8 +21,8 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-[#1D1D1D] text-white px-8 md:px-16 py-14">
-      <div className="max-w-7xl mx-auto">
+    <footer className="bg-[#1D1D1D] text-white py-14">
+      <div className="w-[95%] mx-auto px-4 md:px-6">
 
         {/* Main grid: logo+social | 4 link columns */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10">

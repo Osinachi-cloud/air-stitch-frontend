@@ -5,7 +5,7 @@ export const ProductCategory = ({id,image, name, url, buttonText}: any) => {
         <>
 
             <div key={id} className="bg-white rounded-lg overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 hover:scale-[1.02] h-[260px] md:h-[360px]">
-                <div className="relative w-full h-[65%] md:h-[72%] bg-cover bg-center bg-no-repeat"
+                <div className="relative w-full h-[65%] md:h-[72%] bg-cover bg-top bg-no-repeat"
                     style={{ backgroundImage: `url(${image})` }}
                 >
                 </div>

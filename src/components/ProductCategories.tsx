@@ -85,7 +85,7 @@ export const ProductCategories: React.FC = () => {
                     title={"Styles"}
                     url={"/styles"}
                 />
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
                     {styles.map((category, index) => (
                         <ProductCategory
                             key={index}
@@ -106,7 +106,7 @@ export const ProductCategories: React.FC = () => {
                     title={"Categories"}
                     url={"/categories"}
                 />
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
                     {categories.map((category, index) => (
                         <ProductCategory
                             key={index}

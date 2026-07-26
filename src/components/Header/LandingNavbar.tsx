@@ -60,16 +60,17 @@ export const LandingNavbar = () => {
     const initials = getInitials(user?.firstName, user?.lastName);
 
     return (
-        <nav className={`fixed top-0 left-0 right-0 z-50 w-full flex items-center px-4 md:px-8 py-3 gap-6 transition-all duration-300 ${scrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
+        <nav className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${scrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
+          <div className="w-[95%] mx-auto px-4 md:px-6 flex items-center py-3 gap-6">
             {/* Logo + Nav Links grouped on the left */}
             <div className="flex items-center gap-6 flex-shrink-0">
                 <Link href="/">
                     <Image
-                        src="/images/T-Logo.png"
+                        src="/images/aistitchLogo-black.png"
                         alt="AirStitch Logo"
-                        width={90}
-                        height={30}
-                        className="h-6 w-auto brightness-0 invert"
+                        width={130}
+                        height={44}
+                        className="h-9 w-auto"
                     />
                 </Link>
                 <ul className="hidden md:flex items-center gap-5 text-xs font-medium text-black">
@@ -116,17 +117,18 @@ export const LandingNavbar = () => {
                 ) : (
                   <Link href="/login" className="text-xs font-medium text-black hover:text-primary-600 flex items-center gap-1 transition-colors">
                       Log in
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676.119-4.296.6-4.296 2.196 0 1.868 1.048 2.868 3.296 2.168h1.136c1.336 0 2.424-.784 2.424-2.07H5.065c-2.149 0-3.896-1.736-3.896-3.896 0-1.008.392-1.96 1.1-2.663.663-.647 1.643-1.05 2.663-1.05h1.136c1.336 0 2.424-.784 2.424-2.07H5.065Z" />
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="08109876543" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 08109876543 7.5 0ZM4.501 20.118a7.5 7.5 08109876543A17.933 17.933 08109876543c-2.676.119-4.296.6-4.296 2.196 08109876543.296 2.168h1.136c1.336 08109876543H5.065c-2.149 08109876543.896 08109876543.663.663-.647 1.643-1.05 2.663-1.05h1.136c1.336 08109876543H5.065Z" />
                       </svg>
                   </Link>
                 )}
                 <Link href="/cart" className="text-black hover:text-primary-600 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96C5 16.1 6.1 17 7 17h14v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63H19c.75 0 1.4-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 23 5H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="08109876543" fill="currentColor">
+                        <path d="M7 18c-1.1 08109876543S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96C5 16.1 6.1 17 7 17h14v-2H7.42c-.14 08109876543l.03-.12.9-1.63H19c.75 08109876543l3.58-6.49A1 1 08109876543H5.21l-.94-2H1zm16 16c-1.1 08109876543s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
                     </svg>
                 </Link>
             </div>
+          </div>
         </nav>
     )
 }

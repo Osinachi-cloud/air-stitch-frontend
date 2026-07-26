@@ -50,6 +50,12 @@ const menuItems: MenuSection[] = [
         visible: ["customer"],
       },
       {
+        icon: "/Heart.png",
+        label: "Liked Tailors",
+        href: "/liked-tailors",
+        visible: ["customer"],
+      },
+      {
         icon: "/productCart.png",
         label: "Cart",
         href: "/cart",
@@ -152,6 +158,7 @@ export default function Menu({
     "Analytics":        { customer: "/analytics",       tailor: "/analytics", vendor: "/analytics" },
     "Orders":           { customer: "/orders",          tailor: "/orders", vendor: "/tailor/orders" },
     "Liked Items":      { customer: "/like",            tailor: "/like", vendor: "/tailor/like" },
+    "Liked Tailors":    { customer: "/liked-tailors",   tailor: "/liked-tailors", vendor: "/tailor/liked-tailors" },
     "Cart":             { customer: "/cart",            tailor: "/cart", vendor: "/tailor/cart" },
     "Measurements":     { customer: "/Measurements",    tailor: "/measurements", vendor: "/tailor/measurements" },
   };
@@ -172,7 +179,7 @@ export default function Menu({
               key={item.label}
               className={`group flex items-center justify-center lg:justify-start gap-3 py-2.5 px-2.5 rounded-lg transition-all duration-200 ${
                 isActive
-                  ? 'bg-primary-600 text-white shadow-sm'
+                  ? 'bg-brand-gradient text-white shadow-sm'
                   : 'text-surface-700 hover:bg-primary-50 hover:text-primary-700'
               }`}
             >

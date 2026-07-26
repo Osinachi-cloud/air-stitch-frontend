@@ -135,7 +135,7 @@ export default function AccountOverviewPage() {
           <p className="text-red-600 mb-4">Error: {error}</p>
           <button
             onClick={() => fetchCustomerData()}
-            className="px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-semibold transition-colors"
+            className="px-3 py-2 bg-brand-gradient hover:bg-brand-gradient-hover text-white rounded-xl text-xs font-semibold transition-all"
           >
             Retry
           </button>
@@ -198,7 +198,7 @@ export default function AccountOverviewPage() {
               <div className="text-surface-600">{phone}</div>
               {mounted && (
                 <div className="mt-1">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-primary-600 text-white">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-brand-gradient text-white">
                     {role}
                   </span>
                 </div>
