@@ -114,7 +114,6 @@ const LoginPage = () => {
             <p className="text-white/80 text-sm">Create a new secure password.</p>
           </div>
         </div>
-        </div>
 
         {/* Right side - form */}
         <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-surface-50">
