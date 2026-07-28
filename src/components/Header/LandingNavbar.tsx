@@ -1,6 +1,7 @@
 "use client"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 interface UserData {
@@ -18,6 +19,7 @@ const getInitials = (firstName?: string, lastName?: string): string => {
 };
 
 export const LandingNavbar = () => {
+    const router = useRouter()
     const [search, setSearch] = useState("")
     const [user, setUser] = useState<UserData | null>(null)
     const [scrolled, setScrolled] = useState(false)
@@ -59,6 +61,16 @@ export const LandingNavbar = () => {
     const isLoggedIn = !!(user?.accessToken || user?.access_token);
     const initials = getInitials(user?.firstName, user?.lastName);
 
+    const handleSearch = () => {
+      const term = search.trim()
+      if (!term) return
+      router.push(`/products?search=${encodeURIComponent(term)}`)
+    }
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') handleSearch()
+    }
+
     return (
         <nav className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${scrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
           <div className="w-[95%] mx-auto px-4 md:px-6 flex items-center py-3 gap-6">
@@ -88,9 +100,13 @@ export const LandingNavbar = () => {
                     placeholder="Search styles, tailors..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
+                    onKeyDown={handleKeyDown}
                     className="px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-300 flex-1 bg-transparent text-black placeholder-black/50"
                 />
-                <button className="bg-brand-gradient text-white text-xs font-semibold px-4 py-1.5 hover:opacity-90 transition-opacity flex-shrink-0">
+                <button
+                    onClick={handleSearch}
+                    className="bg-brand-gradient text-white text-xs font-semibold px-4 py-1.5 hover:opacity-90 transition-opacity flex-shrink-0"
+                >
                     Search
                 </button>
             </div>
