@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState, useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { baseUrL } from "@/env/URLs";
 import {
@@ -10,7 +10,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Package,
-  Filter,
   X,
   SlidersHorizontal,
   Grid3X3,
@@ -94,7 +93,7 @@ function buildProductsUrl(
 
 export default function ProductsListingPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams(); // removed for static export compatibility
 
   // ─── UI state ───
   const [products, setProducts] = useState<ProductItem[]>([]);
@@ -120,11 +119,12 @@ export default function ProductsListingPage() {
 
   // ─── Sync URL -> state on mount ───
   useEffect(() => {
-    if (!searchParams) return;
-    const q = searchParams.get("search") || "";
-    const cats = searchParams.getAll("categories");
-    const min = searchParams.get("minPrice") || "";
-    const max = searchParams.get("maxPrice") || "";
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("search") || "";
+    const cats = params.getAll("categories");
+    const min = params.get("minPrice") || "";
+    const max = params.get("maxPrice") || "";
 
     setSearch(q);
     setSelectedCategories(cats);
@@ -136,9 +136,9 @@ export default function ProductsListingPage() {
       );
       setSelectedPriceRange(match ? `${min}-${max}` : null);
     }
-    const p = parseInt(searchParams.get("page") || "0", 10);
+    const p = parseInt(params.get("page") || "0", 10);
     if (!isNaN(p)) setPage(p);
-  }, [searchParams]);
+  }, []);
 
   // ─── Fetch products ───
   const fetchProducts = useCallback(async () => {
