@@ -93,18 +93,18 @@ export const LandingNavbar = () => {
             </ul>
 
             {/* Search Bar — grows to fill remaining space */}
-            <div className="hidden md:flex items-center border border-black/20 rounded-md overflow-hidden flex-1 max-w-sm mx-4 bg-white/60 backdrop-blur-sm h-8">
+            <div className="hidden md:flex items-center border border-black/20 rounded-lg overflow-hidden flex-1 max-w-md mx-auto bg-white/60 backdrop-blur-sm">
                 <input
                     type="text"
                     placeholder="Search styles, tailors..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="px-2.5 py-1 text-[11px] leading-none focus:outline-none flex-1 bg-transparent text-black placeholder-black/50"
+                    className="px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary-300 flex-1 bg-transparent text-black placeholder-black/50"
                 />
                 <button
                     onClick={handleSearch}
-                    className="bg-[#164377] text-white text-[11px] font-semibold px-3 py-1 hover:opacity-90 transition-opacity flex-shrink-0"
+                    className="bg-[#164377] text-white text-xs font-semibold px-4 py-1.5 hover:opacity-90 transition-opacity flex-shrink-0"
                 >
                     Search
                 </button>
