@@ -20,7 +20,43 @@ type TabKey = "personal" | "business";
 export default function TailorSettingsPage() {
   const [tab, setTab] = useState<TabKey>("personal");
   const router = useRouter();
-  const { getUserDetails, setValue } = useLocalStorage<User>("tailorDetails");
+
+  // Scan all possible storage keys to find logged-in user
+  const getUserFromStorage = (): any => {
+    if (typeof window === "undefined") return null;
+    const keys = ["tailorDetails", "customerDetails", "userDetails"];
+    for (const key of keys) {
+      const raw = window.localStorage.getItem(key);
+      if (!raw) continue;
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed?.emailAddress || parsed?.accessToken) return parsed;
+      } catch {
+        /* ignore */
+      }
+    }
+    return null;
+  };
+
+  // Helper to write back to whichever key the user came from
+  const getStorageKey = (): string => {
+    if (typeof window === "undefined") return "tailorDetails";
+    const keys = ["tailorDetails", "customerDetails", "userDetails"];
+    for (const key of keys) {
+      const raw = window.localStorage.getItem(key);
+      if (!raw) continue;
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed?.emailAddress || parsed?.accessToken) return key;
+      } catch {
+        /* ignore */
+      }
+    }
+    return "tailorDetails";
+  };
+
+  const storageKey = getStorageKey();
+  const { getUserDetails, setValue } = useLocalStorage<User>(storageKey);
 
   const [customer, setCustomer] = useState({
     firstName: "",
@@ -64,13 +100,17 @@ export default function TailorSettingsPage() {
     const loadData = async () => {
       if (dataLoadedRef.current) return;
       try {
-        const stored = getUserDetails();
+        const stored = getUserFromStorage();
         const email = stored?.emailAddress;
         const token = stored?.accessToken;
-        if (!email) return;
+        if (!email) {
+          setMessage({ text: "No email found. Please login again.", type: "error" });
+          return;
+        }
 
+        const endpoint = stored?.vendorId ? "vendor-details" : "customer-details";
         const res = await fetch(
-          `${baseUrL}/customer-details?emailAddress=${encodeURIComponent(email)}`,
+          `${baseUrL}/${endpoint}?emailAddress=${encodeURIComponent(email)}`,
           { headers: token ? { Authorization: `Bearer ${token}` } : undefined }
         );
 
@@ -117,9 +157,13 @@ export default function TailorSettingsPage() {
               }
             }
           }
+        } else if (!res.ok) {
+          const errText = await res.text().catch(() => "Failed to load profile");
+          setMessage({ text: errText, type: "error" });
         }
       } catch (err) {
         console.error("Failed to load data", err);
+        setMessage({ text: "Failed to load profile data.", type: "error" });
       }
     };
 

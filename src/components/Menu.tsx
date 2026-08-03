@@ -152,7 +152,7 @@ export default function Menu({
 
   const roleHrefOverrides: Partial<Record<string, Record<Role, string>>> = {
     "Account Overview": { customer: "/Account-Overview", tailor: "/Account-Overview",  vendor: "/tailor" },
-    "Account Settings": { customer: "/list/settings", tailor: "/list/settings", vendor: "/tailor/account-settings" },
+    "Account Settings": { customer: "/list/settings", tailor: "/tailor/account-settings", vendor: "/tailor/account-settings" },
     "Vendors Orders":   { customer: "/vendors-order",   tailor: "/vendors-order", vendor: "/tailor/vendors-order" },
     "Inventory":        { customer: "/inventory",  tailor: "/inventory", vendor: "/inventory" },
     "Analytics":        { customer: "/analytics",       tailor: "/analytics", vendor: "/analytics" },

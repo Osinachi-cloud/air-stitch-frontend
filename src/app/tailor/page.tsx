@@ -34,7 +34,7 @@ export default function TailorAccountOverviewPage() {
       setLoading(true);
       try {
         const res = await fetch(
-          `${baseUrL}/customer-details?emailAddress=${encodeURIComponent(email)}`,
+          `${baseUrL}/vendor-details?emailAddress=${encodeURIComponent(email)}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);

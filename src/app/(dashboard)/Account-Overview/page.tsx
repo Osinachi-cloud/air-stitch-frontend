@@ -219,7 +219,7 @@ export default function AccountOverviewPage() {
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
               <button
-                onClick={() => router.push("/list/settings")}
+                onClick={() => router.push(userIsVendor ? "/tailor/account-settings" : "/list/settings")}
                 className="inline-flex items-center rounded-xl border border-surface-200 bg-white px-3 py-2 text-xs font-semibold shadow-sm hover:bg-surface-50 transition-colors"
               >
                 Edit Profile
@@ -263,7 +263,7 @@ export default function AccountOverviewPage() {
               </h3>
               <p className="mt-1 text-sm text-surface-600">{address}</p>
               <button
-                onClick={() => router.push("/list/settings")}
+                onClick={() => router.push(userIsVendor ? "/tailor/account-settings" : "/list/settings")}
                 className="mt-2 inline-flex items-center rounded-xl border border-surface-200 bg-white px-3 py-2 text-xs font-semibold shadow-sm hover:bg-surface-50 transition-colors"
               >
                 Edit Address
