@@ -179,7 +179,7 @@ export default function Menu({
               key={item.label}
               className={`group flex items-center justify-center lg:justify-start gap-3 py-2.5 px-2.5 rounded-lg transition-all duration-200 ${
                 isActive
-                  ? 'bg-brand-gradient text-white shadow-sm'
+                  ? 'bg-[#164377] text-white shadow-sm'
                   : 'text-surface-700 hover:bg-primary-50 hover:text-primary-700'
               }`}
             >

@@ -139,7 +139,7 @@ const Navbar = () => {
                     className="rounded-full object-cover border border-primary-200"
                   />
                 ) : (
-                  <div className="w-7 h-7 rounded-full bg-brand-gradient text-white flex items-center justify-center text-[10px] font-semibold">
+                  <div className="w-7 h-7 rounded-full bg-[#164377] text-white flex items-center justify-center text-[10px] font-semibold">
                     {initials || 'U'}
                   </div>
                 )}
@@ -149,7 +149,7 @@ const Navbar = () => {
               <Link
                 href="/login"
                 onClick={closeMenu}
-                className="bg-brand-gradient text-white px-4 py-1.5 rounded-xl text-xs font-semibold hover:opacity-90 transition-all duration-300 whitespace-nowrap shadow-card"
+                className="bg-[#164377] text-white px-4 py-1.5 rounded-xl text-xs font-semibold hover:opacity-90 transition-all duration-300 whitespace-nowrap shadow-card"
               >
                 Login
               </Link>
@@ -249,7 +249,7 @@ const Navbar = () => {
                   className="rounded-full object-cover border border-primary-200"
                 />
               ) : (
-                <div className="w-9 h-9 rounded-full bg-brand-gradient text-white flex items-center justify-center text-xs font-semibold">
+                <div className="w-9 h-9 rounded-full bg-[#164377] text-white flex items-center justify-center text-xs font-semibold">
                   {initials || 'U'}
                 </div>
               )}
@@ -259,7 +259,7 @@ const Navbar = () => {
             <Link
               href="/login"
               onClick={closeMenu}
-              className="bg-brand-gradient text-white px-6 py-2.5 rounded-xl text-xs font-semibold hover:opacity-90 transition-all duration-300 mt-4 shadow-card"
+              className="bg-[#164377] text-white px-6 py-2.5 rounded-xl text-xs font-semibold hover:opacity-90 transition-all duration-300 mt-4 shadow-card"
             >
               Login
             </Link>

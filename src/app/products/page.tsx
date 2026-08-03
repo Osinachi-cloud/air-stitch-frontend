@@ -639,7 +639,7 @@ export default function ProductsListingPage() {
                             onClick={() => setPage(p)}
                             className={`w-8 h-8 rounded-lg text-sm font-medium transition-all ${
                               p === page
-                                ? "bg-brand-gradient text-white shadow-sm"
+                                ? "bg-[#164377] text-white shadow-sm"
                                 : "text-surface-600 hover:bg-surface-100"
                             }`}
                           >
@@ -736,7 +736,7 @@ export default function ProductsListingPage() {
                             onClick={() => setPage(p)}
                             className={`w-8 h-8 rounded-lg text-sm font-medium transition-all ${
                               p === page
-                                ? "bg-brand-gradient text-white shadow-sm"
+                                ? "bg-[#164377] text-white shadow-sm"
                                 : "text-surface-600 hover:bg-surface-100"
                             }`}
                           >

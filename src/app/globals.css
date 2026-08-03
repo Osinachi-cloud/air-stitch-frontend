@@ -4,18 +4,17 @@
 
 :root {
   /* === CONFIGURABLE THEME COLORS === */
-  /* Change these to adjust the entire app theme */
-  --color-primary-50: #f5f3ff;
-  --color-primary-100: #ede9fe;
-  --color-primary-200: #ddd6fe;
-  --color-primary-300: #c4b5fd;
-  --color-primary-400: #a78bfa;
-  --color-primary-500: #8b5cf6;
-  --color-primary-600: #7c3aed;
-  --color-primary-700: #6d28d9;
-  --color-primary-800: #5b21b6;
-  --color-primary-900: #4c1d95;
-  --color-primary-950: #2e1065;
+  --color-primary-50: #eef5fd;
+  --color-primary-100: #d4e4f7;
+  --color-primary-200: #adccf0;
+  --color-primary-300: #7aafe6;
+  --color-primary-400: #468dd8;
+  --color-primary-500: #2570c2;
+  --color-primary-600: #164377;
+  --color-primary-700: #133766;
+  --color-primary-800: #102d54;
+  --color-primary-900: #0c2240;
+  --color-primary-950: #08162b;
 
   --color-surface-50: #fafafa;
   --color-surface-100: #f4f4f5;
@@ -38,7 +37,7 @@
   --font-inter: "Inter", system-ui, sans-serif;
 
   --shadow-elegant: 0 1px 3px rgba(0,0,0,0.05), 0 10px 30px -5px rgba(0,0,0,0.08);
-  --shadow-card: 0 2px 8px rgba(109, 40, 217, 0.06), 0 8px 24px -4px rgba(109, 40, 217, 0.1);
+  --shadow-card: 0 2px 8px rgba(22, 67, 119, 0.06), 0 8px 24px -4px rgba(22, 67, 119, 0.1);
 }
 
 html {
@@ -92,13 +91,13 @@ body {
     -webkit-backdrop-filter: blur(12px);
   }
   .gradient-text {
-    background: linear-gradient(90deg, #6366f1, #a855f7);
+    background: linear-gradient(90deg, #164377, #1e5fa3);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   .gradient-text-light {
-    background: linear-gradient(90deg, #818cf8, #c084fc);
+    background: linear-gradient(90deg, #1e5fa3, #468dd8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

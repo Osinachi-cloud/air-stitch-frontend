@@ -81,7 +81,7 @@ const VerifyOTP = () => {
             {/* Left side - brand */}
             <div className="relative hidden lg:flex lg:w-1/2 items-center justify-center p-12 overflow-hidden">
                 <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/images/stitch-backg.png')" }} />
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/80 via-purple-600/80 to-fuchsia-600/80" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#164377]/80 via-[#1e5fa3]/80 to-[#2671c4]/80" />
                 <div className="relative z-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-10 text-center text-white shadow-xl max-w-sm">
                     <h2 className="text-4xl font-display font-bold mb-4">Stitch</h2>
                     <p className="text-white/80 text-sm">Verify your identity.</p>
@@ -124,7 +124,7 @@ const VerifyOTP = () => {
                             disabled={!isOtpComplete || !email}
                             className={`w-full py-3 rounded-xl font-medium transition-all ${
                                 isOtpComplete && email
-                                    ? 'bg-brand-gradient text-white hover:bg-brand-gradient-hover cursor-pointer shadow-lg shadow-primary-500/25'
+                                    ? 'bg-[#164377] text-white hover:bg-[#123661] cursor-pointer shadow-lg shadow-primary-500/25'
                                     : 'bg-surface-200 text-surface-500 cursor-not-allowed'
                             }`}
                         >

@@ -13,7 +13,7 @@ export const ProductCategory = ({id,image, name, url, buttonText}: any) => {
                     <h3 className="text-xs md:text-sm font-semibold leading-snug text-surface-800 text-center">
                         {name}
                     </h3>
-                    <a href={url} className="bg-brand-gradient text-white text-[10px] md:text-xs font-semibold px-4 py-2 rounded-md text-center hover:opacity-90 transition-opacity shadow-card">
+                    <a href={url} className="bg-[#164377] text-white text-[10px] md:text-xs font-semibold px-4 py-2 rounded-md text-center hover:opacity-90 transition-opacity shadow-card">
                         {buttonText}
                         </a>
                 </div>

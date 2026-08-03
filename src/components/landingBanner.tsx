@@ -13,7 +13,7 @@ export const LandingBanner = () => {
                     <p className="font-display text-xl md:text-2xl leading-tight max-w-md drop-shadow-lg">
                         First made to measure online clothing tailor market platform
                     </p>
-                    <Link href="/email-verification" className="bg-brand-gradient text-white text-xs font-semibold px-5 py-2.5 rounded-md flex justify-center items-center w-fit hover:shadow-lg transition-all duration-300 hover:scale-105">
+                    <Link href="/email-verification" className="bg-[#164377] text-white text-xs font-semibold px-5 py-2.5 rounded-md flex justify-center items-center w-fit hover:shadow-lg transition-all duration-300 hover:scale-105">
                         Get Started
                     </Link>
                 </div>

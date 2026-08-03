@@ -17,7 +17,7 @@ export const Blog = ({ id, image, header, body, price, buttonText}: any) => {
                     <div className="flex justify-between items-center">
                         <p className="text-[10px] text-surface-400">07/09/2023</p>
                         <div onClick={()=> showBlogDetails(id)}
-                            className="bg-brand-gradient text-white px-4 py-2 rounded-md text-xs font-semibold flex justify-center items-center gap-2 hover:opacity-90 transition-opacity">
+                            className="bg-[#164377] text-white px-4 py-2 rounded-md text-xs font-semibold flex justify-center items-center gap-2 hover:opacity-90 transition-opacity">
                         <span>Read more</span>
                         <Image src="/icons/Arrow 1.png" alt="" width={16} height={16} className="h-auto w-4" />
                     </div>

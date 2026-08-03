@@ -95,7 +95,7 @@ const SignUp = () => {
             {/* Left side - brand */}
             <div className="relative hidden lg:flex lg:w-1/2 items-center justify-center p-12 overflow-hidden">
               <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/images/stitch-backg.png')" }} />
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/80 via-purple-600/80 to-fuchsia-600/80" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#164377]/80 via-[#1e5fa3]/80 to-[#2671c4]/80" />
               <div className="relative z-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-10 text-center text-white shadow-xl max-w-sm">
                 <h2 className="text-4xl font-display font-bold mb-4">Stitch</h2>
                 <p className="text-white/80 text-sm">Create your account to get started.</p>
@@ -237,7 +237,7 @@ const SignUp = () => {
                         <button 
                             type="submit" 
                             disabled={isLoading}
-                            className="w-full bg-brand-gradient text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-gradient-hover transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-primary-500/25"
+                            className="w-full bg-[#164377] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#123661] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-primary-500/25"
                         >
                             {isLoading ? (
                                 <div className="flex items-center justify-center gap-2">

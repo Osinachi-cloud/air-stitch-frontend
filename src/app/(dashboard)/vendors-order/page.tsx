@@ -226,7 +226,7 @@ const VendorOrders: React.FC = () => {
 
   if (statsLoading && !statsData) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gradient-to-br from-indigo-50 to-purple-50">
+      <div className="flex justify-center items-center h-screen bg-gradient-to-br from-[#eef5fd] to-[#d4e4f7]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     );
@@ -423,7 +423,7 @@ const VendorOrders: React.FC = () => {
                   {Array.from({ length: Math.min(5, numOfPages) }, (_, i) => {
                     const pageNum = i;
                     return (
-                      <button key={i} onClick={() => setProductOrderRequest(prev => ({ ...prev, page: pageNum }))} className={`w-9 h-9 rounded-xl text-xs font-bold transition-all ${productOrderRequest.page === pageNum ? 'bg-brand-gradient text-white shadow-lg' : 'bg-white text-surface-600 border border-surface-200 hover:border-primary-300 hover:text-primary-600'}`}>
+                      <button key={i} onClick={() => setProductOrderRequest(prev => ({ ...prev, page: pageNum }))} className={`w-9 h-9 rounded-xl text-xs font-bold transition-all ${productOrderRequest.page === pageNum ? 'bg-[#164377] text-white shadow-lg' : 'bg-white text-surface-600 border border-surface-200 hover:border-primary-300 hover:text-primary-600'}`}>
                         {pageNum + 1}
                       </button>
                     );
@@ -477,7 +477,7 @@ const VendorOrders: React.FC = () => {
               <div className="text-center py-6"><p className="text-sm text-surface-500">No body measurements available.</p></div>
             )}
             <div className="flex justify-center mt-4">
-              <button onClick={() => setShowBodyMeasurementModal(false)} className="bg-brand-gradient hover:bg-brand-gradient-hover text-white text-sm py-2.5 px-8 rounded-xl font-semibold cursor-pointer transition-all shadow-lg">
+              <button onClick={() => setShowBodyMeasurementModal(false)} className="bg-[#164377] hover:bg-[#123661] text-white text-sm py-2.5 px-8 rounded-xl font-semibold cursor-pointer transition-all shadow-lg">
                 Close
               </button>
             </div>
@@ -485,7 +485,7 @@ const VendorOrders: React.FC = () => {
         ) : (
           <div className="text-center py-6">
             <p className="text-sm text-surface-500">Unable to load order details.</p>
-            <button onClick={() => setShowBodyMeasurementModal(false)} className="mt-4 bg-brand-gradient hover:bg-brand-gradient-hover text-white text-sm py-2 px-6 rounded-xl font-semibold cursor-pointer transition-all">Close</button>
+            <button onClick={() => setShowBodyMeasurementModal(false)} className="mt-4 bg-[#164377] hover:bg-[#123661] text-white text-sm py-2 px-6 rounded-xl font-semibold cursor-pointer transition-all">Close</button>
           </div>
         )}
       </Modal>
@@ -511,7 +511,7 @@ const VendorOrders: React.FC = () => {
               <button onClick={() => setShowOrderModal(false)} className="bg-surface-100 text-surface-700 text-sm py-3 px-8 rounded-xl font-semibold cursor-pointer hover:bg-surface-200 transition-colors order-2 sm:order-1">
                 Close
               </button>
-              <button onClick={() => updateProductOrder(orderRef)} className="bg-brand-gradient hover:bg-brand-gradient-hover text-white text-sm py-3 px-8 rounded-xl font-semibold cursor-pointer flex items-center justify-center gap-2 order-1 sm:order-2 transition-all shadow-lg shadow-primary-500/25">
+              <button onClick={() => updateProductOrder(orderRef)} className="bg-[#164377] hover:bg-[#123661] text-white text-sm py-3 px-8 rounded-xl font-semibold cursor-pointer flex items-center justify-center gap-2 order-1 sm:order-2 transition-all shadow-lg shadow-primary-500/25">
                 <RefreshCw className="w-4 h-4" />
                 {(() => {
                   switch (orderDetail.status) {
@@ -528,7 +528,7 @@ const VendorOrders: React.FC = () => {
         ) : (
           <div className="text-center py-6">
             <p className="text-sm text-surface-500">Unable to load order details.</p>
-            <button onClick={() => setShowOrderModal(false)} className="mt-4 bg-brand-gradient hover:bg-brand-gradient-hover text-white text-sm py-2 px-6 rounded-xl font-semibold cursor-pointer transition-all">Close</button>
+            <button onClick={() => setShowOrderModal(false)} className="mt-4 bg-[#164377] hover:bg-[#123661] text-white text-sm py-2 px-6 rounded-xl font-semibold cursor-pointer transition-all">Close</button>
           </div>
         )}
       </Modal>

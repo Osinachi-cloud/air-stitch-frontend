@@ -417,7 +417,7 @@ export default function VendorAnalytics() {
       formatted: totalItems.toLocaleString(),
       icon: Package,
       change: null,
-      gradient: "from-violet-500 to-purple-600",
+      gradient: "from-[#164377] to-[#1e5fa3]",
       iconBg: "bg-violet-400/30",
       textColor: "text-violet-50",
     },

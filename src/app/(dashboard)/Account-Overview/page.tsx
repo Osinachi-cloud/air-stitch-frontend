@@ -3,9 +3,7 @@
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { baseUrL } from "@/env/URLs";
-import { User } from "@/types/user";
 import { useFetch } from "@/hooks/useFetch";
 
 interface CustomerOverview {
@@ -30,8 +28,40 @@ interface AddressData {
 
 export default function AccountOverviewPage() {
   const router = useRouter();
-  const { getUserDetails } = useLocalStorage<User>("customerDetails");
-  const stored = getUserDetails();
+
+  // Check all storage keys to find the logged-in user (vendor, customer, or generic user)
+  function getUserFromStorage(): any {
+    if (typeof window === "undefined") return null;
+    const keys = ["tailorDetails", "customerDetails", "userDetails"];
+    for (const key of keys) {
+      const raw = window.localStorage.getItem(key);
+      if (!raw) continue;
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed?.emailAddress || parsed?.accessToken) return parsed;
+      } catch {
+        /* ignore */
+      }
+    }
+    return null;
+  }
+
+  function isVendor(user: any): boolean {
+    if (!user) return false;
+    const roleVal =
+      user?.role ||
+      user?.roleDto?.name ||
+      user?.data?.role ||
+      user?.data?.roleDto?.name;
+    if (typeof roleVal === "string") {
+      const normalized = roleVal.toUpperCase().replace("ROLE_", "");
+      if (normalized === "VENDOR" || normalized === "TAILOR") return true;
+    }
+    if (user?.vendorId) return true;
+    return false;
+  }
+
+  const stored = getUserFromStorage();
   console.log("Stored user details:", stored);
 
   const [mounted, setMounted] = useState(false);
@@ -41,28 +71,29 @@ export default function AccountOverviewPage() {
 
   const email = stored?.emailAddress;
   const token = stored?.accessToken;
+  const userIsVendor = isVendor(stored);
 
   const [addressData, setAddressData] = useState<AddressData | null>(null);
 
-  const fetchCustomerUrl = useMemo(
-    () =>
-      `${baseUrL}/customer-details?emailAddress=${encodeURIComponent(email === undefined ? "" : email)}`,
-    [email]
-  );
+  const fetchDetailsUrl = useMemo(() => {
+    if (!email) return "";
+    const endpoint = userIsVendor ? "vendor-details" : "customer-details";
+    return `${baseUrL}/${endpoint}?emailAddress=${encodeURIComponent(email)}`;
+  }, [email, userIsVendor]);
 
   const {
     data: customer,
     isLoading: loading,
     error,
-    callApi: fetchCustomerData
-  } = useFetch("GET", null, fetchCustomerUrl);
+    callApi: fetchCustomerData,
+  } = useFetch("GET", null, fetchDetailsUrl);
 
   useEffect(() => {
     const fetchAddressData = async () => {
       if (!token) return;
       try {
         const res = await fetch(`${baseUrL}/addresses`, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) {
           const data = await res.json();
@@ -75,24 +106,6 @@ export default function AccountOverviewPage() {
     };
 
     if (token) fetchAddressData();
-  }, [token]);
-
-  useEffect(() => {
-    const fetchAddressData = async () => {
-      if (!token) return;
-      try {
-        const res = await fetch(`${baseUrL}/addresses`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          const addressItem = Array.isArray(data) ? data[0] : data;
-          setAddressData(addressItem);
-        }
-      } catch (err) {
-        console.error("Error fetching address:", err);
-      }
-    };
 
     const handleUpdate = () => fetchAddressData();
     if (typeof window !== "undefined") {
@@ -135,7 +148,7 @@ export default function AccountOverviewPage() {
           <p className="text-red-600 mb-4">Error: {error}</p>
           <button
             onClick={() => fetchCustomerData()}
-            className="px-3 py-2 bg-brand-gradient hover:bg-brand-gradient-hover text-white rounded-xl text-xs font-semibold transition-all"
+            className="px-3 py-2 bg-[#164377] hover:bg-[#123661] text-white rounded-xl text-xs font-semibold transition-all"
           >
             Retry
           </button>
@@ -198,7 +211,7 @@ export default function AccountOverviewPage() {
               <div className="text-surface-600">{phone}</div>
               {mounted && (
                 <div className="mt-1">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-brand-gradient text-white">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#164377] text-white">
                     {role}
                   </span>
                 </div>

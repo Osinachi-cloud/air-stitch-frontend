@@ -202,7 +202,7 @@ export default function InventoryPage() {
           </button>
           <button
             onClick={() => router.push("/inventory/add-product")}
-            className="flex items-center justify-center gap-2 bg-brand-gradient hover:bg-brand-gradient-hover text-white px-3 py-2 rounded-xl transition-all text-xs font-semibold"
+            className="flex items-center justify-center gap-2 bg-[#164377] hover:bg-[#123661] text-white px-3 py-2 rounded-xl transition-all text-xs font-semibold"
           >
             <Plus className="w-4 h-4" />
             <span>Add Product</span>
@@ -266,7 +266,7 @@ export default function InventoryPage() {
             <p>Error loading products: {error}</p>
             <button
               onClick={() => fetchProducts(page)}
-              className="mt-4 px-3 py-2 bg-brand-gradient hover:bg-brand-gradient-hover text-white rounded-xl text-xs font-semibold transition-all"
+              className="mt-4 px-3 py-2 bg-[#164377] hover:bg-[#123661] text-white rounded-xl text-xs font-semibold transition-all"
             >
               Retry
             </button>
@@ -281,7 +281,7 @@ export default function InventoryPage() {
             </p>
             <button
               onClick={() => router.push("/inventory/add-product")}
-              className="mt-4 px-3 py-2 bg-brand-gradient hover:bg-brand-gradient-hover text-white rounded-xl text-xs font-semibold transition-all"
+              className="mt-4 px-3 py-2 bg-[#164377] hover:bg-[#123661] text-white rounded-xl text-xs font-semibold transition-all"
             >
               Add Product
             </button>

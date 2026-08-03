@@ -54,7 +54,7 @@ export const Tailor = ({ id, image, name, description, url, buttonText, tailorId
                     <p className="text-[10px] md:text-xs font-medium text-surface-500 text-center line-clamp-2">
                         {description}
                     </p>
-                    <Link href={url} className="bg-brand-gradient text-white text-[10px] md:text-xs font-semibold px-4 py-2 rounded-md text-center mt-1 hover:opacity-90 transition-opacity shadow-card">
+                    <Link href={url} className="bg-[#164377] text-white text-[10px] md:text-xs font-semibold px-4 py-2 rounded-md text-center mt-1 hover:opacity-90 transition-opacity shadow-card">
                         {buttonText}
                     </Link>
                 </div>

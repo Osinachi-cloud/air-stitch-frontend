@@ -716,7 +716,7 @@ const Orders = () => {
             <div className="sticky bottom-0 bg-white border-t border-surface-100 px-4 py-3">
               <button
                 onClick={() => setShowModal(false)}
-                className="w-full px-4 py-2.5 bg-brand-gradient hover:bg-brand-gradient-hover text-white rounded-xl transition-all text-xs font-semibold"
+                className="w-full px-4 py-2.5 bg-[#164377] hover:bg-[#123661] text-white rounded-xl transition-all text-xs font-semibold"
               >
                 Close
               </button>

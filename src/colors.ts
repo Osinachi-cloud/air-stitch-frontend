@@ -1,7 +1,7 @@
 import type { ColorButtonKey } from './interfaces'
 
 export const gradientBgBase = 'bg-gradient-to-tr'
-export const gradientBgPurplePink = `${gradientBgBase} from-purple-400 via-pink-500 to-red-500`
+export const gradientBgPurplePink = `${gradientBgBase} from-[#164377] via-[#1e5fa3] to-[#2671c4]`
 export const gradientBgDark = `${gradientBgBase} from-slate-700 via-slate-900 to-slate-800`
 export const gradientBgPinkRed = `${gradientBgBase} from-pink-400 via-red-500 to-yellow-500`
 

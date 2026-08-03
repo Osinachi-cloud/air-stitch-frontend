@@ -216,7 +216,7 @@ export default function LikesPage() {
                                                 {product.inStock !== false ? (
                                                     <button
                                                         onClick={() => handleBuyNow(product.productId)}
-                                                        className="bg-brand-gradient hover:bg-brand-gradient-hover text-white px-3 py-2 text-xs font-semibold transition-all whitespace-nowrap rounded-xl"
+                                                        className="bg-[#164377] hover:bg-[#123661] text-white px-3 py-2 text-xs font-semibold transition-all whitespace-nowrap rounded-xl"
                                                         disabled={isDisabled}
                                                     >
                                                         BUY NOW
@@ -316,7 +316,7 @@ export default function LikesPage() {
                                                     onClick={() => handlePageChange(i)}
                                                     disabled={deletingId !== null || addingToCartId !== null}
                                                     className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg text-sm font-medium transition-colors ${pageRequest.page === i
-                                                        ? 'bg-brand-gradient text-white'
+                                                        ? 'bg-[#164377] text-white'
                                                         : 'border border-surface-200 hover:bg-surface-50'
                                                         } disabled:opacity-50 disabled:cursor-not-allowed`}
                                                     aria-label={`Go to page ${i + 1}`}
@@ -354,7 +354,7 @@ export default function LikesPage() {
                     <p className="text-sm text-surface-500 mb-4 sm:mb-6">Start exploring and like products</p>
                     <button
                         onClick={() => router.push('/')}
-                        className="bg-brand-gradient hover:bg-brand-gradient-hover text-white px-5 py-2.5 rounded-xl text-xs font-semibold transition-all"
+                        className="bg-[#164377] hover:bg-[#123661] text-white px-5 py-2.5 rounded-xl text-xs font-semibold transition-all"
                     >
                         Browse Products
                     </button>

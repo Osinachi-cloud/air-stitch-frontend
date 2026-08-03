@@ -380,7 +380,7 @@ export default function ChangePasswordPage() {
                 type="submit"
                 disabled={isLoading}
                 className={`flex-1 text-white text-xs font-semibold py-2.5 rounded-xl transition-colors ${
-                  isLoading ? "bg-surface-400 cursor-not-allowed" : "bg-brand-gradient hover:bg-brand-gradient-hover"
+                  isLoading ? "bg-surface-400 cursor-not-allowed" : "bg-[#164377] hover:bg-[#123661]"
                 }`}
               >
                 {isLoading ? "Updating..." : "Update Password"}
